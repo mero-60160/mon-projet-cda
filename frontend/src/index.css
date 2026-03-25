@@ -1,12 +1,68 @@
-/* Styles globaux - Mini CRM */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --bg-principal: #F8FAFC;
+  --texte-principal: #0F172A;
+  --texte-secondaire: #64748B;
+  --primaire: #3B82F6;
+  --primaire-survol: #2563EB;
+  --danger: #EF4444;
+  --police-titre: 'Outfit', sans-serif;
+  --police-texte: 'Inter', sans-serif;
 }
 
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
 body {
-  font-family: 'Inter', sans-serif;
-  background-color: #f5f5f5;
-  color: #333;
+  font-family: var(--police-texte);
+  background-color: var(--bg-principal);
+  color: var(--texte-principal);
 }
+
+h1, h2 { font-family: var(--police-titre); }
+
+.carte-premium {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  padding: 2.5rem;
+}
+
+.bouton-primaire {
+  background-color: var(--primaire);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.bouton-primaire:hover { background-color: var(--primaire-survol); }
+
+/* UTILITAIRES FORMULAIRE (Pour raccourcir le React) */
+.formulaire-groupe { margin-bottom: 1.2rem; display: flex; flex-direction: column; }
+.formulaire-etiquette { font-size: 0.85rem; color: var(--texte-secondaire); margin-bottom: 0.4rem; }
+.champ-avec-icone { position: relative; }
+.icone-champ { position: absolute; top: 12px; left: 12px; color: #94A3B8; }
+.formulaire-champ { 
+  width: 100%; 
+  padding: 0.75rem 1rem 0.75rem 2.5rem; 
+  border: 1px solid #E2E8F0; 
+  border-radius: 8px; 
+}
+.ligne-champs { display: flex; gap: 1rem; }
+.alerte-erreur { color: var(--danger); background: #FEF2F2; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+
+/* PAGE AUTHENTIFICATION */
+.page-authentification { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+.conteneur-authentification { width: 440px; }
+.entete-authentification { text-align: center; margin-bottom: 2rem; }
+.entete-authentification h1 { color: var(--primaire); font-size: 2.5rem; }
+.bascule-authentification { margin-top: 1.5rem; text-align: center; color: var(--texte-secondaire); font-size: 0.9rem; }
+.bascule-authentification span { color: var(--primaire); cursor: pointer; font-weight: 600; margin-left: 5px; }
