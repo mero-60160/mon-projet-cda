@@ -1,0 +1,27 @@
+name: CI simple
+
+on: [push]
+
+jobs:
+  verifier-code:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Test backend
+        run: |
+          cd backend
+          npm install
+          npx prisma generate
+
+      - name: Test frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build
