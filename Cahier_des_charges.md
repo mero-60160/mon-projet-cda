@@ -65,6 +65,8 @@ Le backend gère aussi l'ajout de devis qui sont directement rattachés aux clie
 
 - **Déploiement et CI (Docker / GitHub Actions)** : Pour m'entraîner au DevOps, j'ai aussi rajouté des fichiers Docker pour mon front et mon back. Avec un `docker-compose`, je peux lancer tout l'environnement en local sans galérer sur les conflits de versions. J'ai aussi fait un petit workflow sur GitHub (pipeline CI) hyper basique : à chaque push, un robot teste l'application avec un `npm install` pour vérifier que je n'ai rien cassé au moment d'enregistrer mon travail.
 
+![Preuve du fonctionnement du Pipeline CI](./capture_ci.png)
+
 ## 4. Evolutions prévues
 Maintenant que toute la base technologique est là, mes priorités sont :
 - Permettre la création d'un vrai fichier PDF d'export pour un devis.
