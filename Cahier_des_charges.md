@@ -63,9 +63,9 @@ Le backend gère aussi l'ajout de devis qui sont directement rattachés aux clie
 
 - **Base de données et ORM (PostgreSQL / Prisma)** : PostgreSQL a été choisie comme base de données. Pour la relier au backend, j'ai décidé de faire un essai avec l'ORM Prisma, un outil que je n'avais jamais manipulé non plus. Je l'ai trouvé très pratique car il permet de déclarer mes entités de façon claire avec ses schémas, de gérer les migrations de la base de données sans prise de tête, et ça m'évite de faire des requêtes SQL à la main.
 
+- **Déploiement et CI (Docker / GitHub Actions)** : Pour m'entraîner au DevOps, j'ai aussi rajouté des fichiers Docker pour mon front et mon back. Avec un `docker-compose`, je peux lancer tout l'environnement en local sans galérer sur les conflits de versions. J'ai aussi fait un petit workflow sur GitHub (pipeline CI) hyper basique : à chaque push, un robot teste l'application avec un `npm install` pour vérifier que je n'ai rien cassé au moment d'enregistrer mon travail.
+
 ## 4. Evolutions prévues
-Pour la suite du développement, mes prochaines grosses tâches sont :
-- Faire le pipeline d'intégration (la CI) complet avec GitHub actions.
-- Créer les Dockerfiles pour pouvoir conteneuriser l'application entière.
-- Permettre la conversion et l'export d'un devis en PDF.
-- Rajouter des petits tests automatisés sur les principales routes du back.
+Maintenant que toute la base technologique est là, mes priorités sont :
+- Permettre la création d'un vrai fichier PDF d'export pour un devis.
+- Rajouter 2 ou 3 petits tests automatisés sur les routes du back qui gèrent l'authentification.
