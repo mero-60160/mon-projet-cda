@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Livrable Semaine 2 - Omer Atici</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            max-width: 780px;
+            margin: 50px auto;
+            padding: 50px;
+            color: #222;
+            line-height: 1.9;
+            font-size: 0.97rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            border-bottom: 2px solid #27ae60;
+            padding-bottom: 10px;
+            margin-bottom: 6px;
+        }
+
+        .meta {
+            color: #888;
+            font-size: 0.88rem;
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-top: 38px;
+            margin-bottom: 10px;
+            color: #111;
+        }
+
+        h2 span {
+            color: #27ae60;
+            margin-right: 6px;
+        }
+
+        p { margin-bottom: 8px; color: #333; }
+
+        ul { padding-left: 20px; margin: 8px 0; }
+        li { margin-bottom: 5px; color: #333; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.88rem;
+        }
+        th {
+            background: #27ae60;
+            color: white;
+            padding: 9px 13px;
+            text-align: left;
+        }
+        td { padding: 9px 13px; border-bottom: 1px solid #eee; }
+        .ok td { background: #f0faf4; font-weight: 600; }
+
+        hr {
+            border: none;
+            border-top: 1px solid #eee;
+            margin: 36px 0;
+        }
+
+        .btn {
+            display: block;
+            width: fit-content;
+            margin: 50px auto 0;
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 11px 26px;
+            border-radius: 7px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        @media print {
+            body { margin: 0; padding: 30px 40px; }
+            .no-print { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Livrable — Semaine 2</h1>
+    <p class="meta">Omer Atici &nbsp;·&nbsp; Projet Mini CRM &nbsp;·&nbsp; 09 Avril 2026</p>
+
+    <hr>
+
+    <!-- 1 -->
+    <h2><span>1.</span> Plan de sécurité</h2>
+
+    <p>Pour sécuriser le Mini CRM, voici les mesures que je vais mettre en place :</p>
+
+    <ul>
+        <li><strong>Mots de passe hashés</strong> avec bcrypt avant d'être enregistrés en base de données. Aucun mot de passe en clair ne sera stocké.</li>
+        <li><strong>Connexion via JWT</strong> (JSON Web Token) : à la connexion, un token est généré et stocké dans un cookie httpOnly (inaccessible au JavaScript) pour éviter les vols de session.</li>
+        <li><strong>Protection des routes</strong> : un middleware vérifie le token JWT à chaque requête. Si le token est absent ou invalide, l'accès est bloqué.</li>
+        <li><strong>Validation des données</strong> avec Zod côté serveur : toutes les données envoyées par l'utilisateur sont vérifiées avant d'être traitées ou enregistrées.</li>
+        <li><strong>Protection contre les injections SQL</strong> grâce à Prisma ORM qui génère des requêtes paramétrées.</li>
+        <li><strong>Limitation des tentatives de connexion</strong> : maximum 5 essais par 15 minutes par adresse IP pour éviter les attaques par force brute.</li>
+        <li><strong>Variables d'environnement</strong> : les mots de passe et clés secrètes sont dans un fichier .env, jamais versionné sur Git.</li>
+    </ul>
+
+    <hr>
+
+    <!-- 2 -->
+    <h2><span>2.</span> Choix des technos Front / Back / BDD — Benchmark</h2>
+
+    <p><strong>Front-End</strong></p>
+    <table>
+        <tr><th>Framework</th><th>Facilité</th><th>Performance</th><th>Écosystème</th></tr>
+        <tr class="ok"><td>✅ Vue.js 3</td><td>Facile</td><td>Très bonne</td><td>Vite, Pinia, Vue Router</td></tr>
+        <tr><td>React</td><td>Moyenne</td><td>Excellente</td><td>Très riche</td></tr>
+        <tr><td>Angular</td><td>Difficile</td><td>Bonne</td><td>Complet mais lourd</td></tr>
+    </table>
+    <p>→ Je choisis <strong>Vue.js 3</strong> car c'est le framework que je maîtrise le mieux et sa syntaxe est claire et lisible.</p>
+
+    <p style="margin-top:18px"><strong>Back-End</strong></p>
+    <table>
+        <tr><th>Framework</th><th>Facilité</th><th>Performance</th><th>Flexibilité</th></tr>
+        <tr class="ok"><td>✅ Node.js + Express</td><td>Facile</td><td>Très bonne</td><td>Totale</td></tr>
+        <tr><td>NestJS</td><td>Difficile</td><td>Excellente</td><td>Bonne</td></tr>
+        <tr><td>Django (Python)</td><td>Moyenne</td><td>Bonne</td><td>Limitée</td></tr>
+    </table>
+    <p>→ Je choisis <strong>Node.js + Express</strong> car c'est du JavaScript comme le front, donc je garde le même langage sur tout le projet.</p>
+
+    <p style="margin-top:18px"><strong>Base de données</strong></p>
+    <table>
+        <tr><th>BDD</th><th>Type</th><th>Adapté au CRM</th><th>ORM utilisé</th></tr>
+        <tr class="ok"><td>✅ PostgreSQL</td><td>SQL (relationnel)</td><td>Oui, parfait</td><td>Prisma</td></tr>
+        <tr><td>MySQL</td><td>SQL (relationnel)</td><td>Oui</td><td>Prisma</td></tr>
+        <tr><td>MongoDB</td><td>NoSQL</td><td>Non (données liées)</td><td>Mongoose</td></tr>
+    </table>
+    <p>→ Je choisis <strong>PostgreSQL</strong> car les données du CRM sont relationnelles (un client a plusieurs devis, un devis a plusieurs lignes). PostgreSQL avec Prisma gère ça très bien.</p>
+
+    <hr>
+
+    <!-- 3 -->
+    <h2><span>3.</span> Politique de sauvegarde</h2>
+
+    <p>Pour éviter de perdre les données du CRM, je mets en place la politique suivante :</p>
+
+    <ul>
+        <li><strong>Sauvegarde quotidienne</strong> : chaque nuit, un export complet de la base de données PostgreSQL est fait (via <code>pg_dump</code>) et envoyé sur un stockage cloud. Les sauvegardes sont conservées 30 jours.</li>
+        <li><strong>Sauvegarde hebdomadaire</strong> : chaque dimanche, un snapshot complet de tout l'environnement est conservé pendant 3 mois.</li>
+        <li><strong>Versionnement du code</strong> : le code source est poussé sur GitLab à chaque fonctionnalité terminée. L'historique Git est conservé indéfiniment.</li>
+        <li><strong>Restauration</strong> : en cas de problème, je peux restaurer la base depuis le dernier dump disponible en moins de 2 heures. La perte de données maximale serait de 24h (depuis la dernière sauvegarde).</li>
+        <li><strong>Test mensuel</strong> : une fois par mois, je teste la restauration sur un environnement de dev pour vérifier que les sauvegardes fonctionnent bien.</li>
+    </ul>
+
+    <hr>
+
+    <!-- 4 -->
+    <h2><span>4.</span> Roadmap prévisionnelle</h2>
+
+    <p>Le projet est découpé en 4 phases sur 8 semaines :</p>
+
+    <p><strong>Phase 1 — Semaines 1 & 2 : Socle technique + Authentification</strong></p>
+    <ul>
+        <li>Mise en place du projet : Vue.js, Express, PostgreSQL, Docker</li>
+        <li>Création du modèle User avec Prisma</li>
+        <li>API de connexion et d'inscription</li>
+        <li>Pages Login / Register côté front + protection des routes</li>
+    </ul>
+
+    <p><strong>Phase 2 — Semaines 3 & 4 : Gestion des clients</strong></p>
+    <ul>
+        <li>Modèle Client en base (nom, email, téléphone, SIRET)</li>
+        <li>API pour lister, ajouter, modifier et supprimer un client</li>
+        <li>Page liste des clients avec recherche et formulaire d'ajout</li>
+    </ul>
+
+    <p><strong>Phase 3 — Semaines 5 & 6 : Devis et export PDF</strong></p>
+    <ul>
+        <li>Modèle Devis en base avec les lignes de devis</li>
+        <li>API CRUD pour les devis, avec statuts (Brouillon, Envoyé, Accepté)</li>
+        <li>Formulaire de création de devis avec calcul automatique HT/TTC</li>
+        <li>Export PDF du devis via Puppeteer</li>
+    </ul>
+
+    <p><strong>Phase 4 — Semaines 7 & 8 : Dashboard et mise en ligne</strong></p>
+    <ul>
+        <li>Page dashboard avec les statistiques principales (CA, devis, clients)</li>
+        <li>Audit de sécurité final</li>
+        <li>Mise en place des sauvegardes automatiques</li>
+        <li>Tests et déploiement de l'application</li>
+    </ul>
+
+    <button class="btn no-print" onclick="window.print()">📄 Exporter en PDF</button>
+
+</body>
+</html>
