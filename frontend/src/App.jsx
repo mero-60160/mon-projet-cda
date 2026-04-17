@@ -1,60 +1,44 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Authentification from './pages/Authentification';
+import Layout from './composants/Layout';
+import Dashboard from './pages/Dashboard';
+import Clients from './pages/Clients';
 import './App.css';
 
-/**
- * Composant Racine de l'application
- * Gère le cycle de vie de la session (Connexion / Déconnexion)
- */
 function App() {
   const [estConnecte, setEstConnecte] = useState(false);
   
-  // Utilisation d'un effet secondaire pour vérifier la persistance de session
+  // Vérification de session
   useEffect(() => {
     const token = localStorage.getItem('crm_token');
-    if (token) {
-      setEstConnecte(true);
-    }
+    if (token) setEstConnecte(true);
   }, []);
 
-  /**
-   * Gestionnaire de fin de session
-   * Nettoie le stockage local et réinitialise l'état d'authentification
-   */
   const gererDeconnexion = () => {
     localStorage.removeItem('crm_token');
     localStorage.removeItem('crm_user');
     setEstConnecte(false);
   };
 
-  // Affichage du module d'authentification si la session est expirée ou inexistante
+  // Si pas connecté, affiche le module d'auth
   if (!estConnecte) {
     return <Authentification onLoginSuccess={() => setEstConnecte(true)} />;
   }
 
-  // Affichage du tableau de bord une fois la session validée
+  // Application une fois connectée avec Système de Routage
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>🎉 Bienvenue dans le Mini CRM</h1>
-      <p>L'interface du tableau de bord global.</p>
-      
-      <button 
-        onClick={gererDeconnexion} 
-        style={{ 
-          marginTop: '2rem', 
-          background: 'var(--danger)', 
-          color: 'white', 
-          border: 'none', 
-          padding: '10px 20px', 
-          borderRadius: '8px',
-          cursor: 'pointer',
-          fontFamily: 'var(--police-texte)'
-        }}>
-        Terminer la session
-      </button>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout onLogout={gererDeconnexion} />}>
+          <Route index element={<Dashboard />} />
+          <Route path="clients" element={<Clients />} />
+          {/* <Route path="devis" element={<Devis />} /> Plus tard */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
 export default App;
-
