@@ -11,8 +11,8 @@ const limiteGlobale = rateLimit({
 
 const limiteConnexion = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // Limite à 5 essais (comme décrit dans le cahier des charges)
-  message: { message: "Trop de tentatives de connexion, veuillez patienter 15 minutes." }
+  max: 5, // 5 essais max
+  message: { message: "Trop de tentatives, veuillez patienter 15 minutes." }
 });
 
 

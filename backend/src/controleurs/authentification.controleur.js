@@ -9,12 +9,12 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 const { z } = require('zod');
 
-// Schéma de sécurité Zod pour valider rigoureusement l'inscription
+// Validation de l'inscription via Zod
 const schemaInscription = z.object({
   email: z.string().email("Le format de l'email est invalide."),
   motDePasse: z.string().min(8, "Le mot de passe doit contenir au moins 8 caractères."),
-  nom: z.string().min(2, "Le nom doit au moins comporter 2 lettres."),
-  prenom: z.string().min(2, "Le prénom doit au moins comporter 2 lettres.")
+  nom: z.string().min(2, "Le nom doit contenir au moins 2 caractères."),
+  prenom: z.string().min(2, "Le prénom doit contenir au moins 2 caractères.")
 });
 
 
@@ -25,11 +25,11 @@ exports.inscription = async (req, res) => {
   try {
     const { email, motDePasse, nom, prenom } = req.body;
 
-    // 1. Validation de sécurité Zod (Ne fait pas confiance au Front)
+    // Validation des données
     const validation = schemaInscription.safeParse(req.body);
     if (!validation.success) {
       return res.status(400).json({ 
-        message: "Données mal formatées ou suspectes détectées par le backend.", 
+        message: "Format des données invalide.", 
         erreurs: validation.error.format() 
       });
     }
