@@ -10,6 +10,8 @@ services:
 
   backend:
     build: ./backend
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/crm
     ports:
       - "3000:3000"
     depends_on:

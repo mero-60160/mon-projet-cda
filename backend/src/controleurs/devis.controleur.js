@@ -280,6 +280,7 @@ exports.genererPDFDevis = async (req, res) => {
     `;
 
     const browser = await puppeteer.launch({ 
+      executablePath: '/usr/bin/chromium',
       headless: 'new',
       args: ['--no-sandbox', '--disable-setuid-sandbox'] 
     });
