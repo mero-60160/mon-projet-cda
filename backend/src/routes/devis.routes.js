@@ -13,5 +13,6 @@ router.post('/', controleurDevis.creerDevis);
 router.put('/:id', controleurDevis.modifierDevis);
 router.patch('/:id/statut', controleurDevis.modifierStatutDevis);
 router.delete('/:id', controleurDevis.supprimerDevis);
+router.get('/:id/pdf', controleurDevis.genererPDFDevis);
 
 module.exports = router;

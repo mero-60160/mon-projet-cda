@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Plus, Search, Trash2, FileText, Download, X, PlusCircle, MinusCircle, Edit2, Send, CheckCircle, XCircle } from 'lucide-react';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 
 export default function Devis() {
   const [listeDevis, setListeDevis] = useState([]);
@@ -63,89 +61,24 @@ export default function Devis() {
     }
   };
 
-  const genererPDF = (devis) => {
-    const doc = new jsPDF();
-    const userData = JSON.parse(localStorage.getItem('crm_user') || '{}');
-
-    // Méta-données et En-tête
-    doc.setFont("helvetica");
-    doc.setFontSize(22);
-    doc.setTextColor(59, 130, 246); // Couleur primaire
-    doc.text("DEVIS", 14, 22);
-
-    doc.setFontSize(10);
-    doc.setTextColor(100, 116, 139);
-    doc.text(`Numéro : ${devis.numero}`, 14, 30);
-    doc.text(`Date d'émission : ${new Date(devis.dateEmission).toLocaleDateString()}`, 14, 36);
-    
-    // Informations de l'émetteur (vous)
-    doc.setFontSize(12);
-    doc.setTextColor(15, 23, 42); // texte principal
-    doc.text("Émetteur :", 120, 22);
-    doc.setFontSize(10);
-    doc.text(`Consultant IT / Freelance`, 120, 30);
-    doc.text(`${userData.prenom || ''} ${userData.nom || ''}`, 120, 36);
-    
-    // Information du client
-    doc.setFontSize(12);
-    doc.text("Adressé à :", 14, 55);
-    doc.setFontSize(10);
-    const nomClientFull = devis.client
-      ? (devis.client.entreprise 
-          ? `${devis.client.entreprise}\n${devis.client.prenom} ${devis.client.nom}`
-          : `${devis.client.prenom} ${devis.client.nom}`)
-      : "Client inconnu / supprimé";
-    doc.text(nomClientFull, 14, 63);
-    if(devis.client && devis.client.adresse) doc.text(devis.client.adresse, 14, 75);
-
-    // Tableau des Lignes de devis
-    const colonnes = [["Description", "Quantité", "Prix U. HT", "Total HT"]];
-    const lignesDonnees = devis.lignes.map(l => [
-      l.description,
-      l.quantite.toString(),
-      `${l.prixUnitaire.toFixed(2)} €`,
-      `${l.total.toFixed(2)} €`
-    ]);
-
-    autoTable(doc, {
-      startY: 90,
-      head: colonnes,
-      body: lignesDonnees,
-      theme: 'grid',
-      headStyles: { fillColor: [59, 130, 246] },
-      styles: { fontSize: 10, cellPadding: 3 },
-      columnStyles: {
-        0: { cellWidth: 80 },
-        1: { halign: 'center' },
-        2: { halign: 'right' },
-        3: { halign: 'right' }
-      }
-    });
-
-    // Totaux
-    const finalY = doc.lastAutoTable.finalY + 10;
-    doc.text("Sous-total HT :", 120, finalY);
-    doc.text(`${devis.totalHT.toFixed(2)} €`, 170, finalY, { align: "right" });
-    
-    doc.text(`TVA (${devis.tva}%) :`, 120, finalY + 8);
-    doc.text(`${(devis.totalTTC - devis.totalHT).toFixed(2)} €`, 170, finalY + 8, { align: "right" });
-
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "bold");
-    doc.text("TOTAL TTC :", 120, finalY + 18);
-    doc.text(`${devis.totalTTC.toFixed(2)} €`, 170, finalY + 18, { align: "right" });
-
-    // Notes
-    if (devis.notes && devis.notes.trim() !== '') {
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(10);
-      doc.text("Notes / Conditions :", 14, finalY + 30);
-      doc.setFont("helvetica", "italic");
-      doc.text(devis.notes, 14, finalY + 36, { maxWidth: 100 });
+  const genererPDF = async (devis) => {
+    try {
+      const token = localStorage.getItem('crm_token');
+      const response = await axios.get(`http://localhost:3000/api/devis/${devis.id}/pdf`, {
+        headers: { Authorization: `Bearer ${token}` },
+        responseType: 'blob' // Important pour télécharger le fichier
+      });
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `devis-${devis.numero}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+    } catch (erreur) {
+      alert("Erreur lors de la génération du devis PDF via le serveur.");
     }
-
-    // Sauvegarde auto
-    doc.save(`${devis.numero}.pdf`);
   };
 
   useEffect(() => {

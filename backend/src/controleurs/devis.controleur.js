@@ -1,6 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const { Pool } = require('pg');
 const { PrismaPg } = require('@prisma/adapter-pg');
+const puppeteer = require('puppeteer');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
@@ -169,5 +170,138 @@ exports.modifierStatutDevis = async (req, res) => {
     res.json(devisMisAJour);
   } catch (erreur) {
     res.status(500).json({ message: "Erreur serveur (modification du statut)." });
+  }
+};
+
+/**
+ * Génère le PDF d'un devis
+ */
+exports.genererPDFDevis = async (req, res) => {
+  try {
+    const identifiantDevis = parseInt(req.params.id);
+    const devis = await prisma.devis.findFirst({
+      where: { id: identifiantDevis, userId: req.utilisateurId },
+      include: { 
+        client: true, 
+        lignes: true, 
+        user: true 
+      }
+    });
+
+    if (!devis) {
+      return res.status(404).json({ message: "Devis introuvable." });
+    }
+
+    const htmlContent = `
+      <html>
+        <head>
+          <style>
+            body { font-family: 'Helvetica', Arial, sans-serif; padding: 40px; color: #333; }
+            .header { display: flex; justify-content: space-between; border-bottom: 2px solid #333; padding-bottom: 20px; }
+            .title { font-size: 32px; font-weight: bold; color: #3b82f6; }
+            .info { margin-top: 30px; display: flex; justify-content: space-between; }
+            .info-box { padding: 15px; border-radius: 8px; width: 45%; }
+            table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+            th, td { border: 1px solid #e2e8f0; padding: 12px; text-align: left; }
+            th { background-color: #3b82f6; color: white; font-weight: bold; }
+            .totals { flex-direction: column; align-items: flex-end; margin-top: 20px; }
+            .totals table { width: 40%; margin-left: auto; border: none;}
+            .totals th, .totals td { text-align: right; border: none; padding: 6px; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <div>
+              <div class="title">DEVIS</div>
+              <div style="font-size: 1.2rem; margin-top: 5px; color:#64748b;">N° ${devis.numero}</div>
+              <div style="margin-top: 10px; padding: 4px 8px; background: #e2e8f0; border-radius: 4px; display: inline-block;">Statut: ${devis.statut.toUpperCase()}</div>
+            </div>
+            <div style="text-align: right;">
+              <h2 style="margin:0;">Émetteur :</h2>
+              <p style="margin:5px 0;">Consultant IT / Freelance</p>
+              <p style="margin:5px 0;"><strong>${devis.user ? devis.user.prenom + ' ' + devis.user.nom : 'M-Atici CRM'}</strong></p>
+            </div>
+          </div>
+
+          <div class="info">
+            <div class="info-box">
+              <h3 style="margin-top:0;">Adressé à :</h3>
+              <p style="margin:2px 0;"><strong>${devis.client ? devis.client.entreprise || '' : ''}</strong></p>
+              <p style="margin:2px 0;">${devis.client ? devis.client.prenom + ' ' + devis.client.nom : 'Client introuvable'}</p>
+              <p style="margin:2px 0;">${devis.client ? devis.client.adresse || '' : ''}</p>
+            </div>
+            <div class="info-box" style="text-align: right;">
+              <h3 style="margin-top:0;">Détails</h3>
+              <p style="margin:2px 0;">Date d'émission: ${new Date(devis.createdAt).toLocaleDateString()}</p>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th style="text-align:center;">Quantité</th>
+                <th style="text-align:right;">Prix U. HT</th>
+                <th style="text-align:right;">Total HT</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${devis.lignes.map(l => `
+                <tr>
+                  <td>${l.description}</td>
+                  <td style="text-align:center;">${l.quantite}</td>
+                  <td style="text-align:right;">${l.prixUnitaire.toFixed(2)} €</td>
+                  <td style="text-align:right;">${l.total.toFixed(2)} €</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          <div class="totals">
+            <table>
+              <tr>
+                <th>Sous-total HT :</th>
+                <td>${devis.totalHT.toFixed(2)} €</td>
+              </tr>
+              <tr>
+                <th>TVA (${devis.tva}%) :</th>
+                <td>${(devis.totalTTC - devis.totalHT).toFixed(2)} €</td>
+              </tr>
+              <tr>
+                <th style="font-size: 1.2em;">TOTAL TTC :</th>
+                <td style="font-size: 1.2em;"><strong>${devis.totalTTC.toFixed(2)} €</strong></td>
+              </tr>
+            </table>
+          </div>
+          
+          ${devis.notes ? `<div style="margin-top: 40px; padding: 15px; background: #f8fafc; border-radius: 8px;"><p style="margin:0;"><strong>Notes / Conditions :</strong><br><br>${devis.notes.replace(/\\n/g, '<br>')}</p></div>` : ''}
+        </body>
+      </html>
+    `;
+
+    const browser = await puppeteer.launch({ 
+      headless: 'new',
+      args: ['--no-sandbox', '--disable-setuid-sandbox'] 
+    });
+    
+    const page = await browser.newPage();
+    await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+    const pdfBuffer = await page.pdf({ 
+      format: 'A4', 
+      printBackground: true,
+      margin: { top: '20px', right: '20px', bottom: '20px', left: '20px' }
+    });
+    await browser.close();
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="devis-${devis.numero}.pdf"`,
+      'Content-Length': pdfBuffer.length
+    });
+    
+    res.send(pdfBuffer);
+  } catch (erreur) {
+    console.error(erreur);
+    res.status(500).json({ message: "Erreur serveur (génération du PDF)." });
   }
 };
