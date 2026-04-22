@@ -7,6 +7,16 @@ const { PrismaPg } = require('@prisma/adapter-pg');
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
+const { z } = require('zod');
+
+// Schéma de sécurité Zod pour valider rigoureusement l'inscription
+const schemaInscription = z.object({
+  email: z.string().email("Le format de l'email est invalide."),
+  motDePasse: z.string().min(8, "Le mot de passe doit contenir au moins 8 caractères."),
+  nom: z.string().min(2, "Le nom doit au moins comporter 2 lettres."),
+  prenom: z.string().min(2, "Le prénom doit au moins comporter 2 lettres.")
+});
+
 
 /**
  * Inscription d'un utilisateur
@@ -15,7 +25,16 @@ exports.inscription = async (req, res) => {
   try {
     const { email, motDePasse, nom, prenom } = req.body;
 
-    // Vérification de l'existence de l'utilisateur
+    // 1. Validation de sécurité Zod (Ne fait pas confiance au Front)
+    const validation = schemaInscription.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(400).json({ 
+        message: "Données mal formatées ou suspectes détectées par le backend.", 
+        erreurs: validation.error.format() 
+      });
+    }
+
+    // 2. Vérification de l'existence de l'utilisateur
     const utilisateurExistant = await prisma.user.findUnique({ where: { email } });
     if (utilisateurExistant) {
       return res.status(400).json({ message: "Cet email est déjà pris." });
