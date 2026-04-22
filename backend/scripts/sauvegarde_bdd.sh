@@ -31,9 +31,10 @@ pg_dump "$DATABASE_URL" -F c -f "$BACKUP_FILE"
 
 # Vérification du succès de la commande
 if [ $? -eq 0 ]; then
-  echo "✅ Sauvegarde réussie : $BACKUP_FILE"
+  echo "[SUCCES] Sauvegarde reussie : $BACKUP_FILE"
 else
-  echo "❌ Erreur lors de l'export de la base de données."
+  echo "[ERREUR] Echec lors de l'export de la base de donnees."
+
   exit 1
 fi
 
