@@ -87,3 +87,87 @@ exports.supprimerDevis = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur (suppression du devis)." });
   }
 };
+
+/**
+ * Modifie un devis existant et ses lignes
+ */
+exports.modifierDevis = async (req, res) => {
+  try {
+    const identifiantDevis = parseInt(req.params.id);
+    const { clientId, numero, notes, lignes, statut } = req.body;
+    let totalHT = 0;
+
+    const devisExistant = await prisma.devis.findFirst({
+      where: { id: identifiantDevis, userId: req.utilisateurId }
+    });
+
+    if (!devisExistant) {
+      return res.status(404).json({ message: "Devis introuvable." });
+    }
+
+    // Formatage des lignes et calcul du sous-total
+    const lignesFormatees = lignes.map(ligne => {
+      const totalLigne = ligne.quantite * ligne.prixUnitaire;
+      totalHT += totalLigne;
+      return {
+        description: ligne.description,
+        quantite: ligne.quantite,
+        prixUnitaire: ligne.prixUnitaire,
+        total: totalLigne
+      };
+    });
+
+    const tva = 20;
+    const totalTTC = totalHT * 1.20;
+
+    // Mise à jour du devis : on supprime les anciennes lignes et on recrée les nouvelles
+    const devisMisAJour = await prisma.devis.update({
+      where: { id: identifiantDevis },
+      data: {
+        numero,
+        totalHT,
+        totalTTC,
+        tva,
+        notes,
+        statut: statut || devisExistant.statut,
+        clientId,
+        lignes: {
+          deleteMany: {}, // Supprime toutes les lignes actuelles
+          create: lignesFormatees // Crée les nouvelles lignes
+        }
+      },
+      include: { lignes: true, client: true }
+    });
+
+    res.json(devisMisAJour);
+  } catch (erreur) {
+    res.status(500).json({ message: "Erreur serveur (modification du devis)." });
+  }
+};
+
+/**
+ * Modifie uniquement le statut d'un devis existant
+ */
+exports.modifierStatutDevis = async (req, res) => {
+  try {
+    const identifiantDevis = parseInt(req.params.id);
+    const { statut } = req.body;
+
+    const devisExistant = await prisma.devis.findFirst({
+      where: { id: identifiantDevis, userId: req.utilisateurId }
+    });
+
+    if (!devisExistant) {
+      return res.status(404).json({ message: "Devis introuvable." });
+    }
+
+    const devisMisAJour = await prisma.devis.update({
+      where: { id: identifiantDevis },
+      data: { statut }
+    });
+
+    res.json(devisMisAJour);
+  } catch (erreur) {
+    res.status(500).json({ message: "Erreur serveur (modification du statut)." });
+  }
+};

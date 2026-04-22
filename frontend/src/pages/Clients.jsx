@@ -20,7 +20,7 @@ export default function Clients() {
         headers: { Authorization: `Bearer ${token}` }
       });
       setClients(rep.data);
-    } catch (err) {
+    } catch {
       setErreur("Impossible de charger les clients depuis le serveur.");
     } finally {
       setChargement(false);
@@ -57,7 +57,7 @@ export default function Clients() {
       }
       setModalOuvert(false);
       chargerClients();
-    } catch (err) {
+    } catch {
       alert("Erreur lors de la sauvegarde du client.");
     }
   };
@@ -70,7 +70,7 @@ export default function Clients() {
         headers: { Authorization: `Bearer ${token}` }
       });
       chargerClients();
-    } catch (err) {
+    } catch {
       alert("Erreur lors de la suppression.");
     }
   };

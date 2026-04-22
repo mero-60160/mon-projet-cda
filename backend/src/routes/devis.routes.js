@@ -10,6 +10,8 @@ router.use(middlewareAuth);
 // Points d'accès de l'API Devis
 router.get('/', controleurDevis.obtenirDevis);
 router.post('/', controleurDevis.creerDevis);
+router.put('/:id', controleurDevis.modifierDevis);
+router.patch('/:id/statut', controleurDevis.modifierStatutDevis);
 router.delete('/:id', controleurDevis.supprimerDevis);
 
 module.exports = router;

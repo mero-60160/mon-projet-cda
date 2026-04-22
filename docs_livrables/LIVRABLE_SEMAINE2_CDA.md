@@ -4,8 +4,8 @@
 ## 1. Plan de sécurité
 Pour sécuriser le Mini CRM, voici les mesures que je vais mettre en place :
 - **Mots de passe hashés** avec `bcrypt` avant d'être enregistrés en base de données. Aucun mot de passe en clair ne sera stocké.
-- **Connexion via JWT** (JSON Web Token) : à la connexion, un token est généré et stocké dans un cookie `httpOnly` (inaccessible au JavaScript) pour éviter les vols de session.
-- **Protection des routes** : un middleware vérifie le token JWT à chaque requête. Si le token est absent ou invalide, l'accès est bloqué.
+- **Connexion via JWT** (JSON Web Token) : à la connexion, un token est généré et stocké dans le `localStorage` côté client. Il est transmis au serveur via l'en-tête `Authorization: Bearer`. Note : Les risques XSS liés au localStorage sont limités par l'utilisation du framework Front-End qui échappe automatiquement les données.
+- **Protection des routes** : un middleware vérifie la présence et la validité du token JWT à chaque requête vers l'API.
 - **Validation des données** avec `Zod` côté serveur : toutes les données envoyées par l'utilisateur sont vérifiées avant d'être traitées ou enregistrées.
 - **Protection contre les injections SQL** grâce à Prisma ORM qui génère des requêtes paramétrées.
 - **Limitation des tentatives de connexion** : maximum 5 essais par 15 minutes par adresse IP pour éviter les attaques par force brute.

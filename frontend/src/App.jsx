@@ -4,16 +4,11 @@ import Authentification from './pages/Authentification';
 import Layout from './composants/Layout';
 import Dashboard from './pages/Dashboard';
 import Clients from './pages/Clients';
+import Devis from './pages/Devis';
 import './App.css';
 
 function App() {
-  const [estConnecte, setEstConnecte] = useState(false);
-  
-  // Vérification de session
-  useEffect(() => {
-    const token = localStorage.getItem('crm_token');
-    if (token) setEstConnecte(true);
-  }, []);
+  const [estConnecte, setEstConnecte] = useState(!!localStorage.getItem('crm_token'));
 
   const gererDeconnexion = () => {
     localStorage.removeItem('crm_token');
@@ -33,7 +28,7 @@ function App() {
         <Route path="/" element={<Layout onLogout={gererDeconnexion} />}>
           <Route index element={<Dashboard />} />
           <Route path="clients" element={<Clients />} />
-          {/* <Route path="devis" element={<Devis />} /> Plus tard */}
+          <Route path="devis" element={<Devis />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
