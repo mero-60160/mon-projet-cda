@@ -1,11 +1,43 @@
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
 require('dotenv').config();
 
+const optionsSwagger = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'API Mini CRM',
+      version: '1.0.0',
+      description: 'Documentation de l\'API du Mini CRM',
+    },
+    servers: [
+      {
+        url: 'http://localhost:3000',
+        description: 'Serveur de développement',
+      },
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    security: [{ bearerAuth: [] }],
+  },
+  apis: ['./src/routes/*.js'], // chemins vers les routes pour la doc
+};
+
+const swaggerSpec = swaggerJsdoc(optionsSwagger);
+
 const limiteGlobale = rateLimit({
-  windowMs: 15 * 60 * 1000, 
-  max: 100, 
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   message: { message: "Trop de requêtes, veuillez réessayer plus tard." }
 });
 
@@ -33,6 +65,9 @@ const routesDevis = require('./routes/devis.routes');
 app.get('/', (req, res) => {
   res.json({ message: "Bienvenue sur l'API du Mini CRM !" });
 });
+
+// Route pour la documentation Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Enregistrer toutes les routes
 app.use('/api/authentification', limiteConnexion, routesAuthentification);

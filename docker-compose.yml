@@ -12,10 +12,17 @@ services:
     build: ./backend
     environment:
       - DATABASE_URL=postgresql://user:password@db:5432/crm
+      - REDIS_URL=redis://redis:6379
     ports:
       - "3000:3000"
     depends_on:
       - db
+      - redis
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
 
   frontend:
     build: ./frontend

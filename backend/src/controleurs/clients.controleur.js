@@ -1,20 +1,38 @@
 const { PrismaClient } = require('@prisma/client');
 const { Pool } = require('pg');
 const { PrismaPg } = require('@prisma/adapter-pg');
+const redis = require('redis');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
+
+const redisClient = redis.createClient({
+  url: process.env.REDIS_URL || 'redis://redis:6379'
+});
+redisClient.on('error', (err) => console.log('Redis Client Error', err));
+redisClient.connect().catch(console.error);
 
 /**
  * Récupère la liste des clients de l'utilisateur connecté
  */
 exports.obtenirClients = async (req, res) => {
   try {
+    const cacheKey = `clients_${req.utilisateurId}`;
+    const cachedClients = await redisClient.get(cacheKey);
+
+    if (cachedClients) {
+      return res.json(JSON.parse(cachedClients));
+    }
+
     const listeClients = await prisma.client.findMany({
       where: { userId: req.utilisateurId },
       orderBy: { createdAt: 'desc' }
     });
+
+    // Sauvegarde dans Redis avec expiration (3600 secondes = 1 heure)
+    await redisClient.setEx(cacheKey, 3600, JSON.stringify(listeClients));
+
     res.json(listeClients);
   } catch (erreur) {
     res.status(500).json({ message: "Erreur lors de la récupération des clients." });
@@ -38,6 +56,10 @@ exports.creerClient = async (req, res) => {
         userId: req.utilisateurId 
       }
     });
+
+    // Invalider le cache pour que la liste se mette à jour
+    await redisClient.del(`clients_${req.utilisateurId}`);
+
     res.status(201).json(nouveauClient);
   } catch (erreur) {
     res.status(500).json({ message: "Erreur lors de la création du client." });
@@ -65,6 +87,9 @@ exports.modifierClient = async (req, res) => {
       data: req.body
     });
 
+    // Invalider le cache
+    await redisClient.del(`clients_${req.utilisateurId}`);
+
     res.json(clientMisAJour);
   } catch (erreur) {
     res.status(500).json({ message: "Erreur lors de la modification du client." });
@@ -87,6 +112,10 @@ exports.supprimerClient = async (req, res) => {
     }
 
     await prisma.client.delete({ where: { id: identifiantClient } });
+
+    // Invalider le cache
+    await redisClient.del(`clients_${req.utilisateurId}`);
+
     res.json({ message: "Client supprimé avec succès." });
   } catch (erreur) {
     res.status(500).json({ message: "Erreur lors de la suppression." });
