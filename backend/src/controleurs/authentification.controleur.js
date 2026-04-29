@@ -56,7 +56,8 @@ exports.inscription = async (req, res) => {
 
     res.status(201).json({ message: "Inscription réussie.", utilisateurId: nouvelUtilisateur.id });
   } catch (erreur) {
-    res.status(500).json({ message: "Erreur serveur lors de l'inscription." });
+    console.error("Erreur d'inscription:", erreur);
+    res.status(500).json({ message: "Erreur serveur lors de l'inscription.", details: erreur.message });
   }
 };
 
@@ -86,6 +87,7 @@ exports.connexion = async (req, res) => {
 
     res.json({ message: "Connexion réussie.", token, nom: utilisateur.nom, prenom: utilisateur.prenom });
   } catch (erreur) {
+    console.error("Erreur de connexion:", erreur);
     res.status(500).json({ message: "Erreur serveur lors de la connexion." });
   }
 };
