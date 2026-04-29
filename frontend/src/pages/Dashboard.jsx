@@ -18,8 +18,8 @@ export default function Dashboard() {
         const config = { headers: { Authorization: `Bearer ${token}` } };
         
         const [respDevis, respClients] = await Promise.all([
-          axios.get('http://localhost:3000/api/devis', config),
-          axios.get('http://localhost:3000/api/clients', config)
+          axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/devis`, config),
+          axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/clients`, config)
         ]);
 
         const clients = respClients.data;

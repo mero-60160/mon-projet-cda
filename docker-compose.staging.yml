@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-crm}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata_staging:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-user}:${POSTGRES_PASSWORD:-password}@db:5432/${POSTGRES_DB:-crm}
+      - REDIS_URL=redis://redis:6379
+      - NODE_ENV=staging
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6379:6379"
+
+  frontend:
+    build: ./frontend
+    restart: always
+    environment:
+      - VITE_API_URL=http://<VOTRE_IP_VPS>:3000
+    ports:
+      - "80:5173"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata_staging:

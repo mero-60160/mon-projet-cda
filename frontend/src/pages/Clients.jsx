@@ -16,7 +16,7 @@ export default function Clients() {
   const chargerClients = async () => {
     try {
       const token = localStorage.getItem('crm_token');
-      const rep = await axios.get('http://localhost:3000/api/clients', {
+      const rep = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/clients`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setClients(rep.data);
@@ -51,9 +51,9 @@ export default function Clients() {
     
     try {
       if (clientEnEdition) {
-        await axios.put(`http://localhost:3000/api/clients/${clientEnEdition.id}`, formulaire, config);
+        await axios.put(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/clients/${clientEnEdition.id}`, formulaire, config);
       } else {
-        await axios.post('http://localhost:3000/api/clients', formulaire, config);
+        await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/clients`, formulaire, config);
       }
       setModalOuvert(false);
       chargerClients();
@@ -66,7 +66,7 @@ export default function Clients() {
     if(!window.confirm("Voulez-vous vraiment supprimer ce client de votre carnet ?")) return;
     try {
       const token = localStorage.getItem('crm_token');
-      await axios.delete(`http://localhost:3000/api/clients/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/clients/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       chargerClients();

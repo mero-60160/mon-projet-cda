@@ -48,8 +48,8 @@ export default function Devis() {
       const config = { headers: { Authorization: `Bearer ${token}` } };
       
       const [respDevis, respClients] = await Promise.all([
-        axios.get('http://localhost:3000/api/devis', config),
-        axios.get('http://localhost:3000/api/clients', config)
+        axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/devis`, config),
+        axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/clients`, config)
       ]);
       
       setListeDevis(respDevis.data);
@@ -64,7 +64,7 @@ export default function Devis() {
   const genererPDF = async (devis) => {
     try {
       const token = localStorage.getItem('crm_token');
-      const response = await axios.get(`http://localhost:3000/api/devis/${devis.id}/pdf`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/devis/${devis.id}/pdf`, {
         headers: { Authorization: `Bearer ${token}` },
         responseType: 'blob' // Important pour télécharger le fichier
       });
@@ -89,7 +89,7 @@ export default function Devis() {
     if(!window.confirm("Voulez-vous vraiment supprimer ce devis ?")) return;
     try {
       const token = localStorage.getItem('crm_token');
-      await axios.delete(`http://localhost:3000/api/devis/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/devis/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       chargerDonnees();
@@ -101,7 +101,7 @@ export default function Devis() {
   const changerStatut = async (devis, nouveauStatut) => {
     try {
       const token = localStorage.getItem('crm_token');
-      await axios.patch(`http://localhost:3000/api/devis/${devis.id}/statut`, 
+      await axios.patch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/devis/${devis.id}/statut`, 
         { statut: nouveauStatut },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -147,9 +147,9 @@ export default function Devis() {
 
     try {
       if (devisEnEdition) {
-        await axios.put(`http://localhost:3000/api/devis/${devisEnEdition.id}`, payload, config);
+        await axios.put(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/devis/${devisEnEdition.id}`, payload, config);
       } else {
-        await axios.post('http://localhost:3000/api/devis', payload, config);
+        await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/devis`, payload, config);
       }
       setModalOuvert(false);
       chargerDonnees();

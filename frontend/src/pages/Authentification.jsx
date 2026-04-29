@@ -33,12 +33,12 @@ export default function Authentification({ onLoginSuccess }) {
     try {
       if (estInscription) {
         // Appelle la route /inscription du backend
-        await axios.post('http://localhost:3000/api/authentification/inscription', formulaire);
+        await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/authentification/inscription`, formulaire);
         alert("Succès ! Veuillez vous connecter avec votre nouveau compte.");
         setEstInscription(false);
       } else {
         // Appelle la route /connexion du backend
-        const reponse = await axios.post('http://localhost:3000/api/authentification/connexion', {
+        const reponse = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/authentification/connexion`, {
           email: formulaire.email,
           motDePasse: formulaire.motDePasse
         });
