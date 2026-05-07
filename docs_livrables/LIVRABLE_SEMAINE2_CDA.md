@@ -1,15 +1,22 @@
 # Livrable — Semaine 2
 **Omer Atici · Projet Mini CRM · 09 Avril 2026**
 
-## 1. Plan de sécurité
-Pour sécuriser le Mini CRM, voici les mesures que je vais mettre en place :
-- **Mots de passe hashés** avec `bcrypt` avant d'être enregistrés en base de données. Aucun mot de passe en clair ne sera stocké.
-- **Connexion via JWT** (JSON Web Token) : à la connexion, un token est généré et stocké dans le `localStorage` côté client. Il est transmis au serveur via l'en-tête `Authorization: Bearer`. Note : Les risques XSS liés au localStorage sont limités par l'utilisation du framework Front-End qui échappe automatiquement les données.
-- **Protection des routes** : un middleware vérifie la présence et la validité du token JWT à chaque requête vers l'API.
-- **Validation des données** avec `Zod` côté serveur : toutes les données envoyées par l'utilisateur sont vérifiées avant d'être traitées ou enregistrées.
-- **Protection contre les injections SQL** grâce à Prisma ORM qui génère des requêtes paramétrées.
-- **Limitation des tentatives de connexion** : maximum 5 essais par 15 minutes par adresse IP pour éviter les attaques par force brute.
-- **Variables d'environnement** : les mots de passe et clés secrètes sont dans un fichier `.env`, jamais versionné sur Git.
+## 1. Plan de sécurité (Défense en profondeur)
+Afin d'assurer une sécurité optimale du Mini CRM, j'applique le principe de **défense en profondeur** (superposition de couches de sécurité) :
+
+### A. Contrôle d'accès et Moindre Privilège
+- **RBAC (Role-Based Access Control)** : Mise en place d'une gestion des rôles (ex: `User`, `Admin`). Chaque utilisateur a accès uniquement aux fonctionnalités strictement nécessaires à sa mission (Principe du moindre privilège). 
+- **Isolation des données tenants** : Chaque requête SQL filtre systématiquement sur l'ID de l'utilisateur (`userId`), garantissant qu'un utilisateur ne peut en aucun cas voir les devis d'un autre (Cloisonnement logique).
+
+### B. Sécurité Applicative et Authentification
+- **Hashage fort** : Les mots de passe sont hashés avec `bcrypt` (avec un salt dynamique). Aucun mot de passe en clair.
+- **Tokens Sécurisés (JWT)** : L'authentification repose sur des JSON Web Tokens éphémères (valides 24h) et transmis via l'en-tête `Authorization: Bearer`.
+- **Validation stricte (Zod)** : Toutes les entrées utilisateurs (body, params) sont validées par `Zod` pour s'assurer du format et de la longueur, bloquant ainsi les payloads inattendus.
+- **Protection contre l'Injection SQL** : L'ORM Prisma prépare nativement toutes ses requêtes, ce qui empêche techniquement les injections SQL.
+
+### C. Sécurité de l'Infrastructure
+- **Rate Limiting** : Limite fixée à 5 tentatives de connexion par 15 minutes par adresse IP pour contrer les attaques par force brute.
+- **Gestion des Secrets** : Clés privées (JWT_SECRET) et URL de base de données sont externalisées dans un fichier `.env` non versionné.
 
 ## 2. Choix des technos Front / Back / BDD — Benchmark
 
@@ -40,13 +47,15 @@ Pour sécuriser le Mini CRM, voici les mesures que je vais mettre en place :
 
 → Je choisis **PostgreSQL** car les données du CRM sont relationnelles (un client a plusieurs devis, un devis a plusieurs lignes). PostgreSQL avec Prisma gère ça très bien.
 
-## 3. Politique de sauvegarde
-Pour éviter de perdre les données du CRM, je mets en place la politique suivante :
-- **Sauvegarde quotidienne** : chaque nuit, un export complet de la base de données PostgreSQL est fait (via `pg_dump`) et envoyé sur un stockage cloud. Les sauvegardes sont conservées 30 jours.
-- **Sauvegarde hebdomadaire** : chaque dimanche, un snapshot complet de tout l'environnement est conservé pendant 3 mois.
-- **Versionnement du code** : le code source est poussé sur GitLab à chaque fonctionnalité terminée. L'historique Git est conservé indéfiniment.
-- **Restauration** : en cas de problème, je peux restaurer la base depuis le dernier dump disponible en moins de 2 heures. La perte de données maximale serait de 24h (depuis la dernière sauvegarde).
-- **Test mensuel** : une fois par mois, je teste la restauration sur un environnement de dev pour vérifier que les sauvegardes fonctionnent bien.
+## 3. Politique de sauvegarde et Conformité RGPD
+Pour garantir la continuité de l'activité (PRA/PCA) et respecter la législation sur la protection des données (RGPD), la politique de sauvegarde suivante est appliquée :
+
+- **Sauvegardes Quotidiennes (Backups à chaud)** : Un export complet (dump) de la base de données PostgreSQL est réalisé toutes les nuits. Les données sont chiffrées au repos (AES-256) sur le stockage cloud.
+- **Politique de Rétention (Conformité RGPD)** : 
+  - Les sauvegardes quotidiennes sont **conservées exactement 30 jours**. Au-delà, elles sont écrasées automatiquement. Cela garantit que si un utilisateur exerce son "droit à l'oubli", ses données disparaîtront définitivement de l'ensemble de notre système (y compris les archives) au bout d'un mois maximum.
+  - Les logs de sécurité (tentatives de connexions) sont conservés pendant 6 mois maximum.
+- **Restauration (RTO/RPO)** : L'objectif de point de reprise (RPO) est fixé à 24 heures (perte maximale de données) et le temps de reprise (RTO) est garanti en moins de 2 heures via un script de restauration automatisé.
+- **Test d'intégrité** : Une fois par mois, un test de restauration est effectué sur une instance de pré-production isolée pour valider que les backups ne sont pas corrompus.
 
 ## 4. Roadmap prévisionnelle
 Le projet est découpé en 4 phases sur 8 semaines :

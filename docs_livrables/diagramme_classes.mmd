@@ -1,0 +1,43 @@
+classDiagram
+    class Personne {
+        <<abstract>>
+        #String nom
+        #String prenom
+        #String email
+    }
+    
+    class User {
+        -String password
+        +seConnecter()
+    }
+    
+    class Client {
+        -String entreprise
+        -String telephone
+        -String adresse
+    }
+    
+    Personne <|-- User : Héritage
+    Personne <|-- Client : Héritage
+
+    class Devis {
+        -String numero
+        -String statut
+        -Float totalHT
+        -Float totalTTC
+        +calculerTotal()
+        +exporterPDF()
+        +changerStatut()
+    }
+    
+    class LigneDevis {
+        -String description
+        -Float quantite
+        -Float prixUnitaire
+        +calculerLigne() Float
+    }
+    
+    User "1" --> "*" Client : gère un portefeuille
+    User "1" --> "*" Devis : emet
+    Client "1" --> "*" Devis : est facturé via
+    Devis "1" *-- "1..*" LigneDevis : composition

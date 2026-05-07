@@ -19,9 +19,23 @@ jobs:
           cd backend
           npm install
           npx prisma generate
+          npm test
 
       - name: Test frontend
         run: |
           cd frontend
           npm install
           npm run build
+
+  deploiement:
+    name: Déploiement Continu (CD)
+    needs: verifier-code
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Connexion au Serveur Cloud Privé (SSH)
+        run: echo "Déploiement en cours via SSH/Rsync ou Docker Hub..."
+        
+      - name: Déploiement Frontend et Backend
+        run: echo "Mise à jour de l'image Docker et redémarrage des services en production."

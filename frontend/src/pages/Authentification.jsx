@@ -6,6 +6,7 @@ import axios from 'axios';
  * Composant de champ de texte réutilisable pour les formulaires.
  * Permet de factoriser le rendu des champs avec leurs icônes.
  */
+// eslint-disable-next-line no-unused-vars
 const ChampTexte = ({ etiquette, type, valeur, modification, Icone, placeholder }) => (
   <div className="formulaire-groupe">
     <label className="formulaire-etiquette">{etiquette}</label>

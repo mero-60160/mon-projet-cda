@@ -1,0 +1,17 @@
+Generating single mermaid chart
+
+Error: Lexical error on line 6. Unrecognized text.
+... Visiteur    Admin --|> User    subgra
+----------------------^
+Parser.parseError (https://mermaid-cli-intercept.invalid/Users/atici/.npm/_npx/668c188756b835f3/node_modules/mermaid/dist/chunks/mermaid.esm/flowDiagram-ZXTF6DY4.mjs:1453:21)
+    at #evaluate (file:///Users/atici/.npm/_npx/668c188756b835f3/node_modules/puppeteer-core/lib/esm/puppeteer/cdp/ExecutionContext.js:388:19)
+    at async ExecutionContext.evaluate (file:///Users/atici/.npm/_npx/668c188756b835f3/node_modules/puppeteer-core/lib/esm/puppeteer/cdp/ExecutionContext.js:274:16)
+    at async IsolatedWorld.evaluate (file:///Users/atici/.npm/_npx/668c188756b835f3/node_modules/puppeteer-core/lib/esm/puppeteer/cdp/IsolatedWorld.js:102:16)
+    at async CdpJSHandle.evaluate (file:///Users/atici/.npm/_npx/668c188756b835f3/node_modules/puppeteer-core/lib/esm/puppeteer/api/JSHandle.js:146:20)
+    at async CdpElementHandle.evaluate (file:///Users/atici/.npm/_npx/668c188756b835f3/node_modules/puppeteer-core/lib/esm/puppeteer/api/ElementHandle.js:343:20)
+    at async CdpElementHandle.$eval (file:///Users/atici/.npm/_npx/668c188756b835f3/node_modules/puppeteer-core/lib/esm/puppeteer/api/ElementHandle.js:497:24)
+    at async CdpFrame.$eval (file:///Users/atici/.npm/_npx/668c188756b835f3/node_modules/puppeteer-core/lib/esm/puppeteer/api/Frame.js:464:20)
+    at async CdpPage.$eval (file:///Users/atici/.npm/_npx/668c188756b835f3/node_modules/puppeteer-core/lib/esm/puppeteer/api/Page.js:456:20)
+    at async renderMermaid (file:///Users/atici/.npm/_npx/668c188756b835f3/node_modules/@mermaid-js/mermaid-cli/src/index.js:272:22)
+    at fromText (https://mermaid-cli-intercept.invalid/Users/atici/.npm/_npx/668c188756b835f3/node_modules/mermaid/dist/mermaid.esm.mjs:1190:17)
+

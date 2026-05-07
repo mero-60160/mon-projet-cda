@@ -13,8 +13,8 @@ Pour ce projet de développement seul, j'ai choisi la méthodologie **KANBAN** p
 - **Flexibilité :** Si une fonctionnalité urgente est demandée (ex: correctif de sécurité), elle peut être intégrée immédiatement en haut de la colonne "À faire" sans attendre un cycle planifié.
 
 ## 2. Diagramme de Cas d'Utilisation
-![Use Case Diagram CRM](diagramme_cas_utilisation.png)
-*Interaction des différents acteurs avec le système du Mini CRM.*
+![Use Case Diagram CRM](./diagramme_cas_utilisation.png)
+*Interaction des différents acteurs avec le système du Mini CRM, avec généralisation des droits (l'Administrateur hérite des droits Utilisateur).*
 
 ## 3. Backlog Produit (User Stories)
 - **US-01 - Authentification :** En tant qu'utilisateur, je veux pouvoir m'inscrire et me connecter de manière sécurisée pour accéder à mon tableau de bord personnel.

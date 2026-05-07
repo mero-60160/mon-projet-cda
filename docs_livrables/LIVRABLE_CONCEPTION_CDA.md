@@ -11,51 +11,42 @@ Le dictionnaire regroupe toutes les données stockées et manipulées au sein de
 ### Entité `User` (Comptes utilisateurs / Commerciaux)
 | Nom du champ | Type | Description | Contrainte |
 | :--- | :--- | :--- | :--- |
-| `id` | INT | Identifiant unique de l'utilisateur | PK, Auto-incrément |
-| `email` | VARCHAR(255) | Adresse email de connexion | UNIQUE, NOT NULL |
-| `password` | VARCHAR(255) | Mot de passe hashé (bcrypt) | NOT NULL |
-| `nom` | VARCHAR(255) | Nom de famille | NOT NULL |
-| `prenom` | VARCHAR(255) | Prénom | NOT NULL |
-| `createdAt` | TIMESTAMP | Date de création du compte | DEFAULT CURRENT_TIMESTAMP |
+| `email` | AN | Adresse email de connexion | UNIQUE, Obligatoire |
+| `password` | AN | Mot de passe hashé (bcrypt) | Obligatoire |
+| `nom` | A | Nom de famille | Obligatoire |
+| `prenom` | A | Prénom | Obligatoire |
+| `dateCreation` | D | Date de création du compte | Automatique |
 
 ### Entité `Client`
 | Nom du champ | Type | Description | Contrainte |
 | :--- | :--- | :--- | :--- |
-| `id` | INT | Identifiant unique du client | PK, Auto-incrément |
-| `nom` | VARCHAR(255) | Nom du contact | NOT NULL |
-| `prenom` | VARCHAR(255) | Prénom du contact | NOT NULL |
-| `email` | VARCHAR(255) | Email du client | Optionnel |
-| `telephone` | VARCHAR(255) | Numéro de téléphone | Optionnel |
-| `entreprise` | VARCHAR(255) | Nom de l'entreprise | Optionnel |
-| `adresse` | VARCHAR(255) | Adresse postale complète | Optionnel |
-| `userId` | INT | Utilisateur (Commercial) responsable du client | FK vers `User(id)` |
-| `createdAt` | TIMESTAMP | Date de création | DEFAULT CURRENT_TIMESTAMP |
-| `updatedAt` | TIMESTAMP | Date de mise à jour | Auto-géré |
+| `nom` | A | Nom du contact | Obligatoire |
+| `prenom` | A | Prénom du contact | Obligatoire |
+| `email` | AN | Email du client | Optionnel |
+| `telephone` | AN | Numéro de téléphone | Optionnel |
+| `entreprise` | AN | Nom de l'entreprise | Optionnel |
+| `adresse` | AN | Adresse postale complète | Optionnel |
+| `dateCreation` | D | Date de création | Automatique |
 
 ### Entité `Devis`
 | Nom du champ | Type | Description | Contrainte |
 | :--- | :--- | :--- | :--- |
-| `id` | INT | Identifiant unique du devis | PK, Auto-incrément |
-| `numero` | VARCHAR(255) | Numéro du devis (ex: DEV-2026-001) | UNIQUE, NOT NULL |
-| `statut` | VARCHAR(50) | Statut (brouillon, envoyé, accepté, refusé) | DEFAULT 'brouillon' |
-| `dateEmission` | TIMESTAMP | Date de création/émission | DEFAULT CURRENT_TIMESTAMP |
-| `dateEcheance` | TIMESTAMP | Date d'échéance / validité | Optionnel |
-| `totalHT` | FLOAT(53) | Somme totale Hors Taxes | DEFAULT 0 |
-| `totalTTC` | FLOAT(53) | Somme totale Toutes Taxes Comprises | DEFAULT 0 |
-| `tva` | FLOAT(53) | Taux de TVA (Pourcentage) | DEFAULT 20 |
-| `notes` | TEXT | Conditions ou notes spécifiques | Optionnel |
-| `userId` | INT | Utilisateur créateur du devis | FK vers `User(id)` |
-| `clientId` | INT | Client à qui est rattaché le devis | FK vers `Client(id)` |
+| `numero` | AN | Numéro du devis (ex: DEV-2026-001) | UNIQUE, Obligatoire |
+| `statut` | A | Statut (brouillon, envoyé, accepté, refusé) | Défaut 'brouillon' |
+| `dateEmission` | D | Date de création/émission | Automatique |
+| `dateEcheance` | D | Date d'échéance / validité | Optionnel |
+| `totalHT` | N | Somme totale Hors Taxes | Calculé |
+| `totalTTC` | N | Somme totale Toutes Taxes Comprises | Calculé |
+| `tva` | N | Taux de TVA (Pourcentage) | Défaut 20 |
+| `notes` | AN | Conditions ou notes spécifiques | Optionnel |
 
 ### Entité `LigneDevis` (Détail des prestations)
 | Nom du champ | Type | Description | Contrainte |
 | :--- | :--- | :--- | :--- |
-| `id` | INT | Identifiant de la ligne | PK, Auto-incrément |
-| `description`| VARCHAR(255) | Nom de la prestation/produit | NOT NULL |
-| `quantite` | FLOAT(53) | Nombre d'unités | NOT NULL |
-| `prixUnitaire` | FLOAT(53) | Prix de l'unité HT | NOT NULL |
-| `total` | FLOAT(53) | Total pour cette ligne (quantite * prix) | NOT NULL |
-| `devisId` | INT | Devis parent auquel appartient la ligne | FK vers `Devis(id)` |
+| `description`| AN | Nom de la prestation/produit | Obligatoire |
+| `quantite` | N | Nombre d'unités | Obligatoire |
+| `prixUnitaire` | N | Prix de l'unité HT | Obligatoire |
+| `total` | N | Total pour cette ligne (quantite * prix) | Calculé |
 
 ---
 
@@ -68,42 +59,7 @@ Règles de gestion :
 * Un `Client` est géré par un seul `User` et peut recevoir plusieurs `Devis`.
 * Un `Devis` appartient à un seul `Client`, est créé par un seul `User` et continent plusieurs `LigneDevis`.
 
-```mermaid
-erDiagram
-    USER {
-        int id PK
-        string email
-        string password
-        string nom
-        string prenom
-    }
-    CLIENT {
-        int id PK
-        string nom
-        string entreprise
-        int userId FK
-    }
-    DEVIS {
-        int id PK
-        string numero
-        string statut
-        float totalTTC
-        int userId FK
-        int clientId FK
-    }
-    LIGNE_DEVIS {
-        int id PK
-        string description
-        float quantite
-        float prixUnitaire
-        int devisId FK
-    }
-
-    USER ||--o{ CLIENT : "gère"
-    USER ||--o{ DEVIS : "crée"
-    CLIENT ||--o{ DEVIS : "reçoit"
-    DEVIS ||--|{ LIGNE_DEVIS : "contient"
-```
+![Modèle Conceptuel des Données](./diagramme_mcd.png)
 
 ### Modèle Logique des Données (MLD)
 *   **User** (<ins>id</ins>, email, password, nom, prenom, createdAt)
@@ -113,96 +69,64 @@ erDiagram
 
 ### Modèle Physique des Données (MPD)
 Généré par Prisma PostgreSQL.
-```sql
-CREATE TABLE "User" (
-    "id" SERIAL PRIMARY KEY,
-    "email" VARCHAR(255) UNIQUE NOT NULL,
-    "password" VARCHAR(255) NOT NULL,
-    "nom" VARCHAR(255) NOT NULL,
-    "prenom" VARCHAR(255) NOT NULL,
-    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+*SGBD Cible : PostgreSQL*
 
-CREATE TABLE "Client" (
-    "id" SERIAL PRIMARY KEY,
-    "nom" VARCHAR(255) NOT NULL,
-    "prenom" VARCHAR(255) NOT NULL,
-    "email" VARCHAR(255),
-    "telephone" VARCHAR(255),
-    "entreprise" VARCHAR(255),
-    "adresse" VARCHAR(255),
-    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP NOT NULL,
-    "userId" INTEGER NOT NULL REFERENCES "User"("id")
-);
+#### Table `User`
+| Colonne | Type PostgreSQL | Clé | Contraintes |
+| :--- | :--- | :--- | :--- |
+| `id` | SERIAL | **PK** | NOT NULL |
+| `email` | VARCHAR(255) | | UNIQUE, NOT NULL |
+| `password` | VARCHAR(255) | | NOT NULL |
+| `nom` | VARCHAR(255) | | NOT NULL |
+| `prenom` | VARCHAR(255) | | NOT NULL |
+| `createdAt` | TIMESTAMP | | DEFAULT CURRENT_TIMESTAMP |
 
-CREATE TABLE "Devis" (
-    "id" SERIAL PRIMARY KEY,
-    "numero" VARCHAR(255) UNIQUE NOT NULL,
-    "statut" VARCHAR(255) NOT NULL DEFAULT 'brouillon',
-    "dateEmission" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "dateEcheance" TIMESTAMP,
-    "totalHT" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "totalTTC" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "tva" DOUBLE PRECISION NOT NULL DEFAULT 20,
-    "notes" TEXT,
-    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP NOT NULL,
-    "userId" INTEGER NOT NULL REFERENCES "User"("id"),
-    "clientId" INTEGER NOT NULL REFERENCES "Client"("id")
-);
+#### Table `Client`
+| Colonne | Type PostgreSQL | Clé | Contraintes |
+| :--- | :--- | :--- | :--- |
+| `id` | SERIAL | **PK** | NOT NULL |
+| `nom` | VARCHAR(255) | | NOT NULL |
+| `prenom` | VARCHAR(255) | | NOT NULL |
+| `email` | VARCHAR(255) | | |
+| `telephone` | VARCHAR(255) | | |
+| `entreprise` | VARCHAR(255) | | |
+| `adresse` | VARCHAR(255) | | |
+| `userId` | INTEGER | **FK** | REFERENCES "User"("id") |
+| `createdAt` | TIMESTAMP | | DEFAULT CURRENT_TIMESTAMP |
+| `updatedAt` | TIMESTAMP | | NOT NULL |
 
-CREATE TABLE "LigneDevis" (
-    "id" SERIAL PRIMARY KEY,
-    "description" VARCHAR(255) NOT NULL,
-    "quantite" DOUBLE PRECISION NOT NULL,
-    "prixUnitaire" DOUBLE PRECISION NOT NULL,
-    "total" DOUBLE PRECISION NOT NULL,
-    "devisId" INTEGER NOT NULL REFERENCES "Devis"("id") ON DELETE CASCADE
-);
-```
+#### Table `Devis`
+| Colonne | Type PostgreSQL | Clé | Contraintes |
+| :--- | :--- | :--- | :--- |
+| `id` | SERIAL | **PK** | NOT NULL |
+| `numero` | VARCHAR(255) | | UNIQUE, NOT NULL |
+| `statut` | VARCHAR(255) | | DEFAULT 'brouillon' |
+| `dateEmission` | TIMESTAMP | | DEFAULT CURRENT_TIMESTAMP |
+| `dateEcheance` | TIMESTAMP | | |
+| `totalHT` | DOUBLE PRECISION | | DEFAULT 0 |
+| `totalTTC` | DOUBLE PRECISION | | DEFAULT 0 |
+| `tva` | DOUBLE PRECISION | | DEFAULT 20 |
+| `notes` | TEXT | | |
+| `userId` | INTEGER | **FK** | REFERENCES "User"("id") |
+| `clientId` | INTEGER | **FK** | REFERENCES "Client"("id") |
+| `createdAt` | TIMESTAMP | | DEFAULT CURRENT_TIMESTAMP |
+| `updatedAt` | TIMESTAMP | | NOT NULL |
+
+#### Table `LigneDevis`
+| Colonne | Type PostgreSQL | Clé | Contraintes |
+| :--- | :--- | :--- | :--- |
+| `id` | SERIAL | **PK** | NOT NULL |
+| `description`| VARCHAR(255) | | NOT NULL |
+| `quantite` | DOUBLE PRECISION | | NOT NULL |
+| `prixUnitaire` | DOUBLE PRECISION | | NOT NULL |
+| `total` | DOUBLE PRECISION | | NOT NULL |
+| `devisId` | INTEGER | **FK** | REFERENCES "Devis"("id") ON DELETE CASCADE |
 
 ---
 
 ## 3. Diagramme de classes (Architectures serveur / Modèles)
 
-```mermaid
-classDiagram
-    class User {
-        -int id
-        -String email
-        -String password
-        -String nom
-        -String prenom
-    }
-    class Client {
-        -int id
-        -String nom
-        -String entreprise
-        -String email
-    }
-    class Devis {
-        -int id
-        -String numero
-        -String statut
-        -Float totalHT
-        -Float totalTTC
-        +calculerTotal()
-        +exporterPDF()
-    }
-    class LigneDevis {
-        -int id
-        -String description
-        -Float quantite
-        -Float prixUnitaire
-        +calculerLigne() Float
-    }
-    
-    User "1" --> "*" Client : est responsable
-    User "1" --> "*" Devis : emet
-    Client "1" --> "*" Devis : a facturer
-    Devis "1" *-- "1..*" LigneDevis : contient >
-```
+![Diagramme de classes](./diagramme_classes.png)
 
 ---
 

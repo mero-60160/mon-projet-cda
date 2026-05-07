@@ -76,7 +76,7 @@ export default function Devis() {
       document.body.appendChild(link);
       link.click();
       link.parentNode.removeChild(link);
-    } catch (erreur) {
+    } catch {
       alert("Erreur lors de la génération du devis PDF via le serveur.");
     }
   };
