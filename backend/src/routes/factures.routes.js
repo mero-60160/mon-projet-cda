@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const facturesControleur = require('../controleurs/factures.controleur');
-const { verifierToken } = require('../middleware/auth.middleware');
+const verifierToken = require('../middlewares/authentification.middleware');
 
 router.use(verifierToken); // Toutes les routes factures nécessitent d'être connecté
 
