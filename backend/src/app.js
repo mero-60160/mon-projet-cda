@@ -60,6 +60,7 @@ app.use(limiteGlobale); // Appliquer à toutes les routes
 const routesAuthentification = require('./routes/authentification.routes');
 const routesClients = require('./routes/clients.routes');
 const routesDevis = require('./routes/devis.routes');
+const routesFactures = require('./routes/factures.routes');
 
 // Route de base pour tester que l'API fonctionne
 app.get('/', (req, res) => {
@@ -73,5 +74,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/authentification', limiteConnexion, routesAuthentification);
 app.use('/api/clients', routesClients); // L'URL sera http://localhost:3000/api/clients
 app.use('/api/devis', routesDevis);     // L'URL sera http://localhost:3000/api/devis
+app.use('/api/factures', routesFactures); // L'URL sera http://localhost:3000/api/factures
 
 module.exports = app;
