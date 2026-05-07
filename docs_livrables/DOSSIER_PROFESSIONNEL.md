@@ -19,14 +19,4 @@ La sécurité côté client est un point critique de ce projet. L'authentificati
 L'accès aux différentes pages est protégé par un système de **Routing conditionnel** (Protected Routes avec `react-router-dom`) : si le token est absent ou expiré, l'utilisateur est automatiquement redirigé vers la page de connexion. 
 Enfin, pour se prémunir contre les failles XSS (Cross-Site Scripting), React se charge nativement d'échapper toutes les données affichées dans le DOM, et toutes les entrées utilisateurs sont systématiquement validées avant envoi (contrôles de surface) et traitées par le backend.
 
----
 
-
-## Bloc de compétences 2 : Développer la partie back-end d'une application sécurisée
-*(À venir)*
-
-## Bloc de compétences 3 : Concevoir et mettre en place une base de données
-*(À venir)*
-
-## Bloc de compétences 4 : Développer des composants d'accès aux données
-*(À venir)*

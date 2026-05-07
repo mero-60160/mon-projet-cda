@@ -26,4 +26,3 @@ Bien que je sois seul sur la réalisation technique, j'endosse plusieurs rôles 
 - **Versionning :** Le code source est hébergé et versionné sur GitHub, permettant une traçabilité complète de l'historique des développements. L'URL du dépôt est la suivante : [https://github.com/mero-60160/mon-projet-cda](https://github.com/mero-60160/mon-projet-cda).
 - **Intégration Continue (CI) :** Mise en place de workflows (GitHub Actions) pour automatiser l'installation et les tests à chaque soumission de code, garantissant ainsi la non-régression à chaque nouvelle itération.
 
-*(À compléter avec les prochaines sections : recueil des besoins, architecture, choix techniques...)*
