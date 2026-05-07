@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Plus, Search, Trash2, FileText, Download, X, PlusCircle, MinusCircle, Edit2, Send, CheckCircle, XCircle } from 'lucide-react';
+import { Plus, Search, Trash2, FileText, Download, X, PlusCircle, MinusCircle, Edit2, Send, CheckCircle, XCircle, Receipt } from 'lucide-react';
 
 export default function Devis() {
   const [listeDevis, setListeDevis] = useState([]);
@@ -78,6 +78,21 @@ export default function Devis() {
       link.parentNode.removeChild(link);
     } catch {
       alert("Erreur lors de la génération du devis PDF via le serveur.");
+    }
+  };
+
+  const genererFacture = async (devis) => {
+    if(!window.confirm("Voulez-vous transformer ce devis en facture officielle ? Cette action est irréversible.")) return;
+    try {
+      const token = localStorage.getItem('crm_token');
+      await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/factures/depuis-devis`, 
+        { devisId: devis.id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert("Facture générée avec succès ! (Bientôt visible dans le menu Factures)");
+      chargerDonnees();
+    } catch (err) {
+      alert(err.response?.data?.message || "Erreur lors de la création de la facture.");
     }
   };
 
@@ -250,6 +265,12 @@ export default function Devis() {
                             <XCircle size={18} color="#dc2626" />
                           </button>
                         </>
+                      )}
+                      
+                      {devis.statut === 'accepté' && (
+                        <button className="bouton-icone" onClick={() => genererFacture(devis)} title="Générer la facture">
+                          <Receipt size={18} color="#2563eb" />
+                        </button>
                       )}
 
                       {devis.statut === 'brouillon' && (
