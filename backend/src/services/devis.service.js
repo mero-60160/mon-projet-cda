@@ -216,8 +216,12 @@ class DevisService {
       </html>
     `;
 
+    const executablePath = process.platform === 'darwin' 
+      ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+      : '/usr/bin/chromium';
+
     const browser = await puppeteer.launch({ 
-      executablePath: '/usr/bin/chromium',
+      executablePath,
       headless: 'new',
       args: ['--no-sandbox', '--disable-setuid-sandbox'] 
     });
