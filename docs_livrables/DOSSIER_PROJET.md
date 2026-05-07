@@ -1,28 +1,27 @@
 # Dossier de Projet - Mini CRM (CDA)
 
-## 1. Contexte de l'entreprise et du projet
-Ce projet s'inscrit dans le cadre de la préparation et de la validation du titre RNCP de Concepteur Développeur d'Applications (CDA). 
-L'objectif principal est de concevoir et développer de bout en bout une application web professionnelle de type "Mini CRM" (Customer Relationship Management).
+## 1. Contexte du projet
+Ce projet de Mini CRM a été réalisé pour valider mon titre de Concepteur Développeur d'Applications (CDA).
 
-Cette application vise à répondre aux besoins de gestion courante des indépendants ou petites structures. Elle offre une solution simple, rapide et efficace pour gérer un portefeuille de clients, générer des devis et suivre la facturation, évitant ainsi la lourdeur des ERP complexes du marché.
+L'idée de départ vient d'un constat assez simple : beaucoup d'indépendants (artisans, freelances) gèrent encore leurs clients et leurs devis avec des fichiers Excel ou Word. C'est vite désorganisé, chronophage et propice aux erreurs (perte de fichiers, oublis de relances).
 
-## 2. Méthodologie de travail et Organisation
-Pour mener à bien le développement de cette application, une méthodologie Agile, spécifiquement le **Kanban**, a été adoptée. 
+Le but était donc de créer une application web sur-mesure pour résoudre ce problème. Contrairement aux gros logiciels existants (ERP) qui sont souvent trop complexes et coûteux pour des indépendants, mon CRM se concentre sur l'essentiel : 
+- Centraliser les contacts clients facilement.
+- Créer des devis propres et les passer en facture en un clic.
+- Avoir une vue d'ensemble rapide sur ce qui a été payé ou non.
 
-### Pourquoi le Kanban pour ce projet précis ?
-Le choix du Kanban s'est imposé car, dans le cadre d'un projet de certification où je développe seul, cette méthode offre la flexibilité nécessaire pour gérer un flux de travail continu. Contrairement à Scrum qui fige les tâches sur un sprint de X semaines, le Kanban me permet de :
-- Gérer les priorités au jour le jour en fonction des blocages ou des retours (comme ceux du formateur).
-- Limiter le travail en cours (WIP - Work In Progress) pour m'assurer de terminer une fonctionnalité (développement, tests, doc) avant d'en commencer une autre.
-- Avoir une visualisation claire de la chaîne de valeur via le tableau.
+## 2. Méthodologie de travail et Outils
+Étant seul sur le développement de ce projet, j'ai choisi de m'organiser avec une méthode Agile inspirée du **Kanban**. Travailler avec des sprints stricts (Scrum) n'était pas forcément adapté à mon rythme, alors que le Kanban m'a permis d'avancer de manière plus fluide au fil de l'eau et de m'adapter aux retours.
 
-### Les acteurs du projet
-Bien que je sois seul sur la réalisation technique, j'endosse plusieurs rôles distincts pour respecter le cadre professionnel :
-- **Product Owner :** Je définis les besoins du CRM, priorise le backlog, rédige les User Stories et vérifie que le livrable répond bien au besoin métier.
-- **Scrum Master / Facilitateur :** Je m'assure du respect du cadre Agile, de la mise à jour des tickets sur Trello, et de la levée des blocages (recherches, documentation).
-- **Équipe de développement (Développeur Fullstack) :** Je conçois l'architecture, développe le frontend/backend, implémente les tests et gère le déploiement.
+### Gestion de la Backlog et suivi
+Pour ne pas m'éparpiller, j'ai centralisé toutes mes tâches (User Stories et tâches techniques) dans un outil de gestion de projet. 
+Mon tableau Kanban est divisé en colonnes simples :
+- **À faire (Backlog) :** Toutes les fonctionnalités prévues (ex: transformer un devis en facture).
+- **En cours :** La tâche sur laquelle je code actuellement. Je me force à n'avoir qu'une ou deux tâches en cours en même temps pour être sûr de finir ce que je commence.
+- **Terminé :** Ce qui est codé, testé et validé.
 
-### Outils et suivi de projet :
-- **Gestion des tâches :** Utilisation d'un tableau Trello pour le découpage des fonctionnalités en User Stories (Backlog) et le suivi de l'avancement (À faire, En cours, En test, Terminé).
-- **Versionning :** Le code source est hébergé et versionné sur GitHub, permettant une traçabilité complète de l'historique des développements. L'URL du dépôt est la suivante : [https://github.com/mero-60160/mon-projet-cda](https://github.com/mero-60160/mon-projet-cda).
-- **Intégration Continue (CI) :** Mise en place de workflows (GitHub Actions) pour automatiser l'installation et les tests à chaque soumission de code, garantissant ainsi la non-régression à chaque nouvelle itération.
+### Démarche de développement et Qualité technique
+- **Versionning (Git) :** Tout le code est versionné sur mon dépôt GitHub. Pour garder un historique propre et pro, j'utilise des petits commits réguliers en suivant la norme des "Conventional Commits" (ex: `feat: ajout route devis`, `fix: correction bug affichage`).
+- **Découpage :** Avant de coder une grosse fonctionnalité, je rédige d'abord une User Story avec ses critères d'acceptation pour savoir exactement quand mon ticket est fini.
+- **Intégration Continue :** J'ai aussi mis en place un pipeline CI/CD (avec GitHub Actions) pour que mes tests s'exécutent automatiquement quand j'envoie du nouveau code, ce qui m'assure de ne pas casser l'application.
 

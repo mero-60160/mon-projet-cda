@@ -1,22 +1,36 @@
-# Dossier Professionnel (DP) - Titre CDA
+# Dossier Professionnel (DP) - Titre Concepteur Développeur d'Applications (CDA)
 
-## Bloc de compétences 1 : Développer la partie front-end d'une application sécurisée
+## 1. Présentation du candidat et Parcours professionnel
 
-### 1.1 Maquetter une application
-La conception de l'interface du Mini CRM a été pensée avec une approche *Mobile-First* et orientée utilisateur (User-Centric). L'objectif était de proposer un tableau de bord (Dashboard) épuré, permettant à un indépendant de visualiser rapidement ses indicateurs clés (Devis en attente, CA généré) sans être surchargé d'informations.
-Des wireframes et des maquettes haute fidélité ont été réalisés (via Figma) pour valider les parcours utilisateurs (User Journeys) avant le développement. J'ai opté pour un design minimaliste (Glassmorphism, teintes claires avec des appels à l'action très contrastés) pour garantir une ergonomie optimale et réduire la charge cognitive lors de la création d'un devis.
+Mon parcours professionnel s'articule autour d'une double compétence : un fort sens de la relation client et de la gestion de projet, couplé à une solide expertise technique en développement Fullstack.
 
-### 1.2 Développer une interface utilisateur web statique et adaptable
-L'intégration de l'application respecte les standards du Web (HTML5 sémantique). J'ai mis en place une interface fluide et totalement *Responsive Design* (adaptable sur desktop, tablette et smartphone) en utilisant des grilles CSS (CSS Grid) et Flexbox. 
-Une attention particulière a été portée à l'accessibilité numérique (WCAG) : contrastes des couleurs validés, utilisation de balises sémantiques (`<nav>`, `<main>`, `<article>`), et attributs `aria` pour s'assurer que l'application reste utilisable par tous les profils (notamment lors de la navigation au clavier dans les formulaires de devis).
+Avant de me spécialiser dans l'ingénierie logicielle, j'ai eu l'opportunité de développer mes "soft skills" (savoir-être) à travers plusieurs expériences significatives :
+*   **Conseiller de Vente (Stage Erasmus+ chez CELIO, La Valette, Malte) :** Cette expérience internationale m'a permis de travailler au sein d'une équipe multiculturelle. J'y ai développé mon niveau d'anglais professionnel, ma capacité d'adaptation et le sens de l'accompagnement client.
+*   **Stagiaire en Agence Immobilière (Stéphane Plaza Immobilier, Persan) :** J'y ai géré l'accueil physique et téléphonique, accompagné les clients lors de visites et participé à la prospection terrain. Cela m'a appris la rigueur administrative et l'écoute active des besoins clients.
 
-### 1.3 Développer une interface utilisateur web dynamique
-Le dynamisme de l'interface repose sur la bibliothèque **React.js**, initialisée avec l'outil de build **Vite** pour des performances de développement optimales. L'architecture front-end est basée sur des **composants réutilisables** (ex: `Button`, `Table`, `Modal`), ce qui facilite la maintenance et l'évolution du code.
-La gestion de l'état local (state) est assurée par les Hooks natifs de React (`useState`, `useEffect`). Les communications asynchrones avec l'API backend sont gérées via la librairie `Axios`, permettant de mettre à jour l'interface en temps réel (Single Page Application - SPA) lors de l'ajout d'un client ou du calcul des lignes d'un devis, offrant ainsi une navigation fluide sans rechargement de la page.
+Fort de ces compétences relationnelles, je me suis ensuite tourné vers ma passion : le développement web. Mon expérience en tant que **Développeur Web Fullstack (Stage chez OPIUM DIGITAL, Paris)** m'a permis de mettre en pratique et de consolider les compétences du titre CDA dans un environnement professionnel réel.
 
-### 1.4 Développer une interface utilisateur web sécurisée
-La sécurité côté client est un point critique de ce projet. L'authentification repose sur des **JSON Web Tokens (JWT)**. Une fois connecté, le token est stocké de manière sécurisée et transmis dans l'en-tête HTTP `Authorization` à chaque requête vers l'API.
-L'accès aux différentes pages est protégé par un système de **Routing conditionnel** (Protected Routes avec `react-router-dom`) : si le token est absent ou expiré, l'utilisateur est automatiquement redirigé vers la page de connexion. 
-Enfin, pour se prémunir contre les failles XSS (Cross-Site Scripting), React se charge nativement d'échapper toutes les données affichées dans le DOM, et toutes les entrées utilisateurs sont systématiquement validées avant envoi (contrôles de surface) et traitées par le backend.
+---
 
+## 2. Fiches d'Activités Types
 
+### Activité 1 : Développer et concevoir des interfaces utilisateur sécurisées
+**Contexte de réalisation :** Stage en tant que Développeur Fullstack chez OPIUM DIGITAL (Paris).
+**Description :**
+Lors de ma mission chez Opium Digital, j'ai été chargé de la conception et du déploiement d'interfaces utilisateur interactives. 
+*   **Intégration et Front-end :** J'ai développé des interfaces complexes en JavaScript, en veillant à garantir une fidélité de 100% par rapport aux maquettes graphiques fournies par l'équipe UI/UX. J'ai utilisé des bibliothèques modernes pour assurer le dynamisme et la fluidité de la navigation.
+*   **Qualité et Sécurité :** Pour garantir la robustesse des applications livrées à nos clients, j'ai mis en place une implémentation systématique de tests unitaires et fonctionnels. Cette démarche préventive a permis de réduire drastiquement les bugs remontés en production et d'assurer une expérience utilisateur sécurisée.
+
+### Activité 2 : Concevoir et développer la persistance des données et les composants métiers
+**Contexte de réalisation :** Stage en tant que Développeur Fullstack chez OPIUM DIGITAL (Paris).
+**Description :**
+Au-delà de l'interface, mon rôle couvrait toute l'architecture logicielle de l'application.
+*   **Bases de données :** J'ai été responsable de la création, de l'optimisation et de la maintenance de bases de données relationnelles (SQL) et non-relationnelles (NoSQL) en fonction des besoins spécifiques de chaque projet.
+*   **Architecture Back-end :** J'ai conçu et géré les flux serveurs en développant des API REST sécurisées. Ces API assuraient le traitement de la logique métier et la communication fluide et sécurisée entre l'interface utilisateur (Front-end) et la base de données.
+
+### Activité 3 : Organiser le travail et préparer le déploiement
+**Contexte de réalisation :** Stage en tant que Développeur Fullstack chez OPIUM DIGITAL (Paris).
+**Description :**
+Le travail au sein d'une agence digitale exige une organisation rigoureuse et un travail d'équipe fluide.
+*   **Méthodologie Agile :** J'ai évolué dans un environnement nécessitant une collaboration Agile intensive. J'ai participé activement aux cérémonies Agile (réunions de suivi, stand-ups) pour garantir l'alignement de l'équipe sur les objectifs du sprint.
+*   **Versionning et Déploiement :** J'ai utilisé quotidiennement Git pour le versionning de mon code (création de branches, Pull Requests, Code Review), ce qui m'a permis de m'intégrer parfaitement au pipeline de déploiement continu de l'agence.
