@@ -25,3 +25,13 @@ Mon tableau Kanban est divisé en colonnes simples :
 - **Découpage :** Avant de coder une grosse fonctionnalité, je rédige d'abord une User Story avec ses critères d'acceptation pour savoir exactement quand mon ticket est fini.
 - **Intégration Continue :** J'ai aussi mis en place un pipeline CI/CD (avec GitHub Actions) pour que mes tests s'exécutent automatiquement quand j'envoie du nouveau code, ce qui m'assure de ne pas casser l'application.
 
+## 3. Fonctionnalités Réalisées (Sprint de Facturation)
+Pour mon évaluation CDA, j'ai implémenté le système complet de facturation, découpé en deux grandes User Stories (US) :
+
+### US1 : Transformer un devis en facture
+*   **Backend :** Création du modèle `Facture` avec Prisma. Développement d'un service (`factures.service.js`) permettant de dupliquer automatiquement les lignes d'un devis accepté pour générer une facture unique (avec un numéro formaté type `FACT-2026-001`).
+*   **Frontend :** Ajout d'une action "Générer la facture" sur les devis acceptés avec intégration React/Axios.
+
+### US2 : Afficher et gérer les factures
+*   **Frontend :** Création de l'interface `Factures.jsx` pour lister les factures, avec filtrage par client et gestion des statuts (en attente, payée, annulée).
+*   **Génération PDF :** Implémentation côté Backend d'un générateur PDF avec Puppeteer (gérant dynamiquement le système d'exploitation de l'hôte ou du conteneur Docker Linux) permettant de télécharger instantanément la facture formatée en A4 depuis le Frontend.
