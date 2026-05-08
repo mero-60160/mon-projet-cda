@@ -14,4 +14,7 @@ router.post('/depuis-devis', facturesControleur.creerFactureDepuisDevis);
 // PATCH /api/factures/:id/statut - Modifier le statut d'une facture
 router.patch('/:id/statut', facturesControleur.modifierStatutFacture);
 
+// GET /api/factures/:id/pdf - Générer le PDF d'une facture
+router.get('/:id/pdf', facturesControleur.genererPDF);
+
 module.exports = router;

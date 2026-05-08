@@ -42,3 +42,17 @@ exports.modifierStatutFacture = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur (modification du statut de la facture)." });
   }
 };
+
+exports.genererPDF = async (req, res) => {
+  try {
+    const identifiantFacture = parseInt(req.params.id);
+    const resultat = await facturesService.genererPDF(identifiantFacture, req.utilisateurId);
+    
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=facture-${resultat.facture.numero}.pdf`);
+    res.send(resultat.pdfBuffer);
+  } catch (erreur) {
+    console.error("Erreur genererPDF Facture:", erreur);
+    res.status(500).json({ message: "Erreur lors de la génération du PDF." });
+  }
+};
