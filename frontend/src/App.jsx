@@ -5,6 +5,7 @@ import Layout from './composants/Layout';
 import Dashboard from './pages/Dashboard';
 import Clients from './pages/Clients';
 import Devis from './pages/Devis';
+import Factures from './pages/Factures';
 import './App.css';
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="clients" element={<Clients />} />
           <Route path="devis" element={<Devis />} />
+          <Route path="factures" element={<Factures />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

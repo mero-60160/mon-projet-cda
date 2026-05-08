@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, FileText, LogOut, Briefcase } from 'lucide-react';
+import { LayoutDashboard, Users, FileText, LogOut, Briefcase, Receipt } from 'lucide-react';
 
 export default function Layout({ onLogout }) {
   const navigate = useNavigate();
@@ -17,6 +17,7 @@ export default function Layout({ onLogout }) {
       case '/': return 'Tableau de bord';
       case '/clients': return 'Gestion des clients';
       case '/devis': return 'Gestion des devis';
+      case '/factures': return 'Gestion des factures';
       default: return 'CRM';
     }
   };
@@ -43,7 +44,12 @@ export default function Layout({ onLogout }) {
 
           <NavLink to="/devis" className={({ isActive }) => isActive ? "menu-item actif" : "menu-item"}>
             <FileText size={20} />
-            Devis & Factures
+            Devis
+          </NavLink>
+
+          <NavLink to="/factures" className={({ isActive }) => isActive ? "menu-item actif" : "menu-item"}>
+            <Receipt size={20} />
+            Factures
           </NavLink>
         </nav>
 
