@@ -56,7 +56,7 @@ export default function Layout({ onLogout }) {
         <div className="sidebar-footer">
           <button className="bouton-secondaire" style={{ width: 'auto', border: 'none', color: 'var(--danger)' }} onClick={handleLogout}>
             <LogOut size={18} />
-            Déconnexion
+            <span className="texte-deconnexion">Déconnexion</span>
           </button>
         </div>
       </aside>
