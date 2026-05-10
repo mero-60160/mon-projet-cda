@@ -1,4 +1,4 @@
-m-atici.fr {
+m-atici.fr, www.m-atici.fr {
     # Rediriger toutes les requêtes /api vers le backend
     handle /api/* {
         reverse_proxy backend:3000
