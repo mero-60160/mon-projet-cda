@@ -60,7 +60,7 @@ services:
     volumes:
       - caddy_logs:/srv/logs:ro
       - goaccess_data:/srv/report
-    command: ["goaccess", "/srv/logs/access.log", "-o", "/srv/report/index.html", "--log-format=CADDY", "--real-time-html", "--ws-url=wss://m-atici.fr/ws-stats", "--no-global-config"]
+    command: ["/srv/logs/access.log", "-o", "/srv/report/index.html", "--log-format=CADDY", "--real-time-html", "--ws-url=wss://m-atici.fr/ws-stats", "--no-global-config"]
     depends_on:
       - caddy
 
