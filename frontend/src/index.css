@@ -97,7 +97,7 @@ a { text-decoration: none; color: inherit; }
 .bascule-authentification span { color: var(--primaire); cursor: pointer; font-weight: 600; margin-left: 5px; }
 
 /* === LAYOUT & SIDEBAR === */
-.layout-app { display: flex; height: 100vh; overflow: hidden; }
+.layout-app { display: flex; height: 100dvh; overflow: hidden; }
 .sidebar { 
   width: 260px; 
   background-color: white; 
@@ -131,7 +131,7 @@ a { text-decoration: none; color: inherit; }
 
 /* === TABLEAUX PREMIUM === */
 .table-conteneur { background: white; border-radius: 12px; box-shadow: var(--ombre-douce); overflow: hidden; border: 1px solid var(--bordure); }
-table { width: 100%; border-collapse: collapse; text-align: left; }
+table { width: 100%; border-collapse: collapse; text-align: left; white-space: nowrap; }
 th { padding: 1rem 1.5rem; background-color: #F8FAFC; color: var(--texte-secondaire); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--bordure); }
 td { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--bordure); color: var(--texte-principal); vertical-align: middle; }
 tr:last-child td { border-bottom: none; }
@@ -182,10 +182,16 @@ tr:hover { background-color: #F8FAFC; }
   .sidebar-footer .bouton-secondaire { padding: 0.5rem; border: none; }
   .texte-deconnexion { display: none; }
   
-  .contenu-principal { margin-bottom: 60px; /* Espace pour la barre du bas */ }
+  .contenu-principal { margin-bottom: 0; padding-bottom: 80px; }
   
-  .topbar { padding: 1rem; flex-direction: column; gap: 1rem; align-items: flex-start; }
-  .profil-utilisateur { width: 100%; justify-content: flex-end; }
+  .topbar { 
+    padding: max(1rem, env(safe-area-inset-top)) 1rem 1rem 1rem; 
+    flex-direction: row; 
+    justify-content: space-between; 
+    align-items: center; 
+  }
+  .profil-utilisateur { width: auto; justify-content: flex-end; }
+  .topbar-titre { font-size: 1.1rem; }
   
   .page-wrapper { padding: 1rem; }
   
@@ -193,7 +199,7 @@ tr:hover { background-color: #F8FAFC; }
   .actions-page { width: 100%; flex-direction: column; }
   .actions-page > * { width: 100%; }
   
-  .table-conteneur { overflow-x: auto; }
+  .table-conteneur { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   
   /* Pour le tableau de bord stat */
   .stats-grid { grid-template-columns: 1fr !important; }
