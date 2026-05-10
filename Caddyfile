@@ -1,0 +1,11 @@
+m-atici.fr {
+    # Rediriger toutes les requêtes /api vers le backend
+    handle /api/* {
+        reverse_proxy backend:3000
+    }
+    
+    # Tout le reste va vers le frontend
+    handle {
+        reverse_proxy frontend:5173
+    }
+}

@@ -32,12 +32,28 @@ services:
   frontend:
     build: ./frontend
     environment:
-      - VITE_API_URL=http://51.178.54.131:3000
+      - VITE_API_URL=https://m-atici.fr
     ports:
       - "5173:5173"
     depends_on:
       - backend
 
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - frontend
+      - backend
+
 volumes:
   db_data:
   redis_data:
+  caddy_data:
+  caddy_config:
