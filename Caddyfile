@@ -1,4 +1,10 @@
 m-atici.fr, www.m-atici.fr {
+    # Activer les journaux d'accès pour surveiller les adresses IP et requêtes
+    log {
+        output stdout
+        format console
+    }
+
     # Rediriger toutes les requêtes /api vers le backend
     handle /api/* {
         reverse_proxy backend:3000
