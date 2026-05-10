@@ -60,7 +60,8 @@ services:
     volumes:
       - caddy_logs:/srv/logs:ro
       - goaccess_data:/srv/report
-    command: ["/srv/logs/access.log", "-o", "/srv/report/index.html", "--log-format=CADDY", "--real-time-html", "--ws-url=wss://m-atici.fr/ws-stats", "--no-global-config"]
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["while true; do goaccess /srv/logs/access.log -o /srv/report/index.html --log-format=CADDY --no-global-config 2>/dev/null; sleep 60; done"]
     depends_on:
       - caddy
 
