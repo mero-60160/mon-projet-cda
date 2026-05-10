@@ -49,6 +49,7 @@ const limiteConnexion = rateLimit({
 
 
 const app = express();
+app.set('trust proxy', 1); // Indispensable derrière Caddy pour le rate-limit
 
 // Middleware
 app.use(cors()); // Accepter les requêtes du frontend
