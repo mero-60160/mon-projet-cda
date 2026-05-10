@@ -48,12 +48,31 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
+      - caddy_logs:/var/log/caddy
+      - goaccess_data:/usr/share/caddy/stats
     depends_on:
       - frontend
       - backend
+
+  goaccess:
+    image: allinurl/goaccess
+    restart: unless-stopped
+    volumes:
+      - caddy_logs:/srv/logs:ro
+      - goaccess_data:/srv/report
+    command: >
+      goaccess /srv/logs/access.log 
+      -o /srv/report/index.html 
+      --log-format=CADDY 
+      --real-time-html 
+      --ws-url=wss://m-atici.fr/ws-stats
+    depends_on:
+      - caddy
 
 volumes:
   db_data:
   redis_data:
   caddy_data:
   caddy_config:
+  caddy_logs:
+  goaccess_data:

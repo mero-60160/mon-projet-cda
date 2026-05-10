@@ -1,8 +1,19 @@
 m-atici.fr, www.m-atici.fr {
-    # Activer les journaux d'accès pour surveiller les adresses IP et requêtes
+    # Activer les journaux d'accès vers un fichier pour GoAccess
     log {
-        output stdout
-        format console
+        output file /var/log/caddy/access.log
+        format json
+    }
+
+    # Route sécurisée pour voir les statistiques
+    handle_path /stats* {
+        root * /usr/share/caddy/stats
+        file_server
+    }
+    
+    # Websocket pour GoAccess (mise à jour en temps réel)
+    handle /ws-stats {
+        reverse_proxy goaccess:7890
     }
 
     # Rediriger toutes les requêtes /api vers le backend
