@@ -15,18 +15,18 @@ Fort de ces compétences relationnelles, je me suis ensuite tourné vers ma pass
 ## 2. Fiches d'Activités Types
 
 ### Activité 1 : Développer et concevoir des interfaces utilisateur sécurisées
-**Contexte de réalisation :** Stage en tant que Développeur Fullstack chez OPIUM DIGITAL (Paris).
+**Contexte de réalisation :** Stage en tant que Développeur Fullstack chez OPIUM DIGITAL (Paris) et réalisation de l'application Mini CRM (projet CDA).
 **Description :**
-Lors de ma mission chez Opium Digital, j'ai été chargé de la conception et du déploiement d'interfaces utilisateur interactives. 
-*   **Intégration et Front-end :** J'ai développé des interfaces complexes en JavaScript, en veillant à garantir une fidélité de 100% par rapport aux maquettes graphiques fournies par l'équipe UI/UX. J'ai utilisé des bibliothèques modernes pour assurer le dynamisme et la fluidité de la navigation.
-*   **Qualité et Sécurité :** Pour garantir la robustesse des applications livrées à nos clients, j'ai mis en place une implémentation systématique de tests unitaires et fonctionnels. Cette démarche préventive a permis de réduire drastiquement les bugs remontés en production et d'assurer une expérience utilisateur sécurisée.
+Lors de ma mission chez Opium Digital et dans le cadre de mon projet Mini CRM, j'ai été chargé de la conception, du développement et du déploiement d'interfaces utilisateur interactives et sécurisées.
+*   **Intégration et Front-end (Exemple concret) :** J'ai développé des interfaces complexes en React (Mini CRM) et Vue.js, en veillant à garantir une fidélité de 100% par rapport aux maquettes graphiques fournies (Figma). J'ai utilisé des bibliothèques modernes (Tailwind CSS, Vite) pour assurer le dynamisme, le responsive design et la fluidité de la navigation. Par exemple, sur le Mini CRM, j'ai conçu un tableau de bord dynamique affichant les devis et factures avec des filtres en temps réel.
+*   **Qualité et Sécurité (Exemple concret) :** Pour garantir la robustesse des applications, j'ai mis en place des protections contre les vulnérabilités courantes (XSS, CSRF). L'authentification des utilisateurs est gérée de manière sécurisée via des tokens JWT stockés dans des cookies HTTP-Only. De plus, j'ai implémenté des tests unitaires et d'intégration (avec Jest et React Testing Library) pour valider le bon fonctionnement des composants clés (comme le formulaire de création de devis). Cette démarche préventive assure une expérience utilisateur sécurisée et sans faille.
 
 ### Activité 2 : Concevoir et développer la persistance des données et les composants métiers
-**Contexte de réalisation :** Stage en tant que Développeur Fullstack chez OPIUM DIGITAL (Paris).
+**Contexte de réalisation :** Stage en tant que Développeur Fullstack chez OPIUM DIGITAL (Paris) et projet Mini CRM.
 **Description :**
-Au-delà de l'interface, mon rôle couvrait toute l'architecture logicielle de l'application.
-*   **Bases de données :** J'ai été responsable de la création, de l'optimisation et de la maintenance de bases de données relationnelles (SQL) et non-relationnelles (NoSQL) en fonction des besoins spécifiques de chaque projet.
-*   **Architecture Back-end :** J'ai conçu et géré les flux serveurs en développant des API REST sécurisées. Ces API assuraient le traitement de la logique métier et la communication fluide et sécurisée entre l'interface utilisateur (Front-end) et la base de données.
+Au-delà de l'interface, mon rôle couvrait toute l'architecture logicielle de l'application, de la modélisation des données à la création des API.
+*   **Bases de données (Exemple avec le Mini CRM) :** J'ai été responsable de la création du modèle de données (MCD/MLD) pour gérer les clients, devis et factures. J'ai implémenté ce modèle sur une base de données PostgreSQL en utilisant l'ORM Prisma. Prisma m'a permis de définir un schéma de données clair, de générer des migrations sécurisées et d'optimiser les requêtes SQL (par exemple pour calculer le total TTC d'un devis en fonction de ses lignes).
+*   **Architecture Back-end (Exemple API REST) :** J'ai conçu et développé une API REST sécurisée avec Node.js et Express.js. Cette API centralise la logique métier. Par exemple, lors de la transformation d'un devis en facture, une route spécifique (`POST /api/factures/from-devis/:id`) vérifie les droits de l'utilisateur (middleware d'authentification JWT), s'assure que le devis est accepté, puis crée la facture correspondante en base de données de manière transactionnelle afin d'éviter toute perte de données en cas d'erreur.
 
 ### Activité 3 : Organiser le travail et préparer le déploiement
 **Contexte de réalisation :** Stage en tant que Développeur Fullstack chez OPIUM DIGITAL (Paris).

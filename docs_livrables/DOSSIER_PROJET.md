@@ -35,3 +35,31 @@ Pour mon évaluation CDA, j'ai implémenté le système complet de facturation, 
 ### US2 : Afficher et gérer les factures
 *   **Frontend :** Création de l'interface `Factures.jsx` pour lister les factures, avec filtrage par client et gestion des statuts (en attente, payée, annulée).
 *   **Génération PDF :** Implémentation côté Backend d'un générateur PDF avec Puppeteer (gérant dynamiquement le système d'exploitation de l'hôte ou du conteneur Docker Linux) permettant de télécharger instantanément la facture formatée en A4 depuis le Frontend.
+
+## 4. Conception (Base de données et Architecture)
+
+### 4.1. Modèle Conceptuel des Données (MCD)
+La base de données relationnelle a été pensée pour répondre aux besoins de l'application sans complexité inutile.
+**Règles de gestion principales :**
+*   Un `User` gère plusieurs `Client` et crée plusieurs `Devis` et `Facture`.
+*   Un `Client` est géré par un seul `User` et peut recevoir plusieurs `Devis` et `Facture`.
+*   Un `Devis` (ou une `Facture`) appartient à un seul `Client`, est créé par un seul `User` et continent plusieurs `LigneDevis` (ou `LigneFacture`).
+
+![Modèle Conceptuel des Données](./diagramme_mcd.png)
+
+### 4.2. Dictionnaire de données (Extrait)
+Voici un aperçu des entités principales :
+*   **User** : L'utilisateur de l'application (l'indépendant). Il possède un `email` et un `password` (hashé avec bcrypt).
+*   **Client** : Le contact du User. Il possède un `nom`, `prenom`, `email`, `telephone`, `entreprise`, etc.
+*   **Devis** / **Facture** : Le document financier. Il possède un `numero` unique, un `statut`, une `dateEmission`, un `totalHT`, `totalTTC`, etc.
+*   **LigneDevis** / **LigneFacture** : Le détail des prestations d'un document financier (`description`, `quantite`, `prixUnitaire`, `total`).
+
+### 4.3. Diagramme de classes
+Le diagramme de classes représente la structure des modèles métiers manipulés par l'application et les relations entre les différentes entités gérées par l'ORM Prisma.
+
+![Diagramme de classes](./diagramme_classes.png)
+
+### 4.4. Diagramme de Cas d'Utilisation
+Il définit les interactions possibles entre l'utilisateur (l'artisan/freelance) et le système (le Mini CRM).
+
+![Diagramme de cas d'utilisation](./diagramme_cas_utilisation.png)
