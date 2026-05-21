@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Users, FileText, CheckCircle, Clock } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 
 export default function Dashboard() {
   const [stats, setStats] = useState({
     nbClients: 0,
     caGagne: 0,
     caAttente: 0,
-    nbDevisActifs: 0
+    nbDevisActifs: 0,
+    statutsData: [],
+    moisData: []
   });
   const [chargement, setChargement] = useState(true);
 
@@ -25,15 +28,36 @@ export default function Dashboard() {
         const clients = respClients.data;
         const devis = respDevis.data;
 
-        // Calculs dynamiques
         const caGagne = devis.filter(d => d.statut === 'accepté').reduce((acc, curr) => acc + curr.totalHT, 0);
         const caAttente = devis.filter(d => d.statut === 'envoyé').reduce((acc, curr) => acc + curr.totalHT, 0);
         
+        const statutsData = [
+          { name: 'Brouillon', value: devis.filter(d => d.statut === 'brouillon').length, color: '#94a3b8' },
+          { name: 'Envoyé', value: devis.filter(d => d.statut === 'envoyé').length, color: '#f59e0b' },
+          { name: 'Accepté', value: devis.filter(d => d.statut === 'accepté').length, color: '#10b981' },
+          { name: 'Refusé', value: devis.filter(d => d.statut === 'refusé').length, color: '#ef4444' },
+        ].filter(d => d.value > 0);
+
+        const moisNoms = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
+        const moisData = Array(6).fill(0).map((_, i) => {
+          const d = new Date();
+          d.setMonth(d.getMonth() - (5 - i));
+          return { name: moisNoms[d.getMonth()], total: 0, moisIdx: d.getMonth(), annee: d.getFullYear() };
+        });
+
+        devis.filter(d => d.statut === 'accepté').forEach(d => {
+          const dDate = new Date(d.dateEmission);
+          const moisObj = moisData.find(m => m.moisIdx === dDate.getMonth() && m.annee === dDate.getFullYear());
+          if (moisObj) moisObj.total += d.totalHT;
+        });
+
         setStats({
           nbClients: clients.length,
           caGagne,
           caAttente,
-          nbDevisActifs: devis.length
+          nbDevisActifs: devis.length,
+          statutsData,
+          moisData
         });
       } catch (error) {
         console.error("Erreur chargement dashboard", error);
@@ -106,6 +130,57 @@ export default function Dashboard() {
         </div>
 
       </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '2rem' }}>
+        
+        <div className="carte-premium" style={{ padding: '1.5rem' }}>
+          <h3 style={{ marginBottom: '1.5rem', color: 'var(--texte-principal)' }}>Évolution du Chiffre d'Affaires (6 derniers mois)</h3>
+          <div style={{ width: '100%', height: 300 }}>
+            <ResponsiveContainer>
+              <BarChart data={stats.moisData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} />
+                <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b'}} tickFormatter={(val) => `${val}€`} />
+                <Tooltip cursor={{fill: '#f8fafc'}} formatter={(value) => [`${value.toFixed(2)} €`, 'CA HT']} labelStyle={{color: '#334155', fontWeight: 'bold'}} />
+                <Bar dataKey="total" fill="var(--primaire)" radius={[4, 4, 0, 0]} maxBarSize={50} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="carte-premium" style={{ padding: '1.5rem' }}>
+          <h3 style={{ marginBottom: '1.5rem', color: 'var(--texte-principal)' }}>Répartition des Devis</h3>
+          <div style={{ width: '100%', height: 300 }}>
+            {stats.statutsData.length > 0 ? (
+              <ResponsiveContainer>
+                <PieChart>
+                  <Pie
+                    data={stats.statutsData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={70}
+                    outerRadius={100}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {stats.statutsData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value) => [value, 'Devis']} />
+                  <Legend verticalAlign="bottom" height={36} iconType="circle" />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div style={{display:'flex', justifyContent:'center', alignItems:'center', height:'100%', color:'#94a3b8'}}>
+                Aucune donnée de devis pour le moment.
+              </div>
+            )}
+          </div>
+        </div>
+
+      </div>
+
     </div>
   );
 }
