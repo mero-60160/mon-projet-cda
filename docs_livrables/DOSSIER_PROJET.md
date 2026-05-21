@@ -138,7 +138,25 @@ La sécurité des données (particulièrement financières) est un enjeu critiqu
 
 ---
 
-## 7. Infrastructure et Déploiement Cloud (CI/CD)
+## 7. Qualité Logicielle : Tests et CI/CD
+
+La fiabilité de l'application est garantie par des processus d'assurance qualité stricts.
+
+### 7.1. Stratégie de Tests (Jest)
+Le cœur métier de l'application (les calculs de devis et la sécurité de l'authentification) est couvert par des tests unitaires automatisés utilisant **Jest**.
+- **Tests d'authentification :** Validation de la création de compte, du hashage correct du mot de passe, de la gestion des erreurs (email existant), et de la génération du token JWT.
+- **Tests métiers (Calculs) :** Vérification stricte des algorithmes de calcul financier (`calculDevis.test.js`) pour s'assurer que les totaux HT, les taxes (TVA), et les totaux TTC sont mathématiquement exacts, évitant ainsi toute anomalie de facturation en production.
+
+### 7.2. Intégration Continue (GitHub Actions)
+L'intégration continue (CI) est gérée de manière automatisée grâce à **GitHub Actions**. Un pipeline (workflow `main.yml`) est déclenché à chaque "Push" ou "Pull Request" sur la branche principale :
+- Il installe l'environnement Node.js.
+- Il télécharge les dépendances.
+- Il exécute la suite de tests unitaires Jest.
+Ce mécanisme empêche tout déploiement de code cassé (régressions) sur le serveur de production.
+
+---
+
+## 8. Infrastructure et Déploiement Cloud (CD)
 
 Le projet a été déployé en production dans un environnement cloud professionnel chez **OVHcloud**, en appliquant les bonnes pratiques DevOps.
 
@@ -170,7 +188,7 @@ Un script Bash (`deploy-staging.sh`) a été écrit pour faciliter les mises à 
 
 ---
 
-## 8. Bilan et Perspectives
+## 9. Bilan et Perspectives
 
 Le développement de ce Mini CRM a permis de valider l'ensemble des compétences attendues par le titre de Concepteur Développeur d'Applications. 
 Le produit actuel constitue un **MVP (Minimum Viable Product)** fonctionnel et déployé en production.
