@@ -103,3 +103,34 @@ exports.genererPDFDevis = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur (génération du PDF)." });
   }
 };
+
+/**
+ * Envoie le devis par email au client
+ */
+exports.envoyerDevisEmail = async (req, res) => {
+  try {
+    const identifiantDevis = parseInt(req.params.id);
+    
+    const { pdfBuffer, devis } = await devisService.genererPDF(identifiantDevis, req.utilisateurId);
+
+    if (!devis.client || !devis.client.email) {
+      return res.status(400).json({ message: "Le client n'a pas d'adresse email renseignée." });
+    }
+
+    const emailService = require('../services/email.service');
+    const resultat = await emailService.envoyerDevisParEmail(devis.client.email, devis.numero, pdfBuffer);
+
+    await devisService.modifierStatutDevis(identifiantDevis, "envoyé", req.utilisateurId);
+
+    res.json({ 
+      message: "Email envoyé avec succès !",
+      previewUrl: resultat.previewUrl 
+    });
+  } catch (erreur) {
+    if (erreur.message === "Devis introuvable.") {
+      return res.status(404).json({ message: erreur.message });
+    }
+    console.error("Erreur envoyerDevisEmail:", erreur);
+    res.status(500).json({ message: "Erreur serveur lors de l'envoi de l'email." });
+  }
+};

@@ -1,0 +1,344 @@
+Dossier de projet 2021  
+ 
+YANN DELPERIE  1 
+      
+DOSSIER DE PROJET  
+ 
+ 
+ 
+ 
+ 
+Titre Professionnel CDA  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Dossier de projet 2021  
+ 
+YANN DELPERIE  2 
+  
+Sommaire  
+I. Liste  des compétences du référentiel …………………………………………………………………………………  P.3 
+II. Résumé du projet ………………………………………………………………………………………………………………  P.4 
+III. Cahier des charges  
+III.1. Description du cahier des charges du projet………………………………………………………  P 6 
+III.2 Les utilisateurs du projet…………………………………………………………………………………… . P 6 
+ III.3. NESTI STOCK …………………………………………………… …………………………………………………  P 7 
+III.4 NESTI ADMINISTRATION …………………………………………………………………………………… .. P 8 
+III.5 NESTI CLIENT ……………………………………………………………………………………………………… . P 9 
+III.6 NESTI MOBILE …………………………………………………………………………………………………… .. P 9 
+IV. Gestion de projet ………………………………………………………………………………………………………………  P 10 
+V. Spécifications fonctionnelles du projet ………………………………………………………………………………  P 12 
+III.1. NESTI STOCK ………………………………………………………………………………………………………  P 12 
+III.2 NESTI ADMINISTRATION …………………………………………………………………………………… . P 19 
+III.3 NESTI CLIENT ………………………………………………………………………………………………………  P 20 
+III.4 NESTI MOBILE …………………………………………………………………………………………………… .. P 20 
+VI. Spécifications techniques du projet ………………………………………………………………………………… .. P 20 
+1. Les contraintes techniques …………………………………………………………………………………  P 20 
+2. Les composants d’accès aux données …………………………………………………………………  P 22 
+3. Le principe du développement  en MVC ou le design pattern ……………………………..  p 23 
+VII Réalisation du candidat ……………………………………………………………………………………………………  P 24 
+1. NESTI ST OCK  
+A. Aspect graphique …………………………………………………………………………………. . P 24 
+B. La base de données ……………………………………………………………………………… . P 24 
+C. Structure d’une application desktop ……………………………………………………. . P 25 
+D. Sécurité …………………………………………………………………………………………………  P 29 
+E. Test Unitaire …………………………………………………………………………………………..  P 30 
+2. NESTI ADMINISTRATION  
+A. Aspect graphique et utilisation de Bootstrap …………………………………………  P 31 
+B. La base de données ………………………………………………………………………………..  P 33 
+C. L’utilisation d e méthode asynchrone ………………………………………………………  P 33 
+D. Sécurité et gestion accès …………………………………………………………………………  P 34 
+3. NESTI CLIENT  
+Dossier de projet 2021  
+ 
+YANN DELPERIE  3 
+ A. Aspect graphique et architecture ……………………………………………………………  P 36 
+B. CodeIngiter …………………………………………………………………………………………….  P 37 
+C. Twig ………………………………………………… …………………………………………………….  P 38 
+D. JavaScript ……………………………………………………………………………………… ………  P 40  
+E. Sécurité et information …………………………………………………………………………..  P 40 
+4. NESTI MOBILE  
+A. Structure …………………………………………………………………………………………………  P 40 
+B. Sécurité et protection ………………………………………………………………………………  P 42 
+5. Performance générale du projet ………………………………………………………………………………  P 43 
+6. Déploiement du projet ……………………………………………………………………………………………  P 44 
+VIII. Présentation du jeu d’essai ………………………………………………………………………………………………  P 46 
+IX. Descrip tion de la veille ……………………………………………………………………………………………………….  P 47 
+X. Description d’une situation de travail ayant nécessité une recherche …………………………………  P 48 
+XI. Annexe.  ……………………………………………………………………………………………………………………………  P 50 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Dossier de projet 2021  
+ 
+YANN DELPERIE  4 
+ I. Liste des compétences du référentiel  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Dossier de projet 2021  
+ 
+YANN DELPERIE  5 
+ II. Résumé du projet  
+In order to validate the competences for the validation of the title of designer developer of application 
+we have them to realize project in different language s of programming.  
+Partly in group and partly  individually, this project is the result of a learning during the training. The 
+client and fictitious company is called "Nesti", it is a reseller of recipe ingredients.  
+ 
+We have the n to code in Java, javascript, Android, PHP, and HTML -CSS. For the adminis trative part we 
+designed the application (mockup, storyboard) from a request. Then we realized a program coded in 
+java which allows the management by an application. And a web application in PHP "from scratch" 
+that manages more or less the same features. F or this part we used BootStrap, elements of JavaScript 
+and some style element extracted from the web to reproduce an imposed model.  
+To do this, I had to create a database using MySqlAdmin, managed by the Xampp server.  
+For the client part, we were asked to design a model to meet a need. Then we coded it using the 
+FrameWork CodeIngiter 4 with Twig. The client part uses the same database as the PHP part.  
+Concerning the Android part, the request of the client is to create an application that is supposed to 
+attract the user to the site, there is also a reminder that manages the ingredients. I used Android Studio 
+to create this program.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Dossier de projet 2021  
+ 
+YANN DELPERIE  6 
+ III. Cahier des charges  
+1. Description du cahier des charges du projet  
+ 
+La demande du client est de créer quatre applications  : trois de type ordinateur et une mobile. 
+Concernant les applications de type ordinateur, celle qui gère les stocks sera codé en Java, celle qui 
+fait le lien entre le stock et la partie client en PHP brut et pour finir l’application gér ant la vitrine de 
+l’entreprise est codée avec le cadre ‘CodeIngiter’ et ‘Twig’.  
+L’entreprise Nesti est un acteur du secteur culinaire désirant revoir son processus de vente à distance. 
+Ainsi, il doit aussi bien gérer ses stocks, sa logistique et sa vente p ar des plateformes interconnect ées. 
+Le projet doit également répondre aux besoins de sécurité informatique sur chaque plateforme.  
+Dans son fonctionnement, l’entreprise fait appel à  : 
+• Des admin istrateur s 
+• Des chefs  
+• Des modérateurs  
+• Des clients  
+Les bénéfices p our ce type d’application sont multiples  : 
+• Gérer les commandes / stock en temps réel vis -à-vis des ventes  
+• Permettre une vision globale aux acteurs décisionnaires  
+ 
+Il n’est pas à exclure de rajouter des fonctionnalités ultérieurement afin d’enrichir les in teractions 
+clients ou des éléments statistiques pour optimiser les rendements financiers. La partie sécurité pourra 
+également être améliorée afin de palier à toutes les possibilités.  
+2. Les utilisateurs d u projet  
+ 
+Les destinataires du projet sont  :  
+• Les administrateurs (décisionnaires) et  les 
+déclinaisons chefs, modérateurs.  
+• Les clients  
+Les administrateurs  
+Ils n’ont pas forcément de connaissances dans le code mais ont une vue globale des fonctionnalités et 
+ont accès à toutes les fonctionnalités.  
+Les modérateurs  
+Ils ont des fonctionnalités de gestion concernant les utilisateurs mais n’ont pas accès aux éléments de 
+gestion Admin.  
+Les chefs  
+Ils ont accès uniquement à la gestion de la création de recette s dans le projet. Ils sont de s imples 
+utilisateurs avec des possibilités de création.  
+
+Dossier de projet 2021  
+ 
+YANN DELPERIE  7 
+ Les clients  
+Ils ne sont pas forcément à l’aise avec l‘informatique et peuvent commettre des erreurs involontaires 
+et ont besoin d’être guidés et avertis de la conséquence  de leurs actions. Ils sont sus ceptibles d’être 
+des personnes  malveillantes et il faut donc procéder avec prudence dans le cas de réception de 
+données venant de leur part. Il faut aussi penser à s’adapter aux éventuelles déficiences.  
+3. NESTI STOCK  
+Précisions  
+• Un article peut être fourni  par plusieurs fournisseurs  
+• Un fournisseur peut fournir plusieurs articles  
+• Tous les fournisseurs ne fournissent pas tous les articles  
+-> L'administrateur doit pouvoir gérer la liste des fournisseurs pour un article et la liste des articles 
+pour un même fournisseur.  
+• Pas besoin d'image pour la partie administrative Java  
+• Seul un superAdministrateur pourra ajouter un autre administrateur. Les informations, login 
+et mot de passe, seront fourni es au moment de la livraison au client.  
+• Dans le vocabulaire de l'entreprise Nesti,  on appelle "Product" l'ensemble des ingrédients et 
+des ustensiles.  
+Exemple de products :  
+Les ingrédients  
+• Banane  
+• Farine  
+• Œuf  
+• Lait 
+Les ustensiles  
+• Couteau  
+• Cuillère en bois  
+• Saladier  
+• Fouet  
+• Balance  
+Products = Ingrédient s + Ustensiles  
+Interface graphique  
+• L'utilisation des JTabPannels permet de passer rapidement d'un onglet à l'autre, en restant 
+sur le même frame.  
+• L'interface peut être aussi grande que possible : plein écran . Les administrateurs doivent 
+pouvoir travailler  toute une journée dessus. Ils doivent avoir tout à leur disposition, sur un  
+même écran sans retour en arrière (ou presque) et profiter de toute la place d'une page.  
+Dossier de projet 2021  
+ 
+YANN DELPERIE  8 
+ Validation par le client  
+• Les documents produits dans le dossier de conception devront être validés un par un par le 
+client.  
+• La maquette de l'application devra être  validée écran par écran pour commencer à 
+développer les écrans validés, en attendant la validation des autres écrans.  
+• Le diagramme de classe, la maquette ... etc . devront  correspondre au projet développé.  
+• S'il y a des modifications, il faudra fournir une nouvelle version du document qui devra être à 
+nouveau validée par le client. Il  faudra alors préciser, pourquoi  il y a eu un changement.  
+4. NESTI ADMINISTRATION  
+Objectif de l’application administrative :  
+ 
+• Édition des recettes par les cuisiniers. (Utilisateur particulier, qui s’occupe uniquement de 
+l’édition des recettes)  
+• L’importation des articles depuis la base de données “Gestion de stocks”  
+• Gestion des utilisateurs : Possibilités de bloquer un utilisateur par des modérateurs  
+• Les statistiques : les notes des recettes, les ventes, les bénéfices . 
+ 
+Les rôles  
+Un utilisateur de l’application peut avoir trois rôles : Chef, Administrateur et Modéra teur.  
+Un utilisateur peut avoir plusieurs rôles à la fois.  
+Si un utilisateur n’a pas le droit d'accès, il doit en être averti.  
+● Les administrateurs auront accès à tout  
+● Les modérateurs auront accès à l’onglet des utilisateurs  
+● Les chefs pâtissiers auront accès à l’onglet des recettes . 
+Il n’y a pas d’inscription. Les comptes ne peuvent être créés que par le panel Admin. Un Utilisateur  
+lambda ne peut pas se connecter à la partie administrative.  
+ 
+ 
+ 
+Figure 1 Architecture du site  
+Dossier de projet 2021  
+ 
+YANN DELPERIE  9 
+  5. NESTI CLIENT  
+La vente  
+Le site de l’entreprise Nesti présente des idées de recettes pour vendre ses produits , il propose  une 
+multitude d’ingrédients mais aussi des ustensiles  à la vente . 
+Pour une rece tte donnée, une proposition d'ingrédients à acheter peut -être ajoutée dans le  panier,  
+avec les quantités nécessaires pour la recette.  
+Nous souhaitons une navigation souple  et facile qui permette  de retrouver des informations  
+rapidement.  
+L’avis d’utilisateur  
+Chaque recette est écrite par un chef pâtissier de Nesti et sera illustrée.  
+Les utilisateurs peuvent mettre des notes aux recettes  et ajouter un commentaire. Chaque  utilisateur 
+pourra voir la liste des recettes notée s sur sa page profil.  
+L’ob jectif étant de cibler les recettes qui ont le plus de succès et d’adapter nos propositions de  vente 
+en fonction  de ces choix . 
+Design  
+On sera  libre de proposer une nouvelle charte graphique qui sera adaptée au thème :  
+Pâtisserie. Une maquette sera fournie et devra être validée avant le commencement du  
+développement.  
+● On utilisera  Twig, comme moteur de templating.  
+● Le site devra être responsi ve. (Minimum 3 tailles : Mobile/Tablette/Laptop)  
+● Le site devra réussir la validation W3c  
+Point d’attention  
+• Le site e -shop devra être en accord avec la partie administrative.  
+Par exemple, lorsqu’on bloque une recette dans la partie administrative, cette r ecette ne devra plus 
+être visible dans la partie e -shop de Nesti.  
+Inversement, si un client passe une commande sur Nesti e -shop, il fa udra  que l’on puisse trouver 
+l’information de cette commande dans la partie Admin.  
+•  Les informations du panier seront sauvegardées, non pas dans les cookies, mais en utilisant le local 
+storage . 
+• On supposera que tous les paiements seront valides  seulement  à condition que le numéro de la 
+carte soit valide. L’algorithme de Luhn  sera utilisé  pour valider une carte bancaire.  
+ 
+ 
+ 6. NESTI M OBILE  
+Contexte  
+ 
+La société Nesti qui traditionnellement est présente sur le web, souhaite développer une application 
+mobile, dans le but de permettre aux utilisateurs de suivre leurs recettes favorites dans leur cuisine, 
+en regardant soit leur téléphone, soit leur tablette.  
+Objectifs fonctionnels de l’application  
+ 
+Les objectifs de cette application sont :  
+● Présenter la société  
+● Consulter les recettes proposées par catégorie  
+● Proposer une lis te de courses interactive s. 
+Les catégories  
+Les catégories des recettes sont : Facile, Traditionnel le, Saisonnière, Sans Gluten.  
+Dossier de projet 2021  
+ 
+YANN DELPERIE  10 
+ En cliquant sur une recette, sa fiche détaillée s’affiche avec les informations  suivantes :  
+● Nom de la recette  
+● Difficulté  d’exécution  
+● Temps de préparation  
+● Nombre de personnes  
+● Liste des ingrédients  
+● Étapes de préparation  
+Au clic d’un bouton, associé à un ingrédient, celui -ci sera ajouté à une liste de  courses. L’utilisateur 
+pourra par la suite « cocher  » les ingrédients qu’il a acheté s. 
+Liste des courses  
+ 
+Cette liste contient les produits dont l’utilisateur a besoin. L’utilisateur pourra «  cocher  » les produits 
+qu’il a déjà achetés.  
+Il pourra aussi vide r la liste complète d’un simple clic. A partir du menu principal, l’utilisateur pourra :  
+● Rechercher une recette par son nom  
+● Consulter sa liste de courses  
+● Trouver les coordonnées du développeur  
+o Présentation  
+o Lien vers un portfolio par exemple  
+● Obtenir des informations sur l’Équipe”. Description du titre et de la promo CDA 2020 -2021.  
+● Consulter la p résentation du projet global de Nesti.  
+ 
+IV. Gestion de projet  
+  
+ Pour la réalisation de ce projet , j’ai collaboré avec deux autres développeurs ce qui a nécessité 
+de mettre en place des outils de travail en collaboration. Ainsi, pour travailler sur la partie  Java, j’ai 
+utilisé un Trello . C’est un  outil en ligne qui permet d’interagir à plusieurs. Il ré pond à la demande de la 
+méthode Agile en donnant la possibilité d’organiser des réunions, ce qu’il reste à faire pour finaliser le 
+projet.  
+ L’application en ligne Figma  qui utilise une interface en ligne nous a permis de réaliser une maquette . 
+Nous avons p rocédé de même pour réaliser le storyboard . 
+Pour la charte graphique, j’ai utilisé Photoshop par confort. A l’issue de plusieurs réunions entre 
+développeurs nous avons eu à réaliser des rapports de réunions . 
+Les différentes parties du projet se sont chevau chées et ainsi chaque développeur a choisi les tâches 
+qu’il assum erait. Cela nous a permis de construire de façon simultanée le programme sans passer de 
+longs moments à assembler le projet et cela à chaque mise en commun sur Github.  

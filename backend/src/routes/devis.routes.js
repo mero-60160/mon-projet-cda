@@ -169,4 +169,29 @@ router.delete('/:id', controleurDevis.supprimerDevis);
  */
 router.get('/:id/pdf', controleurDevis.genererPDFDevis);
 
+/**
+ * @swagger
+ * /api/devis/{id}/send:
+ *   post:
+ *     summary: Envoyer un devis par email au client
+ *     tags: [Devis]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: L'ID du devis
+ *     responses:
+ *       200:
+ *         description: Email envoyé avec succès
+ *       400:
+ *         description: Le client n'a pas d'adresse email
+ *       404:
+ *         description: Devis introuvable
+ */
+router.post('/:id/send', controleurDevis.envoyerDevisEmail);
+
 module.exports = router;

@@ -96,6 +96,35 @@ export default function Devis() {
     }
   };
 
+  const envoyerParEmail = async (devis) => {
+    if(!window.confirm(`Voulez-vous envoyer ce devis par email à ${devis.client?.email || 'ce client'} ?`)) return;
+    
+    // UI Feedback
+    const bouton = document.getElementById(`btn-mail-${devis.id}`);
+    if (bouton) {
+      bouton.style.opacity = '0.5';
+      bouton.style.cursor = 'wait';
+    }
+
+    try {
+      const token = localStorage.getItem('crm_token');
+      const resp = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/devis/${devis.id}/send`, 
+        {}, 
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      console.log(`[DEV] Prévisualisation de l'email : ${resp.data.previewUrl}`);
+      alert("Email envoyé avec succès !");
+      chargerDonnees();
+    } catch (err) {
+      alert(err.response?.data?.message || "Erreur lors de l'envoi de l'email.");
+    } finally {
+      if (bouton) {
+        bouton.style.opacity = '1';
+        bouton.style.cursor = 'pointer';
+      }
+    }
+  };
+
   useEffect(() => {
     chargerDonnees();
   }, []);
@@ -279,6 +308,10 @@ export default function Devis() {
                         </button>
                       )}
                       
+                      <button id={`btn-mail-${devis.id}`} className="bouton-icone" onClick={() => envoyerParEmail(devis)} title="Envoyer par email" style={{color: '#8b5cf6'}}>
+                        <Send size={18} />
+                      </button>
+
                       <button className="bouton-icone" onClick={() => genererPDF(devis)} title="Télécharger en PDF">
                         <Download size={18} />
                       </button>
