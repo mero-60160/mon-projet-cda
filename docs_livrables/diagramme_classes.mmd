@@ -36,8 +36,29 @@ classDiagram
         -Float prixUnitaire
         +calculerLigne() Float
     }
+
+    class Facture {
+        -String numero
+        -String statut
+        -Float totalHT
+        -Float totalTTC
+        +calculerTotal()
+        +exporterPDF()
+        +changerStatut()
+    }
     
-    User "1" --> "*" Client : gère un portefeuille
+    class LigneFacture {
+        -String description
+        -Float quantite
+        -Float prixUnitaire
+        +calculerLigne() Float
+    }
+    
+    User "1" --> "*" Client : gère
     User "1" --> "*" Devis : emet
-    Client "1" --> "*" Devis : est facturé via
+    User "1" --> "*" Facture : facture
+    Client "1" --> "*" Devis : reçoit
+    Client "1" --> "*" Facture : doit payer
     Devis "1" *-- "1..*" LigneDevis : composition
+    Facture "1" *-- "1..*" LigneFacture : composition
+    Devis "1" --> "0..1" Facture : transformation

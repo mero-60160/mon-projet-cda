@@ -2,10 +2,8 @@ flowchart LR
     %% Acteurs
     Visiteur((Visiteur))
     User((Utilisateur / Commercial))
-    Admin((Administrateur))
 
     %% Généralisation (Héritage)
-    Admin -. "Hérite de" .-> User
     User -. "Hérite de" .-> Visiteur
 
     %% Système
@@ -14,9 +12,9 @@ flowchart LR
         UC1(Se connecter de manière sécurisée)
         UC2(Gérer son carnet de clients)
         UC3(Créer et envoyer un devis)
-        UC4(Générer un export PDF)
-        UC5(Gérer tous les comptes utilisateurs)
-        UC6(Consulter le CA de l'entreprise)
+        UC4(Générer un export PDF du devis)
+        UC5(Transformer un devis en facture)
+        UC6(Consulter l'état des factures)
     end
 
     %% Relations
@@ -25,5 +23,5 @@ flowchart LR
     User --> UC2
     User --> UC3
     User --> UC4
-    Admin --> UC5
-    Admin --> UC6
+    User --> UC5
+    User --> UC6

@@ -21,8 +21,22 @@ erDiagram
         float quantite
         float prixUnitaire
     }
+    FACTURE {
+        string numero
+        string statut
+        float totalTTC
+    }
+    LIGNE_FACTURE {
+        string description
+        float quantite
+        float prixUnitaire
+    }
 
     USER ||--o{ CLIENT : "gère"
     USER ||--o{ DEVIS : "crée"
+    USER ||--o{ FACTURE : "édite"
     CLIENT ||--o{ DEVIS : "reçoit"
+    CLIENT ||--o{ FACTURE : "doit payer"
     DEVIS ||--|{ LIGNE_DEVIS : "est composé de"
+    FACTURE ||--|{ LIGNE_FACTURE : "est composée de"
+    DEVIS ||--o| FACTURE : "génère"
