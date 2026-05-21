@@ -1,8 +1,15 @@
 ---
 pdf_options:
   format: A4
-  margin: 20mm 15mm
+  margin:
+    top: 20mm
+    bottom: 20mm
+    left: 15mm
+    right: 15mm
   printBackground: true
+  displayHeaderFooter: true
+  headerTemplate: "<div></div>"
+  footerTemplate: "<div style='font-size: 10pt; width: 100%; text-align: center; font-family: sans-serif; color: #555;'><span class='pageNumber'></span></div>"
 stylesheet: docs_livrables/dossier_style.css
 ---
 
