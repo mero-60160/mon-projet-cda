@@ -19,13 +19,7 @@ pdf_options:
 stylesheet: ./dossier_style.css
 ---
 
-<div class="cover-page">
-  <div class="cover-logo">CDA - Bloc 3</div>
-  <h1 class="cover-title">Documentation de Déploiement</h1>
-  <p class="cover-subtitle">Projet M-Atici CRM</p>
-</div>
-
-<div class="page-break"></div>
+# Documentation de Déploiement - M-Atici CRM
 
 ## 1. Introduction
 
@@ -51,6 +45,8 @@ Avantages de cette approche :
 - Isolation stricte des services.
 - Reproductibilité entre l'environnement de développement et de production.
 - Gestion centralisée des variables d'environnement (`.env`).
+
+<div class="page-break"></div>
 
 ### Extrait de configuration (Backend) :
 ```yaml
