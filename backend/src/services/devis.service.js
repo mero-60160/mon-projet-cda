@@ -11,7 +11,7 @@ class DevisService {
   }
 
   async creerDevis(donnees, utilisateurId) {
-    const { clientId, numero, notes, lignes } = donnees;
+    const { clientId, numero, notes, lignes, tva = 20 } = donnees;
     let totalHT = 0;
 
     const lignesFormatees = lignes.map(ligne => {
@@ -25,8 +25,7 @@ class DevisService {
       };
     });
 
-    const tva = 20;
-    const totalTTC = totalHT * 1.20;
+    const totalTTC = totalHT * (1 + tva / 100);
 
     return await prisma.devis.create({
       data: {
@@ -52,7 +51,7 @@ class DevisService {
       throw new Error("Devis introuvable.");
     }
 
-    const { clientId, numero, notes, lignes, statut } = donnees;
+    const { clientId, numero, notes, lignes, statut, tva = 20 } = donnees;
     let totalHT = 0;
 
     const lignesFormatees = lignes.map(ligne => {
@@ -66,8 +65,7 @@ class DevisService {
       };
     });
 
-    const tva = 20;
-    const totalTTC = totalHT * 1.20;
+    const totalTTC = totalHT * (1 + tva / 100);
 
     return await prisma.devis.update({
       where: { id: identifiantDevis },

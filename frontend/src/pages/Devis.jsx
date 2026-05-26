@@ -15,6 +15,7 @@ export default function Devis() {
     clientId: '',
     numero: `DEV-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}`,
     notes: '',
+    tva: 20,
     lignes: [{ description: '', quantite: 1, prixUnitaire: 0 }]
   });
   const [devisEnEdition, setDevisEnEdition] = useState(null);
@@ -26,6 +27,7 @@ export default function Devis() {
         clientId: devis.clientId || '',
         numero: devis.numero,
         notes: devis.notes || '',
+        tva: devis.tva !== undefined ? devis.tva : 20,
         lignes: devis.lignes && devis.lignes.length > 0 
           ? devis.lignes.map(l => ({ description: l.description, quantite: l.quantite, prixUnitaire: l.prixUnitaire }))
           : [{ description: '', quantite: 1, prixUnitaire: 0 }]
@@ -36,6 +38,7 @@ export default function Devis() {
         clientId: '',
         numero: `DEV-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}`,
         notes: '',
+        tva: 20,
         lignes: [{ description: '', quantite: 1, prixUnitaire: 0 }]
       });
     }
@@ -175,7 +178,13 @@ export default function Devis() {
   };
 
   const calculerTotalCreation = () => {
-    return formulaire.lignes.reduce((total, ligne) => total + (ligne.quantite * ligne.prixUnitaire), 0) * 1.2; // TTC 20%
+    const totalHT = formulaire.lignes.reduce((total, ligne) => total + (ligne.quantite * ligne.prixUnitaire), 0);
+    const taux = parseFloat(formulaire.tva) || 0;
+    return {
+      ht: totalHT,
+      tva: totalHT * (taux / 100),
+      ttc: totalHT * (1 + taux / 100)
+    };
   };
 
   const sauvegarderDevis = async (e) => {
@@ -353,6 +362,16 @@ export default function Devis() {
                       ))}
                     </select>
                   </div>
+                  
+                  <div className="formulaire-groupe">
+                    <label className="formulaire-etiquette">Taux de TVA (%)</label>
+                    <select className="formulaire-champ sans-icone" value={formulaire.tva} onChange={(e) => setFormulaire({...formulaire, tva: parseFloat(e.target.value)})} required style={{backgroundColor: 'white'}}>
+                      <option value="20">20% (Standard)</option>
+                      <option value="10">10% (Intermédiaire)</option>
+                      <option value="5.5">5.5% (Réduit)</option>
+                      <option value="0">0% (Auto-entrepreneur / Exonéré)</option>
+                    </select>
+                  </div>
                 </div>
 
                 <h3 style={{fontSize: '1.1rem', marginBottom: '1rem', display: 'flex', justifyContent: 'space-between'}}>
@@ -394,15 +413,15 @@ export default function Devis() {
                   <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', minWidth: '250px'}}>
                     <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem'}}>
                       <span style={{color: 'var(--texte-secondaire)'}}>Sous-total HT</span>
-                      <strong>{(calculerTotalCreation() / 1.2).toFixed(2)} €</strong>
+                      <strong>{calculerTotalCreation().ht.toFixed(2)} €</strong>
                     </div>
                     <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '1rem'}}>
-                      <span style={{color: 'var(--texte-secondaire)'}}>TVA (20%)</span>
-                      <strong>{(calculerTotalCreation() - (calculerTotalCreation() / 1.2)).toFixed(2)} €</strong>
+                      <span style={{color: 'var(--texte-secondaire)'}}>TVA ({formulaire.tva}%)</span>
+                      <strong>{calculerTotalCreation().tva.toFixed(2)} €</strong>
                     </div>
                     <div style={{display: 'flex', justifyContent: 'space-between', borderTop: '2px solid var(--bordure)', paddingTop: '0.5rem', fontSize: '1.2rem', color: 'var(--primaire)'}}>
                       <span><strong>Total TTC</strong></span>
-                      <strong>{calculerTotalCreation().toFixed(2)} €</strong>
+                      <strong>{calculerTotalCreation().ttc.toFixed(2)} €</strong>
                     </div>
                   </div>
                 </div>
