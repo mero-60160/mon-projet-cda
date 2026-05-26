@@ -2,6 +2,54 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Plus, Search, Trash2, FileText, Download, X, PlusCircle, MinusCircle, Edit2, Send, CheckCircle, XCircle, Receipt } from 'lucide-react';
 
+const CATALOGUE_PRODUITS = [
+  // --- IT / Digital ---
+  { nom: "Création Site Vitrine (WordPress)", prix: 1200 },
+  { nom: "Site E-commerce complet (Shopify)", prix: 3500 },
+  { nom: "Développement Application sur mesure", prix: 5000 },
+  { nom: "Maintenance technique mensuelle", prix: 150 },
+  { nom: "Audit de sécurité web", prix: 800 },
+  
+  // --- BTP / Maçonnerie / Gros Œuvre ---
+  { nom: "Pose de mur en parpaings (le m²)", prix: 55.00 },
+  { nom: "Sac de ciment 35kg", prix: 6.50 },
+  { nom: "Sable à bâtir (la tonne)", prix: 35.00 },
+  { nom: "Fondation béton armé (le m³)", prix: 150.00 },
+  { nom: "Démolition de mur non porteur (forfait)", prix: 400.00 },
+  { nom: "Évacuation des gravats (la tonne)", prix: 45.00 },
+
+  // --- Plomberie / Chauffage ---
+  { nom: "Recherche de fuite et réparation (forfait)", prix: 120.00 },
+  { nom: "Fourniture et pose chauffe-eau 200L", prix: 850.00 },
+  { nom: "Installation complète salle de bain", prix: 4500.00 },
+  { nom: "Débouchage canalisation", prix: 90.00 },
+  { nom: "Entretien annuel chaudière gaz", prix: 130.00 },
+
+  // --- Électricité ---
+  { nom: "Installation tableau électrique", prix: 950.00 },
+  { nom: "Mise aux normes électriques (T3)", prix: 2500.00 },
+  { nom: "Pose de prise de courant renforcée", prix: 180.00 },
+  { nom: "Dépannage électrique urgence (forfait)", prix: 150.00 },
+
+  // --- Menuiserie / Agencement ---
+  { nom: "Pose fenêtre double vitrage PVC", prix: 650.00 },
+  { nom: "Fabrication dressing sur mesure", prix: 1800.00 },
+  { nom: "Pose de parquet flottant (le m²)", prix: 35.00 },
+  { nom: "Fourniture et pose porte d'entrée", prix: 1200.00 },
+  
+  // --- Peinture / Revêtement ---
+  { nom: "Préparation des murs (enduit + ponçage) (m²)", prix: 15.00 },
+  { nom: "Peinture acrylique 2 couches (m²)", prix: 25.00 },
+  { nom: "Pose de papier peint (le rouleau)", prix: 45.00 },
+
+  // --- Services / Consulting ---
+  { nom: "Coaching d'équipe (la journée)", prix: 800.00 },
+  { nom: "Création Charte Graphique & Logo", prix: 800.00 },
+  { nom: "Prestation de nettoyage locaux (mois)", prix: 300.00 },
+  { nom: "Main d'œuvre générale (heure)", prix: 45.00 },
+  { nom: "Consulting Stratégie Marketing (heure)", prix: 120.00 }
+];
+
 export default function Devis() {
   const [listeDevis, setListeDevis] = useState([]);
   const [clients, setClients] = useState([]);
@@ -175,6 +223,15 @@ export default function Devis() {
     const nouvellesLignes = [...formulaire.lignes];
     nouvellesLignes[index][champ] = valeur;
     setFormulaire({ ...formulaire, lignes: nouvellesLignes });
+  };
+
+  const gererChangementDescription = (index, valeur) => {
+    modifierLigne(index, 'description', valeur);
+    // Auto-remplissage du prix si le produit existe dans le catalogue
+    const produitTrouve = CATALOGUE_PRODUITS.find(p => p.nom === valeur);
+    if (produitTrouve) {
+      modifierLigne(index, 'prixUnitaire', produitTrouve.prix);
+    }
   };
 
   const calculerTotalCreation = () => {
@@ -385,7 +442,15 @@ export default function Devis() {
                   <div key={i} style={{display: 'flex', gap: '1rem', alignItems: 'flex-start', marginBottom: '1rem', paddingBottom: '1rem', borderBottom: '1px solid var(--bordure)'}}>
                     <div className="formulaire-groupe" style={{flex: 3, marginBottom: 0}}>
                       {i === 0 && <label className="formulaire-etiquette">Description *</label>}
-                      <input type="text" className="formulaire-champ sans-icone" value={ligne.description} onChange={(e) => modifierLigne(i, 'description', e.target.value)} required placeholder="Nom du produit ou service..."/>
+                      <input 
+                        type="text" 
+                        list="catalogue-produits"
+                        className="formulaire-champ sans-icone" 
+                        value={ligne.description} 
+                        onChange={(e) => gererChangementDescription(i, e.target.value)} 
+                        required 
+                        placeholder="Choisissez ou tapez un nom de produit..."
+                      />
                     </div>
                     
                     <div className="formulaire-groupe" style={{flex: 1, marginBottom: 0}}>
@@ -433,6 +498,13 @@ export default function Devis() {
                  <button type="submit" className="bouton-primaire auto-largeur">{devisEnEdition ? "Mettre à jour" : "Enregistrer le Devis"}</button>
               </div>
             </form>
+            
+            <datalist id="catalogue-produits">
+              {CATALOGUE_PRODUITS.map((p, idx) => (
+                <option key={idx} value={p.nom} />
+              ))}
+            </datalist>
+
           </div>
         </div>
       )}
