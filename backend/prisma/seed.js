@@ -11,14 +11,14 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   console.log('Début du peuplement (seed) de la base de données...');
 
-  // 1. Nettoyage de la base de données existante (Optionnel mais recommandé pour les tests)
+  // 1. Nettoyage de la base de données existante
   await prisma.ligneFacture.deleteMany();
   await prisma.facture.deleteMany();
   await prisma.ligneDevis.deleteMany();
   await prisma.devis.deleteMany();
   await prisma.client.deleteMany();
   await prisma.user.deleteMany();
-  
+
   console.log('Base de données nettoyée.');
 
   // 2. Création de mots de passe hachés
