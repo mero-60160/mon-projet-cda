@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Plus, Search, Trash2, FileText, Download, X, PlusCircle, MinusCircle, Edit2, Send, CheckCircle, XCircle, Receipt } from 'lucide-react';
+import { Plus, Search, Trash2, FileText, Download, X, PlusCircle, MinusCircle, Edit2, Send, CheckCircle, XCircle, Receipt, ChevronDown } from 'lucide-react';
 
 const CATALOGUE_PRODUITS = [
   // --- IT / Digital ---
@@ -67,8 +67,10 @@ export default function Devis() {
     lignes: [{ description: '', quantite: 1, prixUnitaire: 0 }]
   });
   const [devisEnEdition, setDevisEnEdition] = useState(null);
+  const [indexDropdownOuvert, setIndexDropdownOuvert] = useState(null);
 
   const ouvrirModal = (devis = null) => {
+    setIndexDropdownOuvert(null);
     if (devis) {
       setDevisEnEdition(devis);
       setFormulaire({
@@ -440,17 +442,104 @@ export default function Devis() {
                 
                 {formulaire.lignes.map((ligne, i) => (
                   <div key={i} style={{display: 'flex', gap: '1rem', alignItems: 'flex-start', marginBottom: '1rem', paddingBottom: '1rem', borderBottom: '1px solid var(--bordure)'}}>
-                    <div className="formulaire-groupe" style={{flex: 3, marginBottom: 0}}>
+                    <div className="formulaire-groupe" style={{flex: 3, marginBottom: 0, position: 'relative'}}>
                       {i === 0 && <label className="formulaire-etiquette">Description *</label>}
-                      <input 
-                        type="text" 
-                        list="catalogue-produits"
-                        className="formulaire-champ sans-icone" 
-                        value={ligne.description} 
-                        onChange={(e) => gererChangementDescription(i, e.target.value)} 
-                        required 
-                        placeholder="Choisissez ou tapez un nom de produit..."
-                      />
+                      <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                        <input 
+                          type="text" 
+                          className="formulaire-champ sans-icone" 
+                          value={ligne.description} 
+                          onChange={(e) => {
+                            gererChangementDescription(i, e.target.value);
+                            setIndexDropdownOuvert(i);
+                          }} 
+                          onFocus={() => setIndexDropdownOuvert(i)}
+                          required 
+                          placeholder="Choisissez ou tapez un nom de produit..."
+                          style={{ paddingRight: '35px' }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setIndexDropdownOuvert(indexDropdownOuvert === i ? null : i)}
+                          style={{
+                            position: 'absolute',
+                            right: '5px',
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            padding: '5px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#64748b'
+                          }}
+                        >
+                          <ChevronDown size={18} style={{ transform: indexDropdownOuvert === i ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                        </button>
+                      </div>
+                      
+                      {indexDropdownOuvert === i && (
+                        <>
+                          <div 
+                            style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 999 }} 
+                            onClick={() => setIndexDropdownOuvert(null)} 
+                          />
+                          <div 
+                            style={{
+                              position: 'absolute',
+                              top: '100%',
+                              left: 0,
+                              right: 0,
+                              zIndex: 1000,
+                              background: 'white',
+                              border: '1px solid #cbd5e1',
+                              borderRadius: '6px',
+                              boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+                              maxHeight: '180px',
+                              overflowY: 'auto',
+                              marginTop: '4px'
+                            }}
+                          >
+                            {CATALOGUE_PRODUITS.filter(p => 
+                              p.nom.toLowerCase().includes(ligne.description.toLowerCase())
+                            ).length === 0 ? (
+                              <div style={{ padding: '8px 12px', color: '#64748b', fontSize: '0.85rem', fontStyle: 'italic' }}>
+                                Aucun produit correspondant (saisie libre...)
+                              </div>
+                            ) : (
+                              CATALOGUE_PRODUITS.filter(p => 
+                                p.nom.toLowerCase().includes(ligne.description.toLowerCase())
+                              ).map((p, idx) => (
+                                <button
+                                  key={idx}
+                                  type="button"
+                                  onClick={() => {
+                                    gererChangementDescription(i, p.nom);
+                                    setIndexDropdownOuvert(null);
+                                  }}
+                                  style={{
+                                    width: '100%',
+                                    textAlign: 'left',
+                                    padding: '8px 12px',
+                                    background: 'none',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    fontSize: '0.9rem',
+                                    color: '#1e293b',
+                                    borderBottom: '1px solid #f1f5f9',
+                                    transition: 'background-color 0.15s'
+                                  }}
+                                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
+                                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                                >
+                                  <div style={{ fontWeight: 500 }}>{p.nom}</div>
+                                  <div style={{ fontSize: '0.75rem', color: '#64748b' }}>Prix unitaire : {p.prix.toFixed(2)} €</div>
+                                </button>
+                              ))
+                            )}
+                          </div>
+                        </>
+                      )}
                     </div>
                     
                     <div className="formulaire-groupe" style={{flex: 1, marginBottom: 0}}>
@@ -498,13 +587,6 @@ export default function Devis() {
                  <button type="submit" className="bouton-primaire auto-largeur">{devisEnEdition ? "Mettre à jour" : "Enregistrer le Devis"}</button>
               </div>
             </form>
-            
-            <datalist id="catalogue-produits">
-              {CATALOGUE_PRODUITS.map((p, idx) => (
-                <option key={idx} value={p.nom} />
-              ))}
-            </datalist>
-
           </div>
         </div>
       )}
