@@ -34,8 +34,14 @@ jobs:
     if: github.ref == 'refs/heads/main'
     
     steps:
-      - name: Connexion au Serveur Cloud Privé (SSH)
-        run: echo "Déploiement en cours via SSH/Rsync ou Docker Hub..."
-        
-      - name: Déploiement Frontend et Backend
-        run: echo "Mise à jour de l'image Docker et redémarrage des services en production."
+      - name: Déploiement automatique sur le VPS OVH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd mon-projet-cda
+            git pull origin main
+            chmod +x deploy-staging.sh
+            ./deploy-staging.sh
