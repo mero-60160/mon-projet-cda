@@ -16,35 +16,69 @@ pdf_options:
     <div class="footer-container">
       <span class="pageNumber"></span>
     </div>
-stylesheet: ./dossier_style.css
+  stylesheet: ./dossier_style.css
 ---
 
 # Documentation de Déploiement - M-Atici CRM
 
+- **Dépôt GitHub (Code source)** : [github.com/mero-60160/mon-projet-cda](https://github.com/mero-60160/mon-projet-cda)
+- **Application en production** : [www.m-atici.fr](https://www.m-atici.fr)
+
 ## 1. Introduction
 
 Ce document détaille la stratégie de déploiement mise en place pour l'application M-Atici CRM. 
-L'objectif est de garantir un passage en production fluide, sécurisé, et automatisé via l'approche CI/CD (Intégration Continue et Déploiement Continu).
+L'objectif est de garantir un passage en production fluide, sécurisé et entièrement automatisé via une approche CI/CD (Intégration Continue et Déploiement Continu).
 
-## 2. Architecture de l'Infrastructure
+## 2. Architecture de l'Infrastructure et Serveur
 
-L'application est déployable sur n'importe quel environnement Linux (notamment un VPS Cloud comme OVHcloud) grâce à sa conteneurisation complète.
+L'application est déployée sur un serveur dédié cloud :
+- **Hébergeur** : VPS OVHcloud
+- **Adresse IP** : `51.178.54.131`
+- **Système d'exploitation** : Ubuntu 25.04 (LTS)
+- **Utilisateur système** : `ubuntu`
+- **Répertoire de l'application** : `/home/ubuntu/mon-projet-cda`
 
-L'écosystème repose sur 3 services majeurs :
-- **Frontend** : Application React (distribuée statiquement ou via un serveur Nginx/Caddy).
+L'écosystème applicatif est entièrement conteneurisé et repose sur 3 services majeurs :
+- **Frontend** : Application React (servie par Caddy en reverse-proxy avec SSL Let's Encrypt automatique).
 - **Backend** : API REST Node.js / Express.
-- **Base de données** : PostgreSQL 15, couplé avec l'ORM Prisma pour les migrations de schémas.
+- **Base de données** : PostgreSQL 15 (les schémas et migrations sont gérés avec l'ORM Prisma).
 
-L'orchestration est gérée par **Docker Compose**.
+L'orchestration globale est assurée par **Docker Compose**.
 
-## 3. Configuration Docker
+## 3. Configuration Initiale du Serveur VPS
 
-Un fichier `docker-compose.yml` (ainsi qu'une variante `docker-compose.staging.yml` pour la pré-production) orchestre les services. 
+Pour pouvoir accueillir le projet, le serveur VPS a été configuré avec les prérequis suivants :
+
+1. **Docker & Docker Compose** :
+   ```bash
+   sudo apt update
+   sudo apt install -y docker.io docker-compose-v2
+   sudo usermod -aG docker ubuntu
+   ```
+2. **Clonage du Projet** :
+   Le dépôt a été cloné dans le répertoire utilisateur :
+   ```bash
+   cd /home/ubuntu
+   git clone https://github.com/mero-60160/mon-projet-cda.git mon-projet-cda
+   ```
+3. **Fichier d'environnement** :
+   Un fichier `/home/ubuntu/mon-projet-cda/.env` a été créé pour héberger les secrets de production (non versionnés sur Git) :
+   ```env
+   DATABASE_URL="postgresql://user:password@db:5432/crm_db"
+   JWT_SECRET="votre_secret_jwt_de_production"
+   EMAIL_USER="votre_email_de_relance"
+   EMAIL_PASS="mot_de_passe_d_application"
+   PORT=3000
+   ```
+
+## 4. Configuration Docker
+
+Un fichier `docker-compose.yml` orchestre les services sur le serveur de production.
 
 Avantages de cette approche :
 - Isolation stricte des services.
 - Reproductibilité entre l'environnement de développement et de production.
-- Gestion centralisée des variables d'environnement (`.env`).
+- Gestion centralisée des variables d'environnement.
 
 <div class="page-break"></div>
 
@@ -56,40 +90,53 @@ backend:
   environment:
     - DATABASE_URL=${DATABASE_URL}
     - JWT_SECRET=${JWT_SECRET}
+    - EMAIL_USER=${EMAIL_USER}
+    - EMAIL_PASS=${EMAIL_PASS}
   ports:
     - "3000:3000"
   depends_on:
     - db
 ```
 
-## 4. Pipeline CI/CD (GitHub Actions)
+## 5. Pipeline CI/CD (GitHub Actions)
 
-Pour éviter de déployer du code défectueux, un pipeline d'Intégration Continue (CI) a été mis en place sur le dépôt Git.
+Pour garantir la stabilité de la production, un pipeline complet de CI/CD a été configuré dans `.github/workflows/main.yml`.
 
-À chaque validation de code (`git push`) sur la branche principale :
-1. **Build** : Le serveur GitHub Actions récupère le code et installe les dépendances Node.js.
-2. **Tests** : La suite de tests unitaires (Jest) est exécutée automatiquement.
-3. **Validation** : Si un seul test échoue, le processus s'arrête, bloquant ainsi le déploiement d'une régression en production.
+À chaque validation de code (`git push`) sur la branche `main` :
+
+1. **Intégration Continue (CI)** :
+   - **Build & Install** : GitHub Actions récupère les sources et installe les dépendances Node.js du frontend et du backend.
+   - **Génération Prisma** : Le client Prisma est généré.
+   - **Tests unitaires** : La suite de tests Jest est exécutée. Si un test échoue, le pipeline s'arrête immédiatement pour empêcher le déploiement d'un bug en production.
+
+2. **Déploiement Continu (CD)** :
+   - Si les tests passent, une connexion SSH sécurisée est ouverte vers le VPS OVH (via la clé privée stockée dans les secrets GitHub).
+   - Le script de déploiement automatique `deploy-staging.sh` est lancé sur le VPS.
+
+### Secrets GitHub configurés sur le dépôt :
+- `SSH_HOST` : L'adresse IP du VPS (`51.178.54.131`).
+- `SSH_USER` : L'utilisateur SSH (`ubuntu`).
+- `SSH_PRIVATE_KEY` : La clé privée SSH autorisée sur le serveur VPS.
 
 *(Le fichier de configuration se trouve dans `.github/workflows/main.yml`)*.
 
-## 5. Script de Déploiement
+## 6. Script de Déploiement
 
 Le déploiement proprement dit s'effectue via un script bash (`deploy-staging.sh`) exécuté sur le serveur cible.
 Ce script automatise les tâches d'exploitation courantes :
 
 1. Mise à jour des sources via Git.
-2. Reconstruction des images Docker (`docker-compose build`).
-3. Démarrage des conteneurs (`docker-compose up -d`).
+2. Reconstruction des images Docker (`docker compose build`).
+3. Démarrage des conteneurs (`docker compose up -d`).
 4. Exécution des migrations de base de données en production via Prisma (`npx prisma migrate deploy`).
 
-## 6. Sécurité et Bonnes Pratiques
+## 7. Sécurité et Bonnes Pratiques
 
 - **Secrets** : Les variables sensibles (Mots de passe, clés JWT) ne sont pas versionnées sur Git. Elles sont injectées directement sur le serveur via le fichier `.env`.
-- **Certificats SSL** : Le trafic entrant en production est chiffré (HTTPS), généralement géré via un reverse-proxy (Caddy ou Nginx) qui renouvelle automatiquement les certificats Let's Encrypt.
+- **Certificats SSL** : Le trafic entrant en production est chiffré (HTTPS), géré par Caddy en reverse-proxy qui renouvelle automatiquement les certificats Let's Encrypt.
 - **Persistance** : Les données de PostgreSQL sont attachées à des Volumes Docker persistants pour prévenir toute perte de données lors du redémarrage des conteneurs.
 
-## 7. Tâches planifiées (Cron)
+## 8. Tâches planifiées (Cron)
 
 Afin d'automatiser les relances de factures et la sauvegarde de la base de données PostgreSQL, deux tâches `cron` doivent être configurées sur le système hôte du VPS.
 
