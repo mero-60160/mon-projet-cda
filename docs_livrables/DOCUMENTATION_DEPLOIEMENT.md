@@ -150,4 +150,4 @@ Exécutez `crontab -e` en tant qu'utilisateur `ubuntu` et ajoutez les lignes sui
 30 8 * * * docker compose -f /home/ubuntu/mon-projet-cda/docker-compose.yml exec -T backend node src/scripts/alerteRetard.js > /dev/null 2>&1
 ```
 
-*(Note : Assurez-vous que le script de sauvegarde est exécutable en lançant `chmod +x scripts/backup-db.sh`)*.
+
