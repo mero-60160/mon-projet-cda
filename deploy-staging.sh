@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Déploiement sur serveur de Staging (VPS)
 echo "[INFO] Démarrage du déploiement en Staging..."
