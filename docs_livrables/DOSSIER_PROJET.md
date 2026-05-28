@@ -429,8 +429,14 @@ Le conteneur **GoAccess** analyse les logs générés par le serveur web (Caddy)
 
 ![Statistiques GoAccess](./images/goaccess_stats.png)
 
----
+### 4. Tâches planifiées (Cron) et Sauvegardes
 
+Afin d'assurer la conformité RGPD et l'automatisation des relances, deux tâches planifiées récurrentes (`cron`) sont configurées sur le système hôte du VPS :
+- **Relances de paiement automatiques (US4)** : Un script autonome (`backend/src/scripts/alerteRetard.js`) s'exécute chaque jour pour détecter les factures "en attente" dont l'échéance est dépassée, passer leur statut à "en retard" et envoyer un e-mail de rappel automatique au client via Nodemailer.
+- **Sauvegarde automatisée de la base de données** : Un script shell (`scripts/backup-db.sh`) est lancé toutes les nuits pour exporter la base PostgreSQL (`pg_dump`) depuis le conteneur Docker. Le script compresse la sauvegarde et applique une politique de rétention de 7 jours (respect du droit à l'oubli).
+ 
+---
+ 
 <div class="page-break"></div>
 
 ## X. Présentation du jeu d'essai
@@ -492,6 +498,6 @@ De l'étude de faisabilité UX jusqu'au monitoring réseau de l'infrastructure D
 
 **Perspectives d'évolution techniques et fonctionnelles (Roadmap) :**
 
-1. **Automatisation des processus métier :** Implémentation d'un système de relance client automatisée par email, architecturé autour d'un gestionnaire de file d'attente (comme RabbitMQ ou Redis BullMQ) couplé à Nodemailer pour éviter le blocage du *Event Loop* de Node.js.
+1. **Planification d'interventions :** Implémentation d'un module d'agenda partagé pour les artisans afin de planifier les rendez-vous clients directement liés aux devis et factures.
 2. **Fintech :** Intégration de l'API de paiement Stripe pour permettre aux clients des artisans de régler directement leurs factures en ligne par carte bancaire via un portail client dédié, réduisant ainsi drastiquement les délais de paiement.
 3. **Data Visualisation :** Amélioration analytique de l'interface d'administration avec des graphiques de statistiques complexes (via Chart.js ou Recharts), permettant un suivi précis de l'évolution du Chiffre d'Affaires annuel en un coup d'œil.

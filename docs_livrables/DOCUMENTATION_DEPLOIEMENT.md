@@ -88,3 +88,19 @@ Ce script automatise les tâches d'exploitation courantes :
 - **Secrets** : Les variables sensibles (Mots de passe, clés JWT) ne sont pas versionnées sur Git. Elles sont injectées directement sur le serveur via le fichier `.env`.
 - **Certificats SSL** : Le trafic entrant en production est chiffré (HTTPS), généralement géré via un reverse-proxy (Caddy ou Nginx) qui renouvelle automatiquement les certificats Let's Encrypt.
 - **Persistance** : Les données de PostgreSQL sont attachées à des Volumes Docker persistants pour prévenir toute perte de données lors du redémarrage des conteneurs.
+
+## 7. Tâches planifiées (Cron)
+
+Afin d'automatiser les relances de factures et la sauvegarde de la base de données PostgreSQL, deux tâches `cron` doivent être configurées sur le système hôte du VPS.
+
+Exécutez `crontab -e` en tant qu'utilisateur `ubuntu` et ajoutez les lignes suivantes :
+
+```bash
+# 1. Sauvegarde automatique quotidienne de la base de données (toutes les nuits à 2h00)
+0 2 * * * /home/ubuntu/mon-projet-cda/scripts/backup-db.sh > /dev/null 2>&1
+
+# 2. Relance automatique des factures en retard de paiement (tous les matins à 8h30)
+30 8 * * * docker compose -f /home/ubuntu/mon-projet-cda/docker-compose.yml exec -T backend node src/scripts/alerteRetard.js > /dev/null 2>&1
+```
+
+*(Note : Assurez-vous que le script de sauvegarde est exécutable en lançant `chmod +x scripts/backup-db.sh`)*.
