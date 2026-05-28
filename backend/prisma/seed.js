@@ -12,6 +12,8 @@ async function main() {
   console.log('Début du peuplement (seed) de la base de données...');
 
   // 1. Nettoyage de la base de données existante (Optionnel mais recommandé pour les tests)
+  await prisma.ligneFacture.deleteMany();
+  await prisma.facture.deleteMany();
   await prisma.ligneDevis.deleteMany();
   await prisma.devis.deleteMany();
   await prisma.client.deleteMany();
