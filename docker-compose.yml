@@ -57,6 +57,9 @@ services:
   goaccess:
     image: allinurl/goaccess
     restart: unless-stopped
+    environment:
+      - LANG=fr_FR.UTF-8
+      - LC_ALL=fr_FR.UTF-8
     volumes:
       - caddy_logs:/srv/logs:ro
       - goaccess_data:/srv/report
