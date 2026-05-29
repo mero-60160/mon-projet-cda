@@ -28,7 +28,7 @@ describe('Clients Service', () => {
 
   it('devrait retourner la liste des clients depuis la base de données', async () => {
     const fakeClients = [
-      { id: 1, nom: 'Dupont', prenom: 'Jean', userId: 1 },
+      { id: 1, nom: 'Atici', prenom: 'Omer', userId: 1 },
       { id: 2, nom: 'Martin', prenom: 'Marie', userId: 1 }
     ];
     prisma.client.findMany.mockResolvedValue(fakeClients);

@@ -83,7 +83,7 @@ Voici l'équivalent cognitif SQL de ce que mon script déclenche en coulisses lo
 ```sql
 -- J'insère un Utilisateur / Commercial (Hash bcrypt généré via mon script Node.js)
 INSERT INTO "User" (email, password, nom, prenom) 
-VALUES ('jean.dupont@minicrm.fr', '$2a$10$...', 'Dupont', 'Jean');
+VALUES ('omer.atici@minicrm.fr', '$2a$10$...', 'Atici', 'Omer');
 
 -- J'insère un de ses Clients
 INSERT INTO "Client" (nom, prenom, email, adresse, "userId") 

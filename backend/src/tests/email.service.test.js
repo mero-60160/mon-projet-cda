@@ -26,11 +26,11 @@ describe('Email Service', () => {
   });
 
   it('devrait appeler sendMail avec le bon destinataire', async () => {
-    await emailService.envoyerDevisParEmail('jean.dupont@test.fr', 'DEV-101', Buffer.from('pdf'));
+    await emailService.envoyerDevisParEmail('omer.atici@test.fr', 'DEV-101', Buffer.from('pdf'));
 
     expect(sendMailMock).toHaveBeenCalledTimes(1);
     expect(sendMailMock).toHaveBeenCalledWith(expect.objectContaining({
-      to: 'jean.dupont@test.fr'
+      to: 'omer.atici@test.fr'
     }));
   });
 

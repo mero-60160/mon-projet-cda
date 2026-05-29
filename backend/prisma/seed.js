@@ -28,10 +28,10 @@ async function main() {
   // 3. Création des Commerciaux (Users)
   const commercial1 = await prisma.user.create({
     data: {
-      email: 'jean.dupont@minicrm.fr',
+      email: 'omer.atici@minicrm.fr',
       password: passwordHash,
-      nom: 'Dupont',
-      prenom: 'Jean',
+      nom: 'Atici',
+      prenom: 'Omer',
     },
   });
 
