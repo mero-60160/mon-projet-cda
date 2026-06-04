@@ -6,7 +6,7 @@ echo "[INFO] Démarrage du déploiement..."
 
 # 1. Mise à jour du code (optionnel si vous tirez depuis Git)
 echo "[INFO] Récupération des dernières modifications..."
-git pull origin main
+git fetch origin && git reset --hard origin/main
 
 # 2. Re-build des images Docker
 echo "[INFO] Construction des images Docker..."
