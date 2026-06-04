@@ -1,14 +1,21 @@
-FROM node:20
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copier tout le projet front
-COPY . .
-
-# Installer les dépendances
+COPY package*.json ./
 RUN npm install
+
+COPY . .
+RUN npm run build
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+RUN npm install -g serve
+
+COPY --from=builder /app/dist ./dist
 
 EXPOSE 5173
 
-# Lancer Vite pour qu'il soit accessible depuis l'extérieur du conteneur
-CMD ["npm", "run", "dev", "--", "--host"]
+CMD ["serve", "-s", "dist", "-l", "5173"]
