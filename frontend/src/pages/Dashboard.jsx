@@ -81,7 +81,7 @@ export default function Dashboard() {
       
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
         
-        <div className="carte-premium" style={{ padding: '1.5rem', borderLeft: '4px solid var(--primaire)' }}>
+        <div className="carte-premium" style={{ padding: '1.5rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <p style={{ color: 'var(--texte-secondaire)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>Clients Totaux</p>
@@ -93,7 +93,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="carte-premium" style={{ padding: '1.5rem', borderLeft: '4px solid var(--succes)' }}>
+        <div className="carte-premium" style={{ padding: '1.5rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <p style={{ color: 'var(--texte-secondaire)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>Chiffre d'Affaires Généré (HT)</p>
@@ -105,7 +105,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="carte-premium" style={{ padding: '1.5rem', borderLeft: '4px solid #F59E0B' }}>
+        <div className="carte-premium" style={{ padding: '1.5rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <p style={{ color: 'var(--texte-secondaire)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>Devis en Attente (HT)</p>
@@ -117,7 +117,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="carte-premium" style={{ padding: '1.5rem', borderLeft: '4px solid #8B5CF6' }}>
+        <div className="carte-premium" style={{ padding: '1.5rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <p style={{ color: 'var(--texte-secondaire)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>Devis Créés</p>
