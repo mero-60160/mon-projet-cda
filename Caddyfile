@@ -21,8 +21,16 @@ m-atici.fr, www.m-atici.fr {
         reverse_proxy backend:3000
     }
     
-    # Tout le reste va vers le frontend
+    # Fichiers avec empreinte (JS/CSS) : cache long, le hash garantit la fraîcheur
+    handle /assets/* {
+        header Cache-Control "public, max-age=31536000, immutable"
+        reverse_proxy frontend:5173
+    }
+
+    # index.html et routes SPA : jamais mis en cache durablement, pour toujours
+    # charger la dernière version après un déploiement (évite les pages blanches)
     handle {
+        header Cache-Control "no-cache"
         reverse_proxy frontend:5173
     }
 }
