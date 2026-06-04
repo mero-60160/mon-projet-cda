@@ -16,6 +16,11 @@ docker compose build
 echo "[INFO] Redémarrage des services..."
 docker compose up -d
 
+# 3bis. Rechargement de la configuration Caddy (en-têtes de cache, routes...)
+# 'up -d' ne recrée pas Caddy si sa définition n'a pas changé : on force le reload.
+echo "[INFO] Rechargement de la configuration Caddy..."
+docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile || docker compose restart caddy
+
 # 4. Migration de la base de données (Prisma)
 echo "[INFO] Application des migrations de base de données..."
 docker compose exec -T backend npx prisma migrate deploy
