@@ -20,5 +20,4 @@ RUN npx prisma generate
 
 EXPOSE 3000
 
-# Lancer en mode dev
-CMD ["npm", "run", "dev"]
+CMD ["node", "src/server.js"]

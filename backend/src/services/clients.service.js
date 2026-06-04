@@ -4,19 +4,20 @@ const redisClient = require('../config/redis');
 class ClientsService {
   async obtenirClients(utilisateurId) {
     const cacheKey = `clients_${utilisateurId}`;
-    const cachedClients = await redisClient.get(cacheKey);
 
-    if (cachedClients) {
-      return JSON.parse(cachedClients);
-    }
+    try {
+      const cachedClients = await redisClient.get(cacheKey);
+      if (cachedClients) return JSON.parse(cachedClients);
+    } catch (_) {}
 
     const listeClients = await prisma.client.findMany({
       where: { userId: utilisateurId },
       orderBy: { createdAt: 'desc' }
     });
 
-    // Sauvegarde dans Redis avec expiration (3600 secondes = 1 heure)
-    await redisClient.setEx(cacheKey, 3600, JSON.stringify(listeClients));
+    try {
+      await redisClient.setEx(cacheKey, 3600, JSON.stringify(listeClients));
+    } catch (_) {}
 
     return listeClients;
   }
@@ -34,8 +35,7 @@ class ClientsService {
       }
     });
 
-    // Invalider le cache pour que la liste se mette à jour
-    await redisClient.del(`clients_${utilisateurId}`);
+    try { await redisClient.del(`clients_${utilisateurId}`); } catch (_) {}
 
     return nouveauClient;
   }
@@ -55,8 +55,7 @@ class ClientsService {
       data: donnees
     });
 
-    // Invalider le cache
-    await redisClient.del(`clients_${utilisateurId}`);
+    try { await redisClient.del(`clients_${utilisateurId}`); } catch (_) {}
 
     return clientMisAJour;
   }
@@ -72,8 +71,7 @@ class ClientsService {
 
     await prisma.client.delete({ where: { id: identifiantClient } });
 
-    // Invalider le cache
-    await redisClient.del(`clients_${utilisateurId}`);
+    try { await redisClient.del(`clients_${utilisateurId}`); } catch (_) {}
   }
 }
 
