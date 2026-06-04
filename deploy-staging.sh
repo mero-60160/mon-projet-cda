@@ -19,6 +19,5 @@ docker compose up -d
 # 4. Migration de la base de données (Prisma)
 echo "[INFO] Application des migrations de base de données..."
 docker compose exec -T backend npx prisma migrate deploy
-docker compose exec -T backend npx prisma db seed
 
 echo "[SUCCES] Déploiement terminé avec succès !"
