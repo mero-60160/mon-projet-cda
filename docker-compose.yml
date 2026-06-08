@@ -16,6 +16,11 @@ services:
       - DATABASE_URL=postgresql://user:password@db:5432/crm
       - REDIS_URL=redis://redis:6379
       - JWT_SECRET=mon_super_secret_crm_2026
+      - SMTP_HOST=smtp-relay.brevo.com
+      - SMTP_PORT=587
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_PASS=${EMAIL_PASS}
+      - EMAIL_FROM=${EMAIL_FROM}
     ports:
       - "3000:3000"
     depends_on:

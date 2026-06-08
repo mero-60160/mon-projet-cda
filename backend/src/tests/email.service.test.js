@@ -4,8 +4,7 @@ jest.mock('nodemailer', () => {
   return {
     createTransport: jest.fn().mockReturnValue({
       sendMail: jest.fn().mockResolvedValue({ messageId: 'abc-456' })
-    }),
-    getTestMessageUrl: jest.fn().mockReturnValue('http://fakeurl.com')
+    })
   };
 });
 
@@ -18,11 +17,11 @@ describe('Email Service', () => {
     sendMailMock.mockClear();
   });
 
-  it("devrait retourner un succès et une URL lors de l'envoi d'un devis", async () => {
+  it("devrait retourner un succès avec un messageId lors de l'envoi d'un devis", async () => {
     const resultat = await emailService.envoyerDevisParEmail('client@example.com', 'DEV-2024-001', Buffer.from('fake-pdf'));
 
     expect(resultat.succes).toBe(true);
-    expect(resultat.previewUrl).toBe('http://fakeurl.com');
+    expect(resultat.messageId).toBe('abc-456');
   });
 
   it('devrait appeler sendMail avec le bon destinataire', async () => {
@@ -65,13 +64,11 @@ describe('Email Service', () => {
       .toThrow("Impossible d'envoyer l'email.");
   });
 
-  it('devrait appeler getTestMessageUrl avec les infos retournées par sendMail', async () => {
-    const nodemailer = require('nodemailer');
-    const fakeInfo = { messageId: 'xyz-789' };
-    sendMailMock.mockResolvedValueOnce(fakeInfo);
+  it('devrait retourner le messageId fourni par sendMail', async () => {
+    sendMailMock.mockResolvedValueOnce({ messageId: 'xyz-789' });
 
-    await emailService.envoyerDevisParEmail('test@example.com', 'DEV-200', Buffer.from('pdf'));
+    const resultat = await emailService.envoyerDevisParEmail('test@example.com', 'DEV-200', Buffer.from('pdf'));
 
-    expect(nodemailer.getTestMessageUrl).toHaveBeenCalledWith(fakeInfo);
+    expect(resultat.messageId).toBe('xyz-789');
   });
 });
