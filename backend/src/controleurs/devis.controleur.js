@@ -122,9 +122,9 @@ exports.envoyerDevisEmail = async (req, res) => {
 
     await devisService.modifierStatutDevis(identifiantDevis, "envoyé", req.utilisateurId);
 
-    res.json({ 
+    res.json({
       message: "Email envoyé avec succès !",
-      previewUrl: resultat.previewUrl 
+      messageId: resultat.messageId
     });
   } catch (erreur) {
     if (erreur.message === "Devis introuvable.") {
