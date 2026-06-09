@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1779809900858" clover="3.2.0">
-  <project timestamp="1779809900858" name="All files">
-    <metrics statements="148" coveredstatements="115" conditionals="82" coveredconditionals="36" methods="26" coveredmethods="21" elements="256" coveredelements="172" complexity="0" loc="148" ncloc="148" packages="3" files="7" classes="7"/>
+<coverage generated="1780573197379" clover="3.2.0">
+  <project timestamp="1780573197379" name="All files">
+    <metrics statements="155" coveredstatements="115" conditionals="82" coveredconditionals="36" methods="27" coveredmethods="21" elements="264" coveredelements="172" complexity="0" loc="155" ncloc="155" packages="3" files="7" classes="7"/>
     <package name="middlewares">
       <metrics statements="11" coveredstatements="11" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
       <file name="authentification.middleware.js" path="/Users/atici/projet_cda/backend/src/middlewares/authentification.middleware.js">
@@ -20,7 +20,7 @@
       </file>
     </package>
     <package name="services">
-      <metrics statements="130" coveredstatements="97" conditionals="80" coveredconditionals="34" methods="23" coveredmethods="18"/>
+      <metrics statements="137" coveredstatements="97" conditionals="80" coveredconditionals="34" methods="24" coveredmethods="18"/>
       <file name="authentification.service.js" path="/Users/atici/projet_cda/backend/src/services/authentification.service.js">
         <metrics statements="19" coveredstatements="19" conditionals="6" coveredconditionals="6" methods="2" coveredmethods="2"/>
         <line num="1" count="1" type="stmt"/>
@@ -117,7 +117,7 @@
         <line num="240" count="1" type="stmt"/>
       </file>
       <file name="email.service.js" path="/Users/atici/projet_cda/backend/src/services/email.service.js">
-        <metrics statements="10" coveredstatements="10" conditionals="8" coveredconditionals="8" methods="2" coveredmethods="2"/>
+        <metrics statements="17" coveredstatements="10" conditionals="8" coveredconditionals="8" methods="3" coveredmethods="2"/>
         <line num="1" count="1" type="stmt"/>
         <line num="5" count="1" type="stmt"/>
         <line num="16" count="6" type="stmt"/>
@@ -127,7 +127,14 @@
         <line num="34" count="5" type="stmt"/>
         <line num="36" count="1" type="stmt"/>
         <line num="37" count="1" type="stmt"/>
-        <line num="42" count="1" type="stmt"/>
+        <line num="42" count="0" type="stmt"/>
+        <line num="43" count="0" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+        <line num="52" count="0" type="stmt"/>
+        <line num="53" count="0" type="stmt"/>
+        <line num="55" count="0" type="stmt"/>
+        <line num="56" count="0" type="stmt"/>
+        <line num="61" count="1" type="stmt"/>
       </file>
       <file name="factures.service.js" path="/Users/atici/projet_cda/backend/src/services/factures.service.js">
         <metrics statements="34" coveredstatements="22" conditionals="32" coveredconditionals="10" methods="6" coveredmethods="4"/>

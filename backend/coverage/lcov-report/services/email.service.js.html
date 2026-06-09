@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">58.82% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>10/17</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>2/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">58.82% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>10/17</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -105,7 +105,26 @@
 <a name='L40'></a><a href='#L40'>40</a>
 <a name='L41'></a><a href='#L41'>41</a>
 <a name='L42'></a><a href='#L42'>42</a>
-<a name='L43'></a><a href='#L43'>43</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -142,6 +161,25 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -186,6 +224,25 @@ class EmailService {
       throw new Error("Impossible d'envoyer l'email.");
     }
   }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  as</span>ync envoyerAlerteRetard(destinataire, numeroFacture, totalTTC, dateEcheance) {
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      const info = <span class="cstat-no" title="statement not covered" >await this.transporter.sendMail({</span>
+        from: '"M-Atici CRM" &lt;contact@m-atici.fr&gt;',
+        to: destinataire,
+        subject: `RAPPEL : Facture en retard N° ${numeroFacture}`,
+        text: `Bonjour,\n\nSauf erreur de notre part, le règlement de la facture N° ${numeroFacture} d'un montant de ${totalTTC} € (échéance le ${new Date(dateEcheance).toLocaleDateString()}) n'a pas été reçu.\n\nNous vous prions de bien vouloir procéder à son règlement dans les plus brefs délais.\n\nCordialement,\nL'équipe M-Atici`,
+        html: `&lt;p&gt;Bonjour,&lt;/p&gt;&lt;p&gt;Sauf erreur de notre part, le règlement de la facture &lt;strong&gt;N° ${numeroFacture}&lt;/strong&gt; d'un montant de &lt;strong&gt;${totalTTC} €&lt;/strong&gt; (date d'échéance : ${new Date(dateEcheance).toLocaleDateString()}) n'a pas été reçu.&lt;/p&gt;&lt;p&gt;Nous vous prions de bien vouloir procéder à son règlement dans les plus brefs délais.&lt;/p&gt;&lt;p&gt;Cordialement,&lt;br&gt;L'équipe M-Atici&lt;/p&gt;`
+      });
+&nbsp;
+      const previewUrl = <span class="cstat-no" title="statement not covered" >nodemailer.getTestMessageUrl(info);</span>
+<span class="cstat-no" title="statement not covered" >      console.log(`Email de relance envoyé à ${destinataire} pour la facture ${numeroFacture} (URL: ${previewUrl})`);</span>
+<span class="cstat-no" title="statement not covered" >      return { succes: true, previewUrl };</span>
+    } catch (erreur) {
+<span class="cstat-no" title="statement not covered" >      console.error("Erreur lors de l'envoi de l'email de relance :", erreur);</span>
+<span class="cstat-no" title="statement not covered" >      throw new Error("Impossible d'envoyer l'email de relance.");</span>
+    }
+  }
 }
 &nbsp;
 module.exports = new EmailService();
@@ -196,7 +253,7 @@ module.exports = new EmailService();
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-05-26T15:38:20.851Z
+                at 2026-06-04T11:39:57.370Z
             </div>
         <script src="../prettify.js"></script>
         <script>

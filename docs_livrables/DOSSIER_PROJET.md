@@ -193,6 +193,7 @@ L'application respecte une architecture **Client-Serveur** totalement découplé
 | :--- | :--- | :--- |
 | **Backend API REST** | Node.js & Express.js | Performance I/O non-bloquante, cohérence JS full-stack. |
 | **Base de Données** | PostgreSQL & Prisma | Robustesse transactionnelle, typage strict et auto-migration. |
+| **Cache mémoire** | Redis | Mise en cache des données fréquemment lues (liste clients) pour réduire la charge BDD et améliorer les temps de réponse. |
 | **Génération PDF** | Puppeteer | Moteur Chrome Headless côté serveur pour un rendu HTML vers PDF pixel-perfect. |
 | **Frontend SPA** | React.js & Vite | Rendu dynamique côté client, Hot Module Replacement (HMR) ultra-rapide. |
 | **Stylisation** | Tailwind CSS | Design system orienté utilitaire, permettant un rendu responsive (Mobile-first) très rapide sans CSS spaghetti. |
@@ -336,7 +337,36 @@ describe('Calculs des devis', () => {
 
 <div class="page-break"></div>
 
-### 2. Pipeline d'Intégration Continue (CI/CD GitHub Actions)
+### 2. Rapport de Couverture de Code et de Tests
+
+Pour garantir la fiabilité, la robustesse et la stabilité de l'application **M-Atici CRM** (spécifiquement sa partie back-end qui gère les données sensibles de facturation et de devis), une stratégie de tests unitaires et d'intégration a été mise en place avec Jest.
+
+Le tableau ci-dessous présente le résumé d'exécution et le taux de couverture des instructions, des branches décisionnelles, des fonctions et des lignes pour chaque module de l'API :
+
+* **Nombre total de suites de tests** : 7 (toutes réussies)
+* **Nombre total de cas de tests** : 40 (tous réussis)
+* **Statut final** : **SUCCÈS (100% passés)**
+* **Durée d'exécution** : 0.43 s
+
+| Module / Fichier | Instructions (Stmts %) | Branches (%) | Fonctions (%) | Lignes (%) |
+| :--- | :--- | :--- | :--- | :--- |
+| **Moyenne Globale (Tous les fichiers)** | **73.88 %** | **43.90 %** | **77.77 %** | **74.19 %** |
+| `middlewares/authentification.middleware.js` | 100.00 % | 100.00 % | 100.00 % | 100.00 % |
+| `services/authentification.service.js` | 100.00 % | 100.00 % | 100.00 % | 100.00 % |
+| `services/clients.service.js` | 100.00 % | 100.00 % | 100.00 % | 100.00 % |
+| `services/devis.service.js` | 51.16 % | 14.28 % | 66.66 % | 51.16 % |
+| `services/email.service.js` | 58.82 % | 100.00 % | 66.66 % | 58.82 % |
+| `services/factures.service.js` | 63.88 % | 31.25 % | 66.66 % | 64.70 % |
+| `utils/calculDevis.js` | 100.00 % | 100.00 % | 100.00 % | 100.00 % |
+
+#### Analyse et détails de la couverture :
+- **Sécurité et Authentification (100% de couverture)** : Les fichiers critiques assurant la sécurité de l'application (validation et décodage du token JWT dans le middleware, création de compte, connexion et hachage sécurisé de mot de passe avec bcrypt) sont couverts à 100%.
+- **Services de Base (100% de couverture)** : Le service `clients` (avec gestion du cache Redis) ainsi que le module utilitaire de calcul des devis (`calculDevis.js`) sont testés de manière exhaustive pour écarter tout risque d'erreur d'arrondi ou de logique sur les calculs financiers complexes.
+- **Services Métiers simulés (50% à 65% de couverture)** : Les modules complexes interagissant avec des dépendances et services tiers (génération de PDF via Puppeteer et envoi d'emails via Nodemailer/SMTP) utilisent des mocks Jest pour isoler la logique métier propre au Mini CRM. Le service `email.service.js` est couvert par **6 cas de tests** vérifiant le destinataire, l'objet du mail, la pièce jointe PDF, la gestion des erreurs SMTP, et l'appel à `getTestMessageUrl`.
+
+<div class="page-break"></div>
+
+### 3. Pipeline d'Intégration Continue (CI/CD GitHub Actions)
 
 Le code n'est pas déployé à l'aveugle. Un pipeline automatisé s'exécute sur les serveurs de GitHub à chaque `push`. Si les tests échouent, le pipeline s'arrête, bloquant ainsi le déploiement d'une régression en production.
 
@@ -400,10 +430,18 @@ services:
     build: ./backend
     environment:
       - DATABASE_URL=postgresql://user:password@db:5432/crm
+      - REDIS_URL=redis://redis:6379
     ports:
       - "3000:3000"
     depends_on:
       - db
+      - redis
+
+  # Cache Redis (optimisation des performances)
+  redis:
+    image: redis:alpine
+    volumes:
+      - redis_data:/data
 
   # Serveur Web Caddy (Reverse Proxy + Let's Encrypt SSL)
   caddy:
@@ -433,7 +471,7 @@ Le conteneur **GoAccess** analyse les logs générés par le serveur web (Caddy)
 
 Afin d'assurer la conformité RGPD et l'automatisation des relances, deux tâches planifiées récurrentes (`cron`) sont configurées sur le système hôte du VPS :
 - **Relances de paiement automatiques (US4)** : Un script autonome (`backend/src/scripts/alerteRetard.js`) s'exécute chaque jour pour détecter les factures "en attente" dont l'échéance est dépassée, passer leur statut à "en retard" et envoyer un e-mail de rappel automatique au client via Nodemailer.
-- **Sauvegarde automatisée de la base de données** : Un script shell (`scripts/backup-db.sh`) est lancé toutes les nuits pour exporter la base PostgreSQL (`pg_dump`) depuis le conteneur Docker. Le script compresse la sauvegarde et applique une politique de rétention de 7 jours (respect du droit à l'oubli).
+- **Sauvegarde automatisée de la base de données** : Un script shell (`scripts/backup-db.sh`) est lancé toutes les nuits via `cron`. Il exécute `pg_dump` directement dans le conteneur Docker (`docker compose exec -T db`), compresse le résultat à la volée avec `gzip`, et applique une politique de rétention de 7 jours via `find … -mtime +7 -delete` (respect du droit à l'oubli RGPD).
  
 ---
  

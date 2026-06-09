@@ -1,0 +1,800 @@
+<!DOCTYPE html><html><head><title></title><meta charset="utf-8"><style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.6;
+  color: #1a1a2e;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-size: 22pt;
+  color: #0d47a1;
+  text-align: center;
+  border-bottom: 3px solid #0d47a1;
+  padding-bottom: 10px;
+  margin-bottom: 6px;
+}
+
+h2 {
+  font-size: 13pt;
+  color: #0d47a1;
+  background: #e8f0fe;
+  padding: 7px 12px;
+  border-left: 5px solid #0d47a1;
+  margin-top: 22px;
+  margin-bottom: 10px;
+  page-break-after: avoid;
+}
+
+h3 {
+  font-size: 11pt;
+  color: #1565c0;
+  border-bottom: 1px solid #bbdefb;
+  padding-bottom: 3px;
+  margin-top: 14px;
+  margin-bottom: 8px;
+  page-break-after: avoid;
+}
+
+p {
+  margin: 5px 0 9px;
+  text-align: justify;
+}
+
+ul, ol {
+  margin: 5px 0 10px 0;
+  padding-left: 20px;
+}
+
+li {
+  margin-bottom: 4px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+  font-size: 9.5pt;
+  page-break-inside: avoid;
+}
+
+th {
+  background-color: #0d47a1;
+  color: white;
+  padding: 7px 10px;
+  text-align: left;
+  font-weight: 600;
+}
+
+td {
+  padding: 6px 10px;
+  border: 1px solid #c5cae9;
+  vertical-align: top;
+}
+
+tr:nth-child(even) td {
+  background-color: #f5f7ff;
+}
+
+img {
+  max-width: 92%;
+  max-height: 370px;
+  width: auto;
+  height: auto;
+  display: block;
+  margin: 8px auto;
+  page-break-inside: avoid;
+  object-fit: contain;
+}
+
+code {
+  background: #e8eaf6;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 9pt;
+  color: #283593;
+}
+
+pre {
+  background: #1a237e;
+  color: #e8eaf6;
+  padding: 12px;
+  border-radius: 5px;
+  font-size: 9pt;
+  overflow-x: auto;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #c5cae9;
+  margin: 16px 0;
+}
+
+strong { color: #0d47a1; }
+em { color: #1565c0; }
+
+.page-break { break-before: page; }
+
+/* Sommaire grande taille */
+ul.sommaire {
+  list-style: none;
+  padding-left: 0;
+}
+
+ul.sommaire li {
+  font-size: 13pt;
+  font-weight: 600;
+  color: #1a1a2e;
+  padding: 6px 0 6px 12px;
+  border-left: 3px solid #0d47a1;
+  margin-bottom: 6px;
+}
+/*# sourceURL=docs_livrables/dossier_style.css*/</style><style>pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em
+}
+code.hljs {
+  padding: 3px 5px
+}
+/*!
+  Theme: GitHub
+  Description: Light theme as seen on github.com
+  Author: github.com
+  Maintainer: @Hirse
+  Updated: 2021-05-15
+
+  Outdated base version: https://github.com/primer/github-syntax-light
+  Current colors taken from GitHub's CSS
+*/
+.hljs {
+  color: #24292e;
+  background: #ffffff
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-variable.language_ {
+  /* prettylights-syntax-keyword */
+  color: #d73a49
+}
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+  /* prettylights-syntax-entity */
+  color: #6f42c1
+}
+.hljs-attr,
+.hljs-attribute,
+.hljs-literal,
+.hljs-meta,
+.hljs-number,
+.hljs-operator,
+.hljs-variable,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-id {
+  /* prettylights-syntax-constant */
+  color: #005cc5
+}
+.hljs-regexp,
+.hljs-string,
+.hljs-meta .hljs-string {
+  /* prettylights-syntax-string */
+  color: #032f62
+}
+.hljs-built_in,
+.hljs-symbol {
+  /* prettylights-syntax-variable */
+  color: #e36209
+}
+.hljs-comment,
+.hljs-code,
+.hljs-formula {
+  /* prettylights-syntax-comment */
+  color: #6a737d
+}
+.hljs-name,
+.hljs-quote,
+.hljs-selector-tag,
+.hljs-selector-pseudo {
+  /* prettylights-syntax-entity-tag */
+  color: #22863a
+}
+.hljs-subst {
+  /* prettylights-syntax-storage-modifier-import */
+  color: #24292e
+}
+.hljs-section {
+  /* prettylights-syntax-markup-heading */
+  color: #005cc5;
+  font-weight: bold
+}
+.hljs-bullet {
+  /* prettylights-syntax-markup-list */
+  color: #735c0f
+}
+.hljs-emphasis {
+  /* prettylights-syntax-markup-italic */
+  color: #24292e;
+  font-style: italic
+}
+.hljs-strong {
+  /* prettylights-syntax-markup-bold */
+  color: #24292e;
+  font-weight: bold
+}
+.hljs-addition {
+  /* prettylights-syntax-markup-inserted */
+  color: #22863a;
+  background-color: #f0fff4
+}
+.hljs-deletion {
+  /* prettylights-syntax-markup-deleted */
+  color: #b31d28;
+  background-color: #ffeef0
+}
+.hljs-char.escape_,
+.hljs-link,
+.hljs-params,
+.hljs-property,
+.hljs-punctuation,
+.hljs-tag {
+  /* purposely ignored */
+  
+}/*# sourceURL=/Users/atici/.npm/_npx/55158e48eb5c59f7/node_modules/highlight.js/styles/github.css*/</style></head>
+	<body class="">
+		<h1 id="dossier-de-projet--application-mini-crm-saas">Dossier de Projet — Application Mini CRM SaaS</h1>
+<p><strong>Candidat :</strong> Omer ATICI &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Certification :</strong> Titre Professionnel CDA &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Année :</strong> 2026</p>
+<hr>
+<div class="page-break"></div>
+
+<h2 id="sommaire">Sommaire</h2>
+<ul class="sommaire">
+<li>I. Liste des compétences du référentiel</li>
+<li>II. Résumé du projet et Cahier des charges</li>
+<li>III. Gestion de projet</li>
+<li>IV. Spécifications fonctionnelles, UX/UI et Captures de l'application</li>
+<li>V. Modélisation et Base de données (UML et ORM)</li>
+<li>VI. Architecture et Choix Techniques (Frontend &amp; Backend)</li>
+<li>VII. Réalisation et Sécurité (Détails du Code)</li>
+<li>VIII. Qualité Logicielle (Tests Unitaires et CI/CD)</li>
+<li>IX. Infrastructure et Déploiement Cloud (DevOps)</li>
+<li>X. Présentation du jeu d'essai</li>
+<li>XI. Description de la veille technologique</li>
+<li>XII. Situation de travail ayant nécessité une recherche</li>
+<li>XIII. Bilan et Perspectives</li>
+</ul>
+
+<div class="page-break"></div>
+
+<h2 id="i-liste-des-compétences-du-référentiel">I. Liste des compétences du référentiel</h2>
+<p>Ce projet de Mini CRM a été conçu pour valider les blocs de compétences du titre de Concepteur Développeur d'Applications (CDA) :</p>
+<table>
+<thead>
+<tr>
+<th align="left">Compétence visée (Référentiel CDA)</th>
+<th align="left">Implémentation dans le projet</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Maquetter une application</strong></td>
+<td align="left">Création du parcours utilisateur (Mobile-First).</td>
+</tr>
+<tr>
+<td align="left"><strong>Développer une interface utilisateur</strong></td>
+<td align="left">Développement d'une SPA avec React.js et intégration responsive via Tailwind CSS.</td>
+</tr>
+<tr>
+<td align="left"><strong>Concevoir une base de données</strong></td>
+<td align="left">Réalisation du MCD/MLD et élaboration du schéma relationnel sous PostgreSQL.</td>
+</tr>
+<tr>
+<td align="left"><strong>Mettre en place une base de données</strong></td>
+<td align="left">Déploiement d'un conteneur Docker Postgres et application des migrations via Prisma.</td>
+</tr>
+<tr>
+<td align="left"><strong>Développer des composants d'accès aux données</strong></td>
+<td align="left">Création d'une API REST Node.js/Express communicant avec la BDD via l'ORM Prisma.</td>
+</tr>
+<tr>
+<td align="left"><strong>Élaborer des jeux d'essai</strong></td>
+<td align="left">Création de scripts de <em>seeding</em> automatisés pour générer de fausses données (clients, devis).</td>
+</tr>
+<tr>
+<td align="left"><strong>Développer la partie back-end</strong></td>
+<td align="left">Implémentation des routes, de la logique métier (calcul TTC) et de la sécurité serveur.</td>
+</tr>
+<tr>
+<td align="left"><strong>Déployer une application</strong></td>
+<td align="left">Mise en production sur un VPS Linux OVH, encapsulation Docker et proxy Caddy Server.</td>
+</tr>
+</tbody></table>
+<div class="page-break"></div>
+
+<h2 id="ii-résumé-du-projet-et-cahier-des-charges">II. Résumé du projet et Cahier des charges</h2>
+<h3 id="1-contexte-métier-et-problématique">1. Contexte métier et problématique</h3>
+<p>La gestion administrative est souvent le point faible des artisans, freelances et très petites entreprises (TPE). La plupart de ces acteurs utilisent encore des solutions bureautiques inadaptées, chronophages et sources d'erreurs (fichiers Excel non centralisés, factures Word sans numérotation légale). L'objectif du projet est de fournir une solution logicielle sur-mesure, accessible en ligne (SaaS) : le <strong>Mini CRM</strong>.</p>
+<h3 id="2-la-proposition-de-valeur">2. La proposition de valeur</h3>
+<ul>
+<li><strong>Simple et intuitive :</strong> Le logiciel évite les usines à gaz comme Salesforce ou Odoo. On se concentre sur le cœur de métier administratif : Clients, Devis, et Factures.</li>
+<li><strong>Automatisée :</strong> Transformation d'un devis en facture en un clic, génération automatique des documents PDF, et calcul des taxes instantané.</li>
+<li><strong>Cloud-based :</strong> Accessible depuis n'importe quel appareil (ordinateur, tablette, smartphone) sans installation requise.</li>
+</ul>
+<h3 id="3-persona-utilisateur">3. Persona utilisateur</h3>
+<p><strong>Julien, Artisan Plombier :</strong> Il a besoin de gérer son carnet d'adresses et de faire des devis depuis sa tablette directement sur les chantiers. Il perd actuellement trop de temps le soir à rédiger ses factures avec des outils inadaptés. Il lui faut une application rapide qui génère des PDF conformes.</p>
+<hr>
+<h2 id="iii-gestion-de-projet">III. Gestion de projet</h2>
+<p>Le développement a été piloté par une méthodologie <strong>Agile (Kanban)</strong>. La traçabilité des évolutions est assurée par un tableau de suivi découpé en colonnes (À faire, En cours, Test, Terminé). </p>
+<p>La gestion du code source s'appuie sur le versionnement <strong>Git (GitHub)</strong> avec des commits atomiques respectant la norme <em>Conventional Commits</em> (ex: <code>feat:</code>, <code>fix:</code>, <code>docs:</code>), permettant un travail incrémental et un historique de code lisible pour les révisions (Code Review) et l'intégration continue.</p>
+<hr>
+<h2 id="iv-spécifications-fonctionnelles-uxui-et-captures-de-lapplication">IV. Spécifications fonctionnelles, UX/UI et Captures de l'application</h2>
+<p>Les fonctionnalités de l'application ont été développées en suivant les spécifications de User Stories précises.</p>
+<h3 id="us-01--authentification">US-01 — Authentification</h3>
+<p><strong>Description :</strong> Inscription et connexion sécurisée via email et mot de passe.
+L'interface se veut claire et épurée pour encourager la conversion.</p>
+<p><img src="./images/login.png" alt="Authentification"></p>
+<h3 id="us-02--tableau-de-bord-dashboard">US-02 — Tableau de bord (Dashboard)</h3>
+<p><strong>Description :</strong> Une fois connecté, l'utilisateur a accès à une vue d'ensemble de son activité.</p>
+<p><img src="./images/dashboard.png" alt="Tableau de bord"></p>
+<div class="page-break"></div>
+
+<h3 id="us-03--gestion-des-clients">US-03 — Gestion des Clients</h3>
+<p><strong>Description :</strong> L'artisan peut ajouter, modifier et lister ses clients, avec une recherche rapide.</p>
+<p><img src="./images/clients_list.png" alt="Liste des clients"></p>
+<h3 id="us-04--création-de-devis">US-04 — Création de Devis</h3>
+<p><strong>Description :</strong> Création d'un devis en associant un client et en ajoutant des lignes de prestations. Les totaux HT, TVA et TTC se calculent automatiquement.</p>
+<p><img src="./images/devis_create.png" alt="Création de devis">
+<img src="./images/devis_create2.png" alt="Suite création de devis"></p>
+<h3 id="us-05--conversion-et-export-pdf">US-05 — Conversion et Export PDF</h3>
+<p><strong>Description :</strong> L'utilisateur peut convertir un devis accepté en facture officielle (ex: FACT-2026-001) et la télécharger au format PDF.</p>
+<p><img src="./images/facture_pdf.png" alt="Facture générée en PDF"></p>
+<hr>
+<div class="page-break"></div>
+
+<h2 id="v-modélisation-et-base-de-données-uml-et-orm">V. Modélisation et Base de données (UML et ORM)</h2>
+<p>La persistance des données repose sur un SGBDR robuste : <strong>PostgreSQL</strong>.
+Le projet intègre une architecture <strong>Multi-tenant</strong> : chaque ressource métier (Client, Devis, Facture) est fortement liée à l'Utilisateur l'ayant créée, garantissant un cloisonnement strict des données entre les différents artisans utilisant la plateforme SaaS.</p>
+<h3 id="1-modèle-conceptuel-des-données-mcd">1. Modèle Conceptuel des Données (MCD)</h3>
+<p><img src="./diagramme_mcd.png" alt="Modèle Conceptuel des Données"></p>
+<h3 id="2-diagramme-de-classes">2. Diagramme de classes</h3>
+<p><img src="./diagramme_classes.png" alt="Diagramme de classes"></p>
+<h3 id="3-diagramme-de-cas-dutilisation">3. Diagramme de Cas d'utilisation</h3>
+<p><img src="./diagramme_cas_utilisation.png" alt="Diagramme de cas d'utilisation"></p>
+<div class="page-break"></div>
+
+<h3 id="4-implémentation-physique--lorm-prisma">4. Implémentation Physique : L'ORM Prisma</h3>
+<p>Au lieu d'écrire des requêtes SQL brutes ou d'utiliser un ORM obsolète, le projet utilise <strong>Prisma</strong>, un ORM nouvelle génération. Prisma génère un client typé dynamiquement, prévenant les erreurs lors de la compilation plutôt qu'à l'exécution.</p>
+<p>Voici un extrait réel du fichier <code>schema.prisma</code> démontrant la gestion des relations et les contraintes de base de données :</p>
+<pre><code class="hljs prisma">// Générateur du client Prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Table des devis
+model Devis {
+  id          Int      @id @default(autoincrement())
+  numero      String   @unique
+  statut      String   @default("brouillon") // brouillon, envoyé, accepté, refusé
+  dateEmission DateTime @default(now())
+  dateEcheance DateTime?
+  totalHT     Float    @default(0)
+  totalTTC    Float    @default(0)
+  tva         Float    @default(20)
+
+  // Relation vers l'utilisateur propriétaire
+  userId   Int
+  user     User   @relation(fields: [userId], references: [id])
+
+  // Relation vers le client associé
+  clientId Int
+  client   Client @relation(fields: [clientId], references: [id])
+
+  // Lignes du devis (Cascade delete)
+  lignes LigneDevis[]
+  
+  // Relation optionnelle vers la facture générée
+  facture Facture?
+}
+</code></pre>
+<hr>
+<div class="page-break"></div>
+
+<h2 id="vi-architecture-et-choix-techniques-frontend--backend">VI. Architecture et Choix Techniques (Frontend &amp; Backend)</h2>
+<p>L'application respecte une architecture <strong>Client-Serveur</strong> totalement découplée, favorisant la scalabilité et la maintenance.</p>
+<h3 id="1-stack-technique-globale">1. Stack Technique Globale</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Couche</th>
+<th align="left">Technologie</th>
+<th align="left">Justification</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Backend API REST</strong></td>
+<td align="left">Node.js &amp; Express.js</td>
+<td align="left">Performance I/O non-bloquante, cohérence JS full-stack.</td>
+</tr>
+<tr>
+<td align="left"><strong>Base de Données</strong></td>
+<td align="left">PostgreSQL &amp; Prisma</td>
+<td align="left">Robustesse transactionnelle, typage strict et auto-migration.</td>
+</tr>
+<tr>
+<td align="left"><strong>Génération PDF</strong></td>
+<td align="left">Puppeteer</td>
+<td align="left">Moteur Chrome Headless côté serveur pour un rendu HTML vers PDF pixel-perfect.</td>
+</tr>
+<tr>
+<td align="left"><strong>Frontend SPA</strong></td>
+<td align="left">React.js &amp; Vite</td>
+<td align="left">Rendu dynamique côté client, Hot Module Replacement (HMR) ultra-rapide.</td>
+</tr>
+<tr>
+<td align="left"><strong>Stylisation</strong></td>
+<td align="left">Tailwind CSS</td>
+<td align="left">Design system orienté utilitaire, permettant un rendu responsive (Mobile-first) très rapide sans CSS spaghetti.</td>
+</tr>
+<tr>
+<td align="left"><strong>Réseau client</strong></td>
+<td align="left">Axios</td>
+<td align="left">Librairie HTTP fiable, intercepteurs permettant l'injection automatique du jeton de sécurité.</td>
+</tr>
+</tbody></table>
+<div class="page-break"></div>
+
+<h3 id="2-focus-architecture-frontend--react-router">2. Focus Architecture Frontend : React Router</h3>
+<p>Côté client, l'application est une Single Page Application (SPA). Le rechargement de page est évité grâce à l'utilisation de <code>react-router-dom</code>. Le routage inclut une logique de protection : un utilisateur non authentifié est automatiquement redirigé vers l'écran de connexion.</p>
+<p>Extrait de <code>App.jsx</code> illustrant cette architecture de routage protégée :</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">import</span> { useState } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">BrowserRouter</span>, <span class="hljs-title class_">Routes</span>, <span class="hljs-title class_">Route</span>, <span class="hljs-title class_">Navigate</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-router-dom'</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">Authentification</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'./pages/Authentification'</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">Layout</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'./composants/Layout'</span>;
+<span class="hljs-comment">// ... autres imports</span>
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">App</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> [estConnecte, setEstConnecte] = <span class="hljs-title function_">useState</span>(!!<span class="hljs-variable language_">localStorage</span>.<span class="hljs-title function_">getItem</span>(<span class="hljs-string">'crm_token'</span>));
+
+  <span class="hljs-comment">// Protection d'accès : Si pas connecté, affiche le composant d'authentification</span>
+  <span class="hljs-keyword">if</span> (!estConnecte) {
+    <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">Authentification</span> <span class="hljs-attr">onLoginSuccess</span>=<span class="hljs-string">{()</span> =&gt;</span> setEstConnecte(true)} /&gt;</span>;
+  }
+
+  <span class="hljs-comment">// Application protégée avec Système de Routage imbriqué</span>
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">BrowserRouter</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">Routes</span>&gt;</span>
+        {/* Le composant Layout encapsule toutes les pages sécurisées */}
+        <span class="hljs-tag">&lt;<span class="hljs-name">Route</span> <span class="hljs-attr">path</span>=<span class="hljs-string">"/"</span> <span class="hljs-attr">element</span>=<span class="hljs-string">{</span>&lt;<span class="hljs-attr">Layout</span> <span class="hljs-attr">onLogout</span>=<span class="hljs-string">{gererDeconnexion}</span> /&gt;</span>}&gt;
+          <span class="hljs-tag">&lt;<span class="hljs-name">Route</span> <span class="hljs-attr">index</span> <span class="hljs-attr">element</span>=<span class="hljs-string">{</span>&lt;<span class="hljs-attr">Dashboard</span> /&gt;</span>} /&gt;
+          <span class="hljs-tag">&lt;<span class="hljs-name">Route</span> <span class="hljs-attr">path</span>=<span class="hljs-string">"clients"</span> <span class="hljs-attr">element</span>=<span class="hljs-string">{</span>&lt;<span class="hljs-attr">Clients</span> /&gt;</span>} /&gt;
+          <span class="hljs-tag">&lt;<span class="hljs-name">Route</span> <span class="hljs-attr">path</span>=<span class="hljs-string">"devis"</span> <span class="hljs-attr">element</span>=<span class="hljs-string">{</span>&lt;<span class="hljs-attr">Devis</span> /&gt;</span>} /&gt;
+          <span class="hljs-tag">&lt;<span class="hljs-name">Route</span> <span class="hljs-attr">path</span>=<span class="hljs-string">"factures"</span> <span class="hljs-attr">element</span>=<span class="hljs-string">{</span>&lt;<span class="hljs-attr">Factures</span> /&gt;</span>} /&gt;
+          <span class="hljs-tag">&lt;<span class="hljs-name">Route</span> <span class="hljs-attr">path</span>=<span class="hljs-string">"*"</span> <span class="hljs-attr">element</span>=<span class="hljs-string">{</span>&lt;<span class="hljs-attr">Navigate</span> <span class="hljs-attr">to</span>=<span class="hljs-string">"/"</span> <span class="hljs-attr">replace</span> /&gt;</span>} /&gt;
+        <span class="hljs-tag">&lt;/<span class="hljs-name">Route</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">Routes</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">BrowserRouter</span>&gt;</span></span>
+  );
+}
+</code></pre>
+<hr>
+<div class="page-break"></div>
+
+<h2 id="vii-réalisation-et-sécurité-détails-du-code">VII. Réalisation et Sécurité (Détails du Code)</h2>
+<p>La sécurité applicative est la priorité absolue d'une solution SaaS manipulant des données financières. </p>
+<h3 id="1-stratégie-de-sécurité">1. Stratégie de Sécurité</h3>
+<ul>
+<li><strong>Anti-XSS :</strong> React échappe nativement les variables lors de la réconciliation du DOM virtuel.</li>
+<li><strong>Mots de passe :</strong> Hashés avec <code>bcrypt</code> (ils n'apparaissent jamais en clair dans la BDD).</li>
+<li><strong>Anti-injection SQL :</strong> Toutes les requêtes passent par l'ORM Prisma, qui génère des requêtes préparées (Prepared Statements).</li>
+<li><strong>Cloisonnement des données :</strong> À chaque requête API, le serveur vérifie que la ressource ciblée appartient bien à l'utilisateur faisant la requête.</li>
+</ul>
+<div class="page-break"></div>
+
+<h3 id="2-implémentation-du-contrôle-daccès--json-web-token-jwt">2. Implémentation du contrôle d'accès : JSON Web Token (JWT)</h3>
+<p>L'authentification ne se base pas sur des sessions stockées côté serveur (étatless), mais sur des <strong>JSON Web Tokens (JWT)</strong> signés cryptographiquement. À chaque appel API, le client envoie son token dans le header <code>Authorization</code>.</p>
+<p>Voici l'extrait du middleware métier (<code>authentification.middleware.js</code>) développé pour intercepter et valider ces requêtes :</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">const</span> jwt = <span class="hljs-built_in">require</span>(<span class="hljs-string">'jsonwebtoken'</span>);
+
+<span class="hljs-comment">/**
+ * Middleware d'authentification
+ * Vérifie la présence et la validité du token JWT dans l'en-tête de la requête HTTP.
+ */</span>
+<span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = <span class="hljs-function">(<span class="hljs-params">req, res, next</span>) =&gt;</span> {
+  <span class="hljs-keyword">try</span> {
+    <span class="hljs-keyword">const</span> enTeteAutorisation = req.<span class="hljs-property">headers</span>.<span class="hljs-property">authorization</span>;
+    
+    <span class="hljs-keyword">if</span> (!enTeteAutorisation) {
+      <span class="hljs-keyword">return</span> res.<span class="hljs-title function_">status</span>(<span class="hljs-number">401</span>).<span class="hljs-title function_">json</span>({ <span class="hljs-attr">message</span>: <span class="hljs-string">"Requête non authentifiée. Token manquant."</span> });
+    }
+
+    <span class="hljs-comment">// Récupération du token après le mot clé "Bearer" (norme OAuth2)</span>
+    <span class="hljs-keyword">const</span> token = enTeteAutorisation.<span class="hljs-title function_">split</span>(<span class="hljs-string">' '</span>)[<span class="hljs-number">1</span>];
+    
+    <span class="hljs-comment">// Vérification de l'intégrité du token via la clé secrète serveur</span>
+    <span class="hljs-keyword">const</span> tokenDecode = jwt.<span class="hljs-title function_">verify</span>(token, process.<span class="hljs-property">env</span>.<span class="hljs-property">JWT_SECRET</span>);
+    
+    <span class="hljs-comment">// Transmission sécurisée de l'ID utilisateur aux routes (controllers) suivantes</span>
+    req.<span class="hljs-property">utilisateurId</span> = tokenDecode.<span class="hljs-property">id</span>;
+    <span class="hljs-title function_">next</span>(); <span class="hljs-comment">// Autorisation accordée, on passe au controller métier</span>
+    
+  } <span class="hljs-keyword">catch</span> (erreur) {
+    res.<span class="hljs-title function_">status</span>(<span class="hljs-number">401</span>).<span class="hljs-title function_">json</span>({ <span class="hljs-attr">message</span>: <span class="hljs-string">"Token invalide ou expiré."</span> });
+  }
+};
+</code></pre>
+<p>Grâce à ce composant, toute tentative d'accès à une route protégée sans token valide est bloquée instantanément avec un code HTTP 401 (Unauthorized).</p>
+<hr>
+<div class="page-break"></div>
+
+<h2 id="viii-qualité-logicielle-tests-unitaires-et-cicd">VIII. Qualité Logicielle (Tests Unitaires et CI/CD)</h2>
+<p>Pour garantir la fiabilité de la solution en production, des processus d'Assurance Qualité (QA) rigoureux ont été mis en place.</p>
+<h3 id="1-stratégie-de-tests-automatisés-jest">1. Stratégie de Tests Automatisés (Jest)</h3>
+<p>Le cœur métier de l'application a été isolé pour être testé via le framework <strong>Jest</strong>. Ces tests garantissent que les règles métier critiques (comme la facturation) sont exactes et résilientes face aux mises à jour futures.</p>
+<p>Extrait de <code>calculDevis.test.js</code> qui valide les algorithmes financiers :</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">const</span> { calculerTotalDevis } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../utils/calculDevis'</span>);
+
+<span class="hljs-title function_">describe</span>(<span class="hljs-string">'Calculs des devis'</span>, <span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-title function_">it</span>(<span class="hljs-string">'doit calculer le total HT et TTC correctement pour une seule ligne'</span>, <span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-keyword">const</span> lignes = [{ <span class="hljs-attr">quantite</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">prixUnitaire</span>: <span class="hljs-number">50</span> }];
+    <span class="hljs-keyword">const</span> resultat = <span class="hljs-title function_">calculerTotalDevis</span>(lignes);
+    
+    <span class="hljs-title function_">expect</span>(resultat.<span class="hljs-property">totalHT</span>).<span class="hljs-title function_">toBe</span>(<span class="hljs-number">100</span>);
+    <span class="hljs-title function_">expect</span>(resultat.<span class="hljs-property">totalTTC</span>).<span class="hljs-title function_">toBe</span>(<span class="hljs-number">120</span>); <span class="hljs-comment">// Test TVA par défaut à 20%</span>
+    <span class="hljs-title function_">expect</span>(resultat.<span class="hljs-property">tva</span>).<span class="hljs-title function_">toBe</span>(<span class="hljs-number">20</span>);
+  });
+
+  <span class="hljs-title function_">it</span>(<span class="hljs-string">'doit calculer le total HT et TTC correctement pour plusieurs lignes'</span>, <span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-keyword">const</span> lignes = [
+      { <span class="hljs-attr">quantite</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">prixUnitaire</span>: <span class="hljs-number">100</span> },
+      { <span class="hljs-attr">quantite</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">prixUnitaire</span>: <span class="hljs-number">20</span> }
+    ];
+    <span class="hljs-keyword">const</span> resultat = <span class="hljs-title function_">calculerTotalDevis</span>(lignes);
+    
+    <span class="hljs-title function_">expect</span>(resultat.<span class="hljs-property">totalHT</span>).<span class="hljs-title function_">toBe</span>(<span class="hljs-number">160</span>);
+    <span class="hljs-title function_">expect</span>(resultat.<span class="hljs-property">totalTTC</span>).<span class="hljs-title function_">toBe</span>(<span class="hljs-number">192</span>); <span class="hljs-comment">// Vérification de la somme matricielle</span>
+  });
+});
+</code></pre>
+<div class="page-break"></div>
+
+<h3 id="2-rapport-de-couverture-de-code-et-de-tests">2. Rapport de Couverture de Code et de Tests</h3>
+<p>Pour garantir la fiabilité, la robustesse et la stabilité de l'application <strong>M-Atici CRM</strong> (spécifiquement sa partie back-end qui gère les données sensibles de facturation et de devis), une stratégie de tests unitaires et d'intégration a été mise en place avec Jest.</p>
+<p>Le tableau ci-dessous présente le résumé d'exécution et le taux de couverture des instructions, des branches décisionnelles, des fonctions et des lignes pour chaque module de l'API :</p>
+<ul>
+<li><strong>Nombre total de suites de tests</strong> : 7 (toutes réussies)</li>
+<li><strong>Nombre total de cas de tests</strong> : 40 (tous réussis)</li>
+<li><strong>Statut final</strong> : <strong>SUCCÈS (100% passés)</strong></li>
+<li><strong>Durée d'exécution</strong> : 0.58 s</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Module / Fichier</th>
+<th align="left">Instructions (Stmts %)</th>
+<th align="left">Branches (%)</th>
+<th align="left">Fonctions (%)</th>
+<th align="left">Lignes (%)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Moyenne Globale (Tous les fichiers)</strong></td>
+<td align="left"><strong>73.88 %</strong></td>
+<td align="left"><strong>43.90 %</strong></td>
+<td align="left"><strong>77.77 %</strong></td>
+<td align="left"><strong>74.19 %</strong></td>
+</tr>
+<tr>
+<td align="left"><code>middlewares/authentification.middleware.js</code></td>
+<td align="left">100.00 %</td>
+<td align="left">100.00 %</td>
+<td align="left">100.00 %</td>
+<td align="left">100.00 %</td>
+</tr>
+<tr>
+<td align="left"><code>services/authentification.service.js</code></td>
+<td align="left">100.00 %</td>
+<td align="left">100.00 %</td>
+<td align="left">100.00 %</td>
+<td align="left">100.00 %</td>
+</tr>
+<tr>
+<td align="left"><code>services/clients.service.js</code></td>
+<td align="left">100.00 %</td>
+<td align="left">100.00 %</td>
+<td align="left">100.00 %</td>
+<td align="left">100.00 %</td>
+</tr>
+<tr>
+<td align="left"><code>services/devis.service.js</code></td>
+<td align="left">51.16 %</td>
+<td align="left">14.28 %</td>
+<td align="left">66.66 %</td>
+<td align="left">51.16 %</td>
+</tr>
+<tr>
+<td align="left"><code>services/email.service.js</code></td>
+<td align="left">58.82 %</td>
+<td align="left">100.00 %</td>
+<td align="left">66.66 %</td>
+<td align="left">58.82 %</td>
+</tr>
+<tr>
+<td align="left"><code>services/factures.service.js</code></td>
+<td align="left">63.88 %</td>
+<td align="left">31.25 %</td>
+<td align="left">66.66 %</td>
+<td align="left">64.70 %</td>
+</tr>
+<tr>
+<td align="left"><code>utils/calculDevis.js</code></td>
+<td align="left">100.00 %</td>
+<td align="left">100.00 %</td>
+<td align="left">100.00 %</td>
+<td align="left">100.00 %</td>
+</tr>
+</tbody></table>
+<h4 id="analyse-et-détails-de-la-couverture-">Analyse et détails de la couverture :</h4>
+<ul>
+<li><strong>Sécurité et Authentification (100% de couverture)</strong> : Les fichiers critiques assurant la sécurité de l'application (validation et décodage du token JWT dans le middleware, création de compte, connexion et hachage sécurisé de mot de passe avec bcrypt) sont couverts à 100%.</li>
+<li><strong>Services de Base (100% de couverture)</strong> : Le service <code>clients</code> ainsi que le module utilitaire de calcul des devis (<code>calculDevis.js</code>) sont testés de manière exhaustive pour écarter tout risque d'erreur d'arrondi ou de logique sur les calculs financiers complexes.</li>
+<li><strong>Services Métiers simulés (50% à 65% de couverture)</strong> : Les modules complexes interagissant avec des dépendances et services tiers (génération de PDF via Puppeteer et envoi d'emails via Nodemailer/SMTP) utilisent des mocks pour isoler la logique métier propre au Mini CRM.</li>
+</ul>
+<div class="page-break"></div>
+
+<h3 id="3-pipeline-dintégration-continue-cicd-github-actions">3. Pipeline d'Intégration Continue (CI/CD GitHub Actions)</h3>
+<p>Le code n'est pas déployé à l'aveugle. Un pipeline automatisé s'exécute sur les serveurs de GitHub à chaque <code>push</code>. Si les tests échouent, le pipeline s'arrête, bloquant ainsi le déploiement d'une régression en production.</p>
+<p>Extrait du workflow YAML (<code>main.yml</code>) :</p>
+<pre><code class="hljs yaml"><span class="hljs-attr">name:</span> <span class="hljs-string">CI/CD</span> <span class="hljs-string">Pipeline</span>
+
+<span class="hljs-attr">on:</span> [<span class="hljs-string">push</span>]
+
+<span class="hljs-attr">jobs:</span>
+  <span class="hljs-attr">verifier-code:</span>
+    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span>
+    <span class="hljs-attr">steps:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/checkout@v3</span>
+
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Installer</span> <span class="hljs-string">Node.js</span>
+        <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/setup-node@v3</span>
+        <span class="hljs-attr">with:</span>
+          <span class="hljs-attr">node-version:</span> <span class="hljs-number">20</span>
+
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Test</span> <span class="hljs-string">backend</span>
+        <span class="hljs-attr">run:</span> <span class="hljs-string">|
+          cd backend
+          npm install
+          npx prisma generate
+          npm test
+</span>
+  <span class="hljs-attr">deploiement:</span>
+    <span class="hljs-attr">needs:</span> <span class="hljs-string">verifier-code</span>
+    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span>
+    <span class="hljs-attr">if:</span> <span class="hljs-string">github.ref</span> <span class="hljs-string">==</span> <span class="hljs-string">'refs/heads/main'</span>
+    <span class="hljs-comment"># La suite du pipeline s'exécute uniquement si 'verifier-code' a réussi</span>
+</code></pre>
+<div class="page-break"></div>
+
+<h2 id="ix-infrastructure-et-déploiement-cloud-devops">IX. Infrastructure et Déploiement Cloud (DevOps)</h2>
+<p>L'application n'est pas qu'un projet local, elle est intégralement déployée en environnement professionnel sur un serveur <strong>VPS OVHcloud</strong> accessible sous un domaine dédié (<code>m-atici.fr</code>).</p>
+<h3 id="1-orchestration-avec-docker">1. Orchestration avec Docker</h3>
+<p>L'intégralité de l'écosystème est "conteneurisée". Ceci assure que l'application s'exécute de manière identique en développement, en phase de test et en production.</p>
+<p>Extrait du fichier <code>docker-compose.yml</code> démontrant la liaison des microservices :</p>
+<pre><code class="hljs yaml"><span class="hljs-attr">services:</span>
+  <span class="hljs-comment"># Base de données</span>
+  <span class="hljs-attr">db:</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">postgres:15</span>
+    <span class="hljs-attr">environment:</span>
+      <span class="hljs-attr">POSTGRES_DB:</span> <span class="hljs-string">crm</span>
+      <span class="hljs-comment"># ... variables secrètes d'environnement</span>
+    <span class="hljs-attr">volumes:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">db_data:/var/lib/postgresql/data</span>
+
+  <span class="hljs-comment"># Backend API Node.js</span>
+  <span class="hljs-attr">backend:</span>
+    <span class="hljs-attr">build:</span> <span class="hljs-string">./backend</span>
+    <span class="hljs-attr">environment:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">DATABASE_URL=postgresql://user:password@db:5432/crm</span>
+    <span class="hljs-attr">ports:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">"3000:3000"</span>
+    <span class="hljs-attr">depends_on:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">db</span>
+
+  <span class="hljs-comment"># Serveur Web Caddy (Reverse Proxy + Let's Encrypt SSL)</span>
+  <span class="hljs-attr">caddy:</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">caddy:2-alpine</span>
+    <span class="hljs-attr">restart:</span> <span class="hljs-string">unless-stopped</span>
+    <span class="hljs-attr">ports:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">"80:80"</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">"443:443"</span>
+    <span class="hljs-attr">depends_on:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">frontend</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">backend</span>
+</code></pre>
+<div class="page-break"></div>
+
+<h3 id="2-le-serveur-caddy-et-https">2. Le Serveur Caddy et HTTPS</h3>
+<p>Caddy a été préféré à Nginx pour sa simplicité et sa capacité native à générer et renouveler automatiquement les certificats SSL via <strong>Let's Encrypt</strong>. Tout le trafic est chiffré en HTTPS, sécurisant ainsi l'échange des tokens JWT et des mots de passe.</p>
+<h3 id="3-monitoring">3. Monitoring</h3>
+<p>Le conteneur <strong>GoAccess</strong> analyse les logs générés par le serveur web (Caddy) et restitue un tableau de bord visuel des statistiques de trafic réseau en temps réel, permettant de surveiller la santé du serveur.</p>
+<p><img src="./images/goaccess_stats.png" alt="Statistiques GoAccess"></p>
+<h3 id="4-tâches-planifiées-cron-et-sauvegardes">4. Tâches planifiées (Cron) et Sauvegardes</h3>
+<h2 id="afin-dassurer-la-conformité-rgpd-et-lautomatisation-des-relances-deux-tâches-planifiées-récurrentes-cron-sont-configurées-sur-le-système-hôte-du-vps----relances-de-paiement-automatiques-us4--un-script-autonome-backendsrcscriptsalerteretardjs-sexécute-chaque-jour-pour-détecter-les-factures-en-attente-dont-léchéance-est-dépassée-passer-leur-statut-à-en-retard-et-envoyer-un-e-mail-de-rappel-automatique-au-client-via-nodemailer---sauvegarde-automatisée-de-la-base-de-données--un-script-shell-scriptsbackup-dbsh-est-lancé-toutes-les-nuits-pour-exporter-la-base-postgresql-pg_dump-depuis-le-conteneur-docker-le-script-compresse-la-sauvegarde-et-applique-une-politique-de-rétention-de-7-jours-respect-du-droit-à-loubli">Afin d'assurer la conformité RGPD et l'automatisation des relances, deux tâches planifiées récurrentes (<code>cron</code>) sont configurées sur le système hôte du VPS :
+- <strong>Relances de paiement automatiques (US4)</strong> : Un script autonome (<code>backend/src/scripts/alerteRetard.js</code>) s'exécute chaque jour pour détecter les factures "en attente" dont l'échéance est dépassée, passer leur statut à "en retard" et envoyer un e-mail de rappel automatique au client via Nodemailer.
+- <strong>Sauvegarde automatisée de la base de données</strong> : Un script shell (<code>scripts/backup-db.sh</code>) est lancé toutes les nuits pour exporter la base PostgreSQL (<code>pg_dump</code>) depuis le conteneur Docker. Le script compresse la sauvegarde et applique une politique de rétention de 7 jours (respect du droit à l'oubli).
+ </h2>
+<div class="page-break"></div>
+
+<h2 id="x-présentation-du-jeu-dessai">X. Présentation du jeu d'essai</h2>
+<p>Afin de pouvoir tester et présenter l'application aux correcteurs et clients potentiels sans partir d'une base vide, un script professionnel de "Seeding" a été développé (intégré nativement via la commande d'ORM <code>npx prisma db seed</code>).</p>
+<p>Ce jeu d'essai manipule directement l'API Prisma pour injecter de fausses données relationnelles cohérentes :</p>
+<ol>
+<li>Un compte administrateur racine (<code>admin@m-atici.fr</code>).</li>
+<li>La création d'une dizaine de faux clients avec des noms d'entreprises réalistes.</li>
+<li>La génération d'une vingtaine de devis à des stades cycliques différents (Brouillon, Envoyé, Accepté) associés à ces clients.</li>
+<li>La création de factures finales pour les devis "acceptés".</li>
+</ol>
+<p>Ce processus permet de valider empiriquement le bon fonctionnement des filtres de la base de données, des requêtes de jointure de l'API, des algorithmes de calcul des totaux sur le Dashboard, et de la pagination de l'interface graphique.</p>
+<hr>
+<h2 id="xi-description-de-la-veille-technologique">XI. Description de la veille technologique</h2>
+<p>Le développement de ce projet a été alimenté par une veille technologique active, primordiale dans l'écosystème web en perpétuelle évolution.</p>
+<ol>
+<li><p><strong>Sources d'informations (Outils) :</strong> </p>
+<ul>
+<li>Utilisation quotidienne de Feedly (agrégateur de flux RSS) ciblant des blogs techniques comme Smashing Magazine ou le blog officiel de React.</li>
+<li>Alertes algorithmiques Twitter/X et LinkedIn sur les mots-clés du stack (Node.js, Docker, Cybersecurity).</li>
+<li>Inscription aux newsletters spécialisées (Node Weekly, Frontend Focus).</li>
+</ul>
+</li>
+<li><p><strong>Cibles de la veille (Sécurité) :</strong></p>
+<ul>
+<li>Surveillance stricte des alertes CVE (Common Vulnerabilities and Exposures) touchant le monde open-source JavaScript.</li>
+<li>Utilisation native de <code>npm audit</code> et des alertes <em>GitHub Dependabot</em> pour maintenir les dépendances à l'abri des failles zero-day.</li>
+</ul>
+</li>
+<li><p><strong>Mise en pratique au sein du projet :</strong></p>
+<ul>
+<li><em>Cas concret :</em> Suite à des lectures pointues sur les problématiques de performance des ORM traditionnels Node.js (tels que Sequelize ou TypeORM), et face à l'essor grandissant de TypeScript, le choix s'est porté sur <strong>Prisma</strong>. L'ORM offre un typage statique prédictif bien supérieur et des migrations de schémas plus sécurisées, qui ont grandement accéléré la conception de la base de données du Mini CRM.</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="xii-situation-de-travail-ayant-nécessité-une-recherche">XII. Situation de travail ayant nécessité une recherche</h2>
+<p><strong>Problématique rencontrée :</strong> La génération des factures PDF avec Puppeteer en environnement de production conteneurisé.</p>
+<p>En phase de développement local (sur OS de bureau Mac/Windows), la génération de fichiers PDF à l'aide de Puppeteer (outil qui lance un navigateur Google Chrome invisible côté serveur pour faire le rendu de la facture) fonctionnait parfaitement. Cependant, lors du premier déploiement en production sur le serveur VPS OVH (qui tourne sous Linux encapsulé dans Docker), l'application Node.js crashait systématiquement au moment critique de générer une facture pour le client.</p>
+<p><strong>Démarche de recherche et Résolution :</strong></p>
+<ol>
+<li><strong>Diagnostic via les logs :</strong> La commande <code>docker logs &lt;container_id&gt;</code> a mis en évidence une erreur fatale (<code>Failed to launch the browser process</code>). L'erreur indiquait un manque flagrant de bibliothèques systèmes dynamiques, normalement fournies par une interface graphique, mais absentes d'une image Docker Node minimaliste (Alpine/Debian Lite).</li>
+<li><strong>Recherche documentaire :</strong> Investigation des <em>issues</em> sur le GitHub officiel de Puppeteer, et lectures croisées sur <em>StackOverflow</em> concernant le couplage de Puppeteer et Docker.</li>
+<li><strong>Mise en place de la solution :</strong><ul>
+<li><strong>Côté Dockerfile :</strong> Refonte du processus de "Build" du conteneur Backend pour forcer l'installation de Chromium en ligne de commande ainsi que ses dépendances graphiques Linux nécessaires (<code>libnss3</code>, <code>libxss1</code>, <code>libasound2</code>...).</li>
+<li><strong>Côté Code (Node.js) :</strong> Modification des paramètres d'initialisation de l'instance Puppeteer pour lui injecter les arguments système <code>--no-sandbox</code> et <code>--disable-setuid-sandbox</code>. Ces drapeaux (flags) désactivent une fonctionnalité de bac-à-sable de Chrome qui entre en conflit direct avec le bac-à-sable natif de Docker, autorisant ainsi la génération de PDF en parfaite sécurité au sein du serveur VPS.</li>
+</ul>
+</li>
+</ol>
+<hr>
+<div class="page-break"></div>
+
+<h2 id="xiii-bilan-et-perspectives">XIII. Bilan et Perspectives</h2>
+<p>Le cycle de conception, développement et déploiement de ce Mini CRM SaaS m'a permis d'appliquer concrètement et avec succès l'ensemble du périmètre des compétences attendues d'un Concepteur Développeur d'Applications (CDA).</p>
+<p>De l'étude de faisabilité UX jusqu'au monitoring réseau de l'infrastructure Docker hébergée, ce projet s'est mué en un logiciel <em>Minimum Viable Product</em> (MVP) professionnellement fonctionnel, sécurisé, et prêt à absorber de la charge.</p>
+<p><strong>Perspectives d'évolution techniques et fonctionnelles (Roadmap) :</strong></p>
+<ol>
+<li><strong>Planification d'interventions :</strong> Implémentation d'un module d'agenda partagé pour les artisans afin de planifier les rendez-vous clients directement liés aux devis et factures.</li>
+<li><strong>Fintech :</strong> Intégration de l'API de paiement Stripe pour permettre aux clients des artisans de régler directement leurs factures en ligne par carte bancaire via un portail client dédié, réduisant ainsi drastiquement les délais de paiement.</li>
+<li><strong>Data Visualisation :</strong> Amélioration analytique de l'interface d'administration avec des graphiques de statistiques complexes (via Chart.js ou Recharts), permettant un suivi précis de l'évolution du Chiffre d'Affaires annuel en un coup d'œil.</li>
+</ol>
+
+	
+
+</body></html>
