@@ -21,13 +21,13 @@ docker compose up -d
 echo "[INFO] Rechargement de la configuration Caddy..."
 docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile || docker compose restart caddy
 
-# 4. Autoriser les connexions TCP non-SSL dans pg_hba.conf (réseau Docker interne)
+# 4. Autoriser les connexions TCP non-SSL depuis le réseau Docker (172.x.x.x)
 echo "[INFO] Vérification pg_hba.conf..."
 docker compose exec -T db bash -c "
-  grep -qE '^host[[:space:]]+all' /var/lib/postgresql/data/pg_hba.conf || \
-  { echo 'host all all all md5' >> /var/lib/postgresql/data/pg_hba.conf && \
+  grep -qE '^host[[:space:]]+all[[:space:]]+all[[:space:]]+(all|0\.0\.0\.0/0|172\.)' /var/lib/postgresql/data/pg_hba.conf || \
+  { echo 'host all all 0.0.0.0/0 md5' >> /var/lib/postgresql/data/pg_hba.conf && \
     psql -U user -c 'SELECT pg_reload_conf()' > /dev/null && \
-    echo 'pg_hba.conf mis à jour'; }
+    echo '[INFO] pg_hba.conf mis à jour - connexions Docker autorisées'; }
 "
 
 # 5. Attente que PostgreSQL soit prêt
