@@ -42,7 +42,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd mon-projet-cda
-            printf "EMAIL_USER=${{ secrets.EMAIL_USER }}\nEMAIL_PASS=${{ secrets.EMAIL_PASS }}\nEMAIL_FROM=${{ secrets.EMAIL_FROM }}\n" > .env
+            printf "JWT_SECRET=${{ secrets.JWT_SECRET }}\nEMAIL_USER=${{ secrets.EMAIL_USER }}\nEMAIL_PASS=${{ secrets.EMAIL_PASS }}\nEMAIL_FROM=${{ secrets.EMAIL_FROM }}\n" > .env
             git fetch origin && git reset --hard origin/main
             chmod +x deploy-staging.sh
             ./deploy-staging.sh

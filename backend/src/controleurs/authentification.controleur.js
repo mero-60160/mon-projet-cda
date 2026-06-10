@@ -34,7 +34,7 @@ exports.inscription = async (req, res) => {
       return res.status(400).json({ message: erreur.message });
     }
     console.error("Erreur d'inscription:", erreur);
-    res.status(500).json({ message: "Erreur serveur lors de l'inscription.", details: erreur.message });
+    res.status(500).json({ message: "Erreur serveur lors de l'inscription." });
   }
 };
 

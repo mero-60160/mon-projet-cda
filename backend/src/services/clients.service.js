@@ -50,9 +50,13 @@ class ClientsService {
       throw new Error("Client introuvable.");
     }
 
+    // Liste blanche des champs modifiables : empêche la réattribution du client
+    // à un autre compte via l'injection d'un champ userId dans le corps de requête.
+    const { nom, prenom, email, telephone, entreprise, adresse } = donnees;
+
     const clientMisAJour = await prisma.client.update({
       where: { id: identifiantClient },
-      data: donnees
+      data: { nom, prenom, email, telephone, entreprise, adresse }
     });
 
     try { await redisClient.del(`clients_${utilisateurId}`); } catch (_) {}

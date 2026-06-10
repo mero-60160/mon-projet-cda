@@ -52,7 +52,22 @@ const app = express();
 app.set('trust proxy', 1); // Indispensable derrière Caddy pour le rate-limit
 
 // Middleware
-app.use(cors()); // Accepter les requêtes du frontend
+// Liste blanche des origines autorisées (restreint le CORS au front officiel + dev local)
+const originesAutorisees = [
+  'https://m-atici.fr',
+  'https://www.m-atici.fr',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+app.use(cors({
+  origin: (origine, callback) => {
+    // Autorise les requêtes sans origine (outils CLI, same-origin) et celles de la liste blanche
+    if (!origine || originesAutorisees.includes(origine)) {
+      return callback(null, true);
+    }
+    return callback(new Error("Origine non autorisée par la politique CORS."));
+  }
+}));
 app.use(express.json()); // Comprendre le JSON dans les requêtes
 app.use(limiteGlobale); // Appliquer à toutes les routes
 
