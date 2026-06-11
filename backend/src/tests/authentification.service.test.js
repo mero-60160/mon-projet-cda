@@ -1,3 +1,6 @@
+// Clé de chiffrement factice pour les tests (64 caractères hex = 32 octets)
+process.env.ENCRYPTION_KEY = 'a'.repeat(64);
+
 const authService = require('../services/authentification.service');
 const prisma = require('../config/db');
 const bcrypt = require('bcryptjs');
@@ -48,14 +51,13 @@ describe('AuthentificationService', () => {
 
       // Vérifications
       expect(bcrypt.hash).toHaveBeenCalledWith('monMotDePasse', 'superSalt');
-      expect(prisma.user.create).toHaveBeenCalledWith({
-        data: { 
-          email: 'nouveau@test.com', 
-          password: 'hashedPassword123', 
-          nom: 'Doe', 
-          prenom: 'Jane' 
-        }
-      });
+      // nom et prenom sont maintenant chiffrés avant d'être stockés
+      const appelCreate = prisma.user.create.mock.calls[0][0].data;
+      expect(appelCreate.email).toBe('nouveau@test.com');
+      expect(appelCreate.password).toBe('hashedPassword123');
+      expect(appelCreate.nom).not.toBe('Doe');     // Chiffré → différent de la valeur originale
+      expect(appelCreate.prenom).not.toBe('Jane'); // Chiffré → différent de la valeur originale
+      expect(appelCreate.nom).toContain(':');       // Format iv:authTag:données
       expect(result).toEqual(fakeUser);
     });
   });
