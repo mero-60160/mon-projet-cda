@@ -1,0 +1,77 @@
+erDiagram
+    USER {
+        int id PK
+        string email UK
+        string password
+        string nom
+        string prenom
+        datetime createdAt
+    }
+    CLIENT {
+        int id PK
+        string nom
+        string prenom
+        string email
+        string telephone
+        string entreprise
+        string adresse
+        datetime createdAt
+        datetime updatedAt
+        int userId FK
+    }
+    DEVIS {
+        int id PK
+        string numero UK
+        string statut
+        datetime dateEmission
+        datetime dateEcheance
+        float totalHT
+        float totalTTC
+        float tva
+        string notes
+        datetime createdAt
+        datetime updatedAt
+        int userId FK
+        int clientId FK
+    }
+    LIGNE_DEVIS {
+        int id PK
+        string description
+        float quantite
+        float prixUnitaire
+        float total
+        int devisId FK
+    }
+    FACTURE {
+        int id PK
+        string numero UK
+        string statut
+        datetime dateEmission
+        datetime dateEcheance
+        float totalHT
+        float totalTTC
+        float tva
+        string notes
+        datetime createdAt
+        datetime updatedAt
+        int userId FK
+        int clientId FK
+        int devisId FK
+    }
+    LIGNE_FACTURE {
+        int id PK
+        string description
+        float quantite
+        float prixUnitaire
+        float total
+        int factureId FK
+    }
+
+    USER ||--o{ CLIENT : "userId"
+    USER ||--o{ DEVIS : "userId"
+    USER ||--o{ FACTURE : "userId"
+    CLIENT ||--o{ DEVIS : "clientId"
+    CLIENT ||--o{ FACTURE : "clientId"
+    DEVIS ||--|{ LIGNE_DEVIS : "devisId"
+    FACTURE ||--|{ LIGNE_FACTURE : "factureId"
+    DEVIS ||--o| FACTURE : "devisId"

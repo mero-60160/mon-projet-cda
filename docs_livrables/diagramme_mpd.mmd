@@ -1,0 +1,77 @@
+erDiagram
+    users {
+        SERIAL id PK
+        VARCHAR email UK
+        VARCHAR password
+        VARCHAR nom
+        VARCHAR prenom
+        TIMESTAMP created_at
+    }
+    clients {
+        SERIAL id PK
+        VARCHAR nom
+        VARCHAR prenom
+        VARCHAR email
+        VARCHAR telephone
+        VARCHAR entreprise
+        TEXT adresse
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+        INTEGER user_id FK
+    }
+    devis {
+        SERIAL id PK
+        VARCHAR numero UK
+        VARCHAR statut
+        TIMESTAMP date_emission
+        TIMESTAMP date_echeance
+        DECIMAL total_ht
+        DECIMAL total_ttc
+        DECIMAL tva
+        TEXT notes
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+        INTEGER user_id FK
+        INTEGER client_id FK
+    }
+    lignes_devis {
+        SERIAL id PK
+        TEXT description
+        DECIMAL quantite
+        DECIMAL prix_unitaire
+        DECIMAL total
+        INTEGER devis_id FK
+    }
+    factures {
+        SERIAL id PK
+        VARCHAR numero UK
+        VARCHAR statut
+        TIMESTAMP date_emission
+        TIMESTAMP date_echeance
+        DECIMAL total_ht
+        DECIMAL total_ttc
+        DECIMAL tva
+        TEXT notes
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+        INTEGER user_id FK
+        INTEGER client_id FK
+        INTEGER devis_id FK
+    }
+    lignes_factures {
+        SERIAL id PK
+        TEXT description
+        DECIMAL quantite
+        DECIMAL prix_unitaire
+        DECIMAL total
+        INTEGER facture_id FK
+    }
+
+    users ||--o{ clients : "user_id"
+    users ||--o{ devis : "user_id"
+    users ||--o{ factures : "user_id"
+    clients ||--o{ devis : "client_id"
+    clients ||--o{ factures : "client_id"
+    devis ||--|{ lignes_devis : "devis_id"
+    factures ||--|{ lignes_factures : "facture_id"
+    devis ||--o| factures : "devis_id"

@@ -128,19 +128,33 @@ Le projet intègre une architecture **Multi-tenant** : chaque ressource métier 
 
 ### 1. Modèle Conceptuel des Données (MCD)
 
+Le MCD représente les entités métier et leurs associations indépendamment de toute contrainte technique. Il identifie les objets du domaine (User, Client, Devis, Facture) et les cardinalités entre eux.
+
 ![Modèle Conceptuel des Données](./diagramme_mcd.png)
 
-### 2. Diagramme de classes
+### 2. Modèle Logique des Données (MLD)
+
+Le MLD traduit le MCD en tables relationnelles. Les clés primaires (PK) et clés étrangères (FK) sont explicitement définies, mais sans contraintes propres au SGBD.
+
+![Modèle Logique des Données](./diagramme_mld.png)
+
+### 3. Modèle Physique des Données (MPD)
+
+Le MPD est l'implémentation concrète dans PostgreSQL. Chaque colonne est typée avec précision (`SERIAL`, `VARCHAR`, `DECIMAL`, `TIMESTAMP`), les contraintes `NOT NULL`, `UNIQUE` et `CASCADE` sont appliquées. Ce schéma est géré automatiquement par les migrations Prisma.
+
+![Modèle Physique des Données](./diagramme_mpd.png)
+
+### 4. Diagramme de classes
 
 ![Diagramme de classes](./diagramme_classes.png)
 
-### 3. Diagramme de Cas d'utilisation
+### 5. Diagramme de Cas d'utilisation
 
 ![Diagramme de cas d'utilisation](./diagramme_cas_utilisation.png)
 
 <div class="page-break"></div>
 
-### 4. Implémentation Physique : L'ORM Prisma
+### 6. Implémentation Physique : L'ORM Prisma
 
 Au lieu d'écrire des requêtes SQL brutes ou d'utiliser un ORM obsolète, le projet utilise **Prisma**, un ORM nouvelle génération. Prisma génère un client typé dynamiquement, prévenant les erreurs lors de la compilation plutôt qu'à l'exécution.
 
@@ -198,10 +212,108 @@ L'application respecte une architecture **Client-Serveur** totalement découplé
 | **Frontend SPA** | React.js & Vite | Rendu dynamique côté client, Hot Module Replacement (HMR) ultra-rapide. |
 | **Stylisation** | Tailwind CSS | Design system orienté utilitaire, permettant un rendu responsive (Mobile-first) très rapide sans CSS spaghetti. |
 | **Réseau client** | Axios | Librairie HTTP fiable, intercepteurs permettant l'injection automatique du jeton de sécurité. |
+| **Graphiques** | Recharts | Bibliothèque de visualisation React (BarChart CA mensuel, PieChart statuts devis) intégrée au Dashboard. |
+| **Email transactionnel** | Brevo (SMTP) | Fournisseur SMTP gratuit jusqu'à 300 emails/jour. Utilisé pour l'envoi des devis et les relances automatiques. |
+| **Documentation API** | Swagger / OpenAPI 3.0 | Interface interactive auto-générée depuis les annotations JSDoc des routes, accessible sur `/api-docs`. |
 
 <div class="page-break"></div>
 
-### 2. Focus Architecture Frontend : React Router
+### 2. Architecture en couches (Controller-Service-Repository)
+
+Le backend suit une architecture strictement découpée en 4 couches pour séparer les responsabilités :
+
+```
+Routes → Contrôleurs → Services → Config (DB / Redis)
+```
+
+| Couche | Rôle | Exemple |
+| :--- | :--- | :--- |
+| **Routes** | Déclarer les endpoints HTTP et appliquer les middlewares | `clients.routes.js` |
+| **Contrôleurs** | Gérer la requête HTTP, valider les données (Zod), renvoyer la réponse JSON | `clients.controleur.js` |
+| **Services** | Contenir la logique métier pure (calculs, règles, accès BDD) | `clients.service.js` |
+| **Config** | Connexions aux ressources externes (Prisma, Redis) | `config/db.js`, `config/redis.js` |
+
+Cette séparation permet de tester les services en isolation totale, sans démarrer le serveur HTTP.
+
+<div class="page-break"></div>
+
+### 3. Sécurité réseau : CORS avec liste blanche
+
+La politique CORS n'autorise pas toutes les origines. Une liste blanche explicite est définie dans `app.js`. Toute requête provenant d'un domaine non listé est immédiatement rejetée par le serveur.
+
+```javascript
+// Liste blanche des origines autorisées (restreint le CORS au front officiel + dev local)
+const originesAutorisees = [
+  'https://m-atici.fr',
+  'https://www.m-atici.fr',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
+app.use(cors({
+  origin: (origine, callback) => {
+    if (!origine || originesAutorisees.includes(origine)) {
+      return callback(null, true);
+    }
+    return callback(new Error("Origine non autorisée par la politique CORS."));
+  }
+}));
+```
+
+### 4. Protection contre les attaques par force brute : Rate Limiting
+
+Deux limiteurs de débit distincts sont configurés via `express-rate-limit` :
+
+```javascript
+// Limiteur global : 100 requêtes par 15 minutes sur toutes les routes
+const limiteGlobale = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { message: "Trop de requêtes, veuillez réessayer plus tard." }
+});
+
+// Limiteur strict sur l'authentification : 5 tentatives max par 15 minutes
+const limiteConnexion = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { message: "Trop de tentatives, veuillez patienter 15 minutes." }
+});
+
+app.set('trust proxy', 1); // Indispensable derrière Caddy pour lire l'IP réelle via X-Forwarded-For
+app.use(limiteGlobale);
+app.use('/api/authentification', limiteConnexion, routesAuthentification);
+```
+
+La directive `trust proxy` est critique : sans elle, le rate-limiter verrait toujours l'IP interne Docker (`172.x.x.x`) et considérerait tous les utilisateurs comme une seule personne.
+
+<div class="page-break"></div>
+
+### 5. Documentation API interactive : Swagger / OpenAPI
+
+Chaque route de l'API est documentée via des annotations JSDoc au format OpenAPI 3.0. La documentation est accessible en temps réel sur `/api-docs` et permet de tester les endpoints directement depuis le navigateur, sans outil externe.
+
+```javascript
+// Configuration Swagger dans app.js
+const optionsSwagger = {
+  definition: {
+    openapi: '3.0.0',
+    info: { title: 'API Mini CRM', version: '1.0.0' },
+    components: {
+      securitySchemes: {
+        bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }
+      }
+    },
+    security: [{ bearerAuth: [] }]
+  },
+  apis: ['./src/routes/*.js'] // Scan automatique des annotations JSDoc
+};
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+```
+
+La sécurité `bearerAuth` est définie globalement : chaque endpoint marqué comme protégé affiche un cadenas dans l'interface et exige le token JWT pour être testé.
+
+### 6. Focus Architecture Frontend : React Router
 
 Côté client, l'application est une Single Page Application (SPA). Le rechargement de page est évité grâce à l'utilisation de `react-router-dom`. Le routage inclut une logique de protection : un utilisateur non authentifié est automatiquement redirigé vers l'écran de connexion.
 
@@ -240,6 +352,21 @@ function App() {
 }
 ```
 
+### 3. Architecture Backend : API REST
+
+L'API backend respecte les principes **REST** (Representational State Transfer), un style d'architecture standardisé pour la communication entre un client et un serveur via HTTP.
+
+Les 6 contraintes REST appliquées dans ce projet :
+
+| Contrainte REST | Application dans le projet |
+| :--- | :--- |
+| **1. Client-Serveur** | Le frontend React et le backend Node.js sont totalement séparés et communiquent uniquement via HTTP. |
+| **2. Sans état (Stateless)** | Chaque requête est autonome et contient toutes les informations nécessaires. L'authentification est portée par le token JWT dans le header, le serveur ne stocke aucune session. |
+| **3. Mise en cache (Cacheable)** | Les données fréquemment consultées (liste des clients) sont mises en cache via Redis pour réduire la charge sur la base de données. |
+| **4. Interface uniforme** | Les routes suivent les conventions HTTP : `GET` pour lire, `POST` pour créer, `PUT/PATCH` pour modifier, `DELETE` pour supprimer. Les ressources sont identifiées par des URLs sémantiques (`/api/clients`, `/api/devis/:id`). |
+| **5. Système en couches** | Le client ne communique qu'avec Caddy (reverse proxy), qui redirige vers le backend. Redis et PostgreSQL sont invisibles depuis l'extérieur. |
+| **6. Code à la demande** *(optionnel)* | Non applicable dans ce projet (principe optionnel dans REST). |
+
 ---
 
 <div class="page-break"></div>
@@ -251,12 +378,72 @@ La sécurité applicative est la priorité absolue d'une solution SaaS manipulan
 ### 1. Stratégie de Sécurité
 - **Anti-XSS :** React échappe nativement les variables lors de la réconciliation du DOM virtuel.
 - **Mots de passe :** Hashés avec `bcrypt` (ils n'apparaissent jamais en clair dans la BDD).
+- **Données profil chiffrées :** `nom` et `prenom` des utilisateurs sont chiffrés en base via AES-256-GCM (chiffrement symétrique réversible).
 - **Anti-injection SQL :** Toutes les requêtes passent par l'ORM Prisma, qui génère des requêtes préparées (Prepared Statements).
 - **Cloisonnement des données :** À chaque requête API, le serveur vérifie que la ressource ciblée appartient bien à l'utilisateur faisant la requête.
 
+### 2. Chiffrement des données personnelles : AES-256-GCM
+
+Les données personnelles identifiables (PII) stockées en base de données sont chiffrées avec l'algorithme **AES-256-GCM** (Advanced Encryption Standard, clé 256 bits, mode Galois/Counter). Contrairement à `bcrypt` qui est un hachage unidirectionnel (pour les mots de passe), AES-256-GCM est un **chiffrement symétrique réversible** : les données peuvent être déchiffrées pour être affichées à l'utilisateur légitime.
+
+Le module `utils/chiffrement.js` encapsule cette logique :
+
+```javascript
+const crypto = require('crypto');
+const ALGORITHME = 'aes-256-gcm';
+
+function chiffrer(texte) {
+  if (!texte) return texte;
+  const cle = Buffer.from(process.env.ENCRYPTION_KEY, 'hex'); // Clé 32 octets
+  const iv = crypto.randomBytes(16); // Vecteur d'initialisation aléatoire unique
+  const cipher = crypto.createCipheriv(ALGORITHME, cle, iv);
+  let chiffre = cipher.update(texte, 'utf8', 'hex');
+  chiffre += cipher.final('hex');
+  const authTag = cipher.getAuthTag().toString('hex'); // Tag d'authenticité (GCM)
+  // Format stocké en BDD : iv:authTag:données_chiffrées
+  return `${iv.toString('hex')}:${authTag}:${chiffre}`;
+}
+
+function dechiffrer(valeur) {
+  if (!valeur || !valeur.includes(':')) return valeur; // Compatibilité données existantes
+  const [ivHex, authTagHex, chiffre] = valeur.split(':');
+  const cle = Buffer.from(process.env.ENCRYPTION_KEY, 'hex');
+  const decipher = crypto.createDecipheriv(ALGORITHME, cle, Buffer.from(ivHex, 'hex'));
+  decipher.setAuthTag(Buffer.from(authTagHex, 'hex')); // Vérification d'intégrité
+  let dechiffre = decipher.update(chiffre, 'hex', 'utf8');
+  dechiffre += decipher.final('utf8');
+  return dechiffre;
+}
+```
+
+**Pourquoi AES-256-GCM ?** Le mode GCM (Galois/Counter Mode) offre à la fois le **chiffrement** et l'**authentification** : le `authTag` garantit que la donnée chiffrée n'a pas été altérée. Un attaquant ayant accès à la base ne pourrait ni lire ni modifier les données sans la clé `ENCRYPTION_KEY`.
+
+**Flux dans `authentification.service.js` :**
+
+```javascript
+// À l'inscription : chiffrement avant stockage
+const nouvelUtilisateur = await prisma.user.create({
+  data: {
+    email,                          // Email en clair (nécessaire pour le lookup de connexion)
+    password: motDePasseHache,      // Mot de passe haché bcrypt
+    nom: chiffrer(nom),             // Nom chiffré AES-256-GCM
+    prenom: chiffrer(prenom)        // Prénom chiffré AES-256-GCM
+  }
+});
+
+// À la connexion : déchiffrement avant envoi au client
+const utilisateurDechiffre = {
+  ...utilisateur,
+  nom: dechiffrer(utilisateur.nom),
+  prenom: dechiffrer(utilisateur.prenom)
+};
+```
+
+La clé `ENCRYPTION_KEY` est une valeur de 64 caractères hexadécimaux (32 octets) stockée uniquement dans les variables d'environnement du serveur (jamais dans le code source ni dans Git).
+
 <div class="page-break"></div>
 
-### 2. Implémentation du contrôle d'accès : JSON Web Token (JWT)
+### 3. Implémentation du contrôle d'accès : JSON Web Token (JWT)
 
 L'authentification ne se base pas sur des sessions stockées côté serveur (étatless), mais sur des **JSON Web Tokens (JWT)** signés cryptographiquement. À chaque appel API, le client envoie son token dans le header `Authorization`.
 
@@ -295,6 +482,109 @@ module.exports = (req, res, next) => {
 
 Grâce à ce composant, toute tentative d'accès à une route protégée sans token valide est bloquée instantanément avec un code HTTP 401 (Unauthorized).
 
+Le token est signé avec une clé secrète (`JWT_SECRET`) stockée uniquement dans les variables d'environnement du serveur, jamais exposée au client. Sa durée de vie est fixée à **24 heures** (`expiresIn: '24h'`), équilibrant sécurité (expiration courte) et confort utilisateur (pas de reconnexion trop fréquente).
+
+```javascript
+const token = jwt.sign(
+  { id: utilisateur.id },       // Payload minimal : seulement l'ID
+  process.env.JWT_SECRET,        // Clé secrète serveur
+  { expiresIn: '24h' }           // Expiration automatique après 24h
+);
+```
+
+### 3. Validation des données : Zod
+
+Avant d'atteindre la base de données, les données d'entrée sont validées côté serveur grâce à la bibliothèque **Zod**. Cette validation défensive empêche les données malformées ou incomplètes de provoquer des erreurs en base.
+
+```javascript
+const schemaInscription = z.object({
+  email: z.string().email("Le format de l'email est invalide."),
+  motDePasse: z.string().min(8, "Le mot de passe doit contenir au moins 8 caractères."),
+  nom: z.string().min(2, "Le nom doit contenir au moins 2 caractères."),
+  prenom: z.string().min(2, "Le prénom doit contenir au moins 2 caractères.")
+});
+
+const validation = schemaInscription.safeParse(req.body);
+if (!validation.success) {
+  return res.status(400).json({ 
+    message: "Format des données invalide.", 
+    erreurs: validation.error.format()  // Retourne des erreurs typées par champ
+  });
+}
+```
+
+En cas d'échec, le serveur retourne un objet d'erreurs structuré par champ (ex: `{ motDePasse: { _errors: ["Le mot de passe doit contenir au moins 8 caractères."] } }`), permettant au frontend d'afficher des messages précis.
+
+<div class="page-break"></div>
+
+### 4. Protection contre l'injection de masse (Mass Assignment)
+
+Une faille classique consiste à envoyer des champs non attendus dans le corps d'une requête. Par exemple, un attaquant pourrait injecter `{ userId: 2 }` dans une requête de modification de client pour transférer frauduleusement la propriété d'une ressource.
+
+Ce risque est neutralisé dans `clients.service.js` par une **liste blanche des champs modifiables** : seuls les champs autorisés sont extraits du corps de la requête avant d'être transmis à Prisma.
+
+```javascript
+async modifierClient(identifiantClient, donnees, utilisateurId) {
+  // Vérification préalable : le client appartient bien à cet utilisateur
+  const clientExistant = await prisma.client.findFirst({
+    where: { id: identifiantClient, userId: utilisateurId }
+  });
+  if (!clientExistant) throw new Error("Client introuvable.");
+
+  // Liste blanche des champs modifiables : empêche la réattribution du client
+  // à un autre compte via l'injection d'un champ userId dans la requête.
+  const { nom, prenom, email, telephone, entreprise, adresse } = donnees;
+
+  return await prisma.client.update({
+    where: { id: identifiantClient },
+    data: { nom, prenom, email, telephone, entreprise, adresse }
+  });
+}
+```
+
+Le champ `userId` est délibérément absent de la déstructuration : même s'il est présent dans la requête entrante, il sera ignoré.
+
+### 5. Automatisation : Service d'email et alertes de retard
+
+L'application dispose d'un pipeline d'automatisation complet pour le suivi des impayés. Le service email (`email.service.js`) utilise **Nodemailer** configuré sur le SMTP de **Brevo** (port 587, TLS STARTTLS) et expose deux méthodes distinctes :
+
+**Envoi de devis par email :** génère le PDF en mémoire, l'attache à l'email et met à jour automatiquement le statut du devis à "envoyé".
+
+```javascript
+async envoyerDevisParEmail(destinataire, numeroDevis, pdfBuffer) {
+  await this.transporter.sendMail({
+    from: `"Mini CRM SaaS" <${process.env.EMAIL_FROM}>`,
+    to: destinataire,
+    subject: `Votre devis N° ${numeroDevis}`,
+    html: `<p>Veuillez trouver ci-joint votre devis <strong>N° ${numeroDevis}</strong>.</p>`,
+    attachments: [{
+      filename: `Devis_${numeroDevis}.pdf`,
+      content: pdfBuffer,           // Buffer mémoire, pas de fichier temporaire sur disque
+      contentType: 'application/pdf'
+    }]
+  });
+}
+```
+
+**Alertes de retard automatiques :** le script `alerteRetard.js`, exécuté chaque nuit par le cron du VPS, détecte les factures `en_attente` dont la date d'échéance est dépassée, les bascule en statut `en_retard` et envoie une mise en demeure email au client.
+
+```javascript
+const facturesEnRetard = await prisma.facture.findMany({
+  where: { statut: "en_attente", dateEcheance: { lt: maintenant } },
+  include: { client: true }
+});
+
+for (const facture of facturesEnRetard) {
+  await prisma.facture.update({ where: { id: facture.id }, data: { statut: "en_retard" } });
+
+  if (facture.client?.email) {
+    await emailService.envoyerAlerteRetard(
+      facture.client.email, facture.numero, facture.totalTTC, facture.dateEcheance
+    );
+  }
+}
+```
+
 ---
 
 <div class="page-break"></div>
@@ -303,9 +593,46 @@ Grâce à ce composant, toute tentative d'accès à une route protégée sans to
 
 Pour garantir la fiabilité de la solution en production, des processus d'Assurance Qualité (QA) rigoureux ont été mis en place.
 
-### 1. Stratégie de Tests Automatisés (Jest)
+### 1. Stratégie de Tests Automatisés (Jest) et les Mocks
 
 Le cœur métier de l'application a été isolé pour être testé via le framework **Jest**. Ces tests garantissent que les règles métier critiques (comme la facturation) sont exactes et résilientes face aux mises à jour futures.
+
+**Pourquoi des mocks ?** Les services dépendent de ressources externes (PostgreSQL, Redis, SMTP, Puppeteer). Pour tester la logique métier sans démarrer ces services, Jest remplace chaque dépendance par un **mock** — un faux module qui simule le comportement réel de manière contrôlée.
+
+```javascript
+// clients.service.test.js — déclaration des mocks en tête de fichier
+jest.mock('../config/db', () => ({
+  client: {
+    findMany: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn()
+  }
+}));
+
+jest.mock('../config/redis', () => ({
+  get: jest.fn().mockResolvedValue(null),  // Par défaut : cache vide
+  setEx: jest.fn().mockResolvedValue('OK'),
+  del: jest.fn().mockResolvedValue(1)
+}));
+```
+
+Cela permet de tester le service en isolation totale, sans base de données ni serveur Redis réel.
+
+**Test de la stratégie cache-aside :** le test le plus significatif valide les deux chemins de lecture :
+
+```javascript
+it('devrait retourner les clients depuis le cache Redis si disponible', async () => {
+  const clientsEnCache = [{ id: 3, nom: 'Cache', prenom: 'Test', userId: 1 }];
+  redisClient.get.mockResolvedValue(JSON.stringify(clientsEnCache)); // Cache chaud
+
+  const resultat = await clientsService.obtenirClients(1);
+
+  // Redis a répondu : Prisma ne doit PAS être appelé
+  expect(prisma.client.findMany).not.toHaveBeenCalled();
+  expect(resultat).toEqual(clientsEnCache);
+});
+```
 
 Extrait de `calculDevis.test.js` qui valide les algorithmes financiers :
 
@@ -370,10 +697,10 @@ Le tableau ci-dessous présente le résumé d'exécution et le taux de couvertur
 
 Le code n'est pas déployé à l'aveugle. Un pipeline automatisé s'exécute sur les serveurs de GitHub à chaque `push`. Si les tests échouent, le pipeline s'arrête, bloquant ainsi le déploiement d'une régression en production.
 
-Extrait du workflow YAML (`main.yml`) :
+Extrait du workflow YAML complet (`main.yml`) :
 
 ```yaml
-name: CI/CD Pipeline
+name: CI simple
 
 on: [push]
 
@@ -395,12 +722,35 @@ jobs:
           npx prisma generate
           npm test
 
+      - name: Build frontend          # Valide que React compile sans erreur
+        run: |
+          cd frontend
+          npm install
+          npm run build
+
   deploiement:
-    needs: verifier-code
+    name: Déploiement Continu (CD)
+    needs: verifier-code             # Bloqué si les tests échouent
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    # La suite du pipeline s'exécute uniquement si 'verifier-code' a réussi
+
+    steps:
+      - name: Déploiement automatique sur le VPS OVH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd mon-projet-cda
+            # Injection sécurisée des secrets GitHub dans le .env du VPS
+            printf "JWT_SECRET=${{ secrets.JWT_SECRET }}\nEMAIL_USER=${{ secrets.EMAIL_USER }}\nEMAIL_PASS=${{ secrets.EMAIL_PASS }}\nEMAIL_FROM=${{ secrets.EMAIL_FROM }}\n" > .env
+            git fetch origin && git reset --hard origin/main
+            chmod +x deploy-staging.sh
+            ./deploy-staging.sh
 ```
+
+**Les 7 secrets GitHub utilisés** (`SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY`, `JWT_SECRET`, `EMAIL_USER`, `EMAIL_PASS`, `EMAIL_FROM`) sont stockés dans les *Repository Secrets* GitHub et ne sont jamais visibles dans les logs du pipeline. Le fichier `.env` du VPS est régénéré à chaque déploiement depuis ces secrets — jamais commité dans Git.
 
 <div class="page-break"></div>
 
@@ -457,21 +807,126 @@ services:
 
 <div class="page-break"></div>
 
-### 2. Le Serveur Caddy et HTTPS
+### 2. Dockerfile Backend : optimisation des couches
 
-Caddy a été préféré à Nginx pour sa simplicité et sa capacité native à générer et renouveler automatiquement les certificats SSL via **Let's Encrypt**. Tout le trafic est chiffré en HTTPS, sécurisant ainsi l'échange des tokens JWT et des mots de passe.
+Le Dockerfile backend est structuré pour maximiser le cache Docker. Chaque instruction `RUN`/`COPY` crée une couche immuable. En ordonnant les couches de la plus stable à la plus volatile, on évite de reconstruire les étapes lourdes à chaque déploiement.
 
-### 3. Monitoring
+```dockerfile
+FROM node:20
 
-Le conteneur **GoAccess** analyse les logs générés par le serveur web (Caddy) et restitue un tableau de bord visuel des statistiques de trafic réseau en temps réel, permettant de surveiller la santé du serveur.
+WORKDIR /app
+
+# Couche 1 — Dépendances système Chromium (lourde ~300Mo, quasi jamais modifiée)
+RUN apt-get update && apt-get install -y \
+    chromium libnss3 libatk1.0-0 libxkbcommon0 libgbm1 libasound2 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Puppeteer utilise le Chromium système : inutile de télécharger le sien
+ENV PUPPETEER_SKIP_DOWNLOAD=true
+
+# Couche 2 — Dépendances Node.js (reconstruite uniquement si package.json change)
+COPY package*.json ./
+RUN npm install
+
+# Couche 3 — Client Prisma (reconstruite uniquement si schema.prisma change)
+COPY prisma ./prisma
+RUN npx prisma generate
+
+# Couche 4 — Code applicatif (seule couche reconstruite à chaque commit)
+COPY . .
+
+EXPOSE 3000
+CMD ["node", "src/server.js"]
+```
+
+### 3. Dockerfile Frontend : build multi-stage
+
+Le frontend utilise une stratégie de **build multi-stage** pour produire une image de production légère. La première étape compile le projet Vite, la seconde ne conserve que le dossier `/dist` final.
+
+```dockerfile
+# Étape 1 : Build (image lourde ~800Mo avec node_modules)
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build         # Compile React + Vite → dossier /dist statique
+
+# Étape 2 : Production (image légère ~50Mo, juste les fichiers statiques)
+FROM node:20-alpine
+WORKDIR /app
+RUN npm install -g serve
+COPY --from=builder /app/dist ./dist   # Seul le /dist est copié
+EXPOSE 5173
+CMD ["serve", "-s", "dist", "-l", "5173"]
+```
+
+Cette technique réduit la taille de l'image de **~800 Mo** (avec les `node_modules`) à **~50 Mo** (juste les fichiers compilés).
+
+<div class="page-break"></div>
+
+### 4. Le Serveur Caddy et la stratégie de cache HTTP
+
+Caddy a été préféré à Nginx pour sa capacité native à générer et renouveler automatiquement les certificats SSL via **Let's Encrypt**. Le `Caddyfile` implémente également une stratégie de cache HTTP différenciée, essentielle pour éviter les "pages blanches" après un déploiement.
+
+```
+m-atici.fr, www.m-atici.fr {
+    log { output file /var/log/caddy/access.log format json }
+
+    handle /api/* {
+        reverse_proxy backend:3000     # Toutes les requêtes API vers Node.js
+    }
+
+    # Assets avec empreinte (JS/CSS compilés par Vite : ex: /assets/index-a3b4c5d6.js)
+    # Le hash garantit l'unicité : cache immutable d'1 an en toute sécurité
+    handle /assets/* {
+        header Cache-Control "public, max-age=31536000, immutable"
+        reverse_proxy frontend:5173
+    }
+
+    # index.html et routes SPA : jamais mis en cache
+    # Pour toujours charger la dernière version après un déploiement
+    handle {
+        header Cache-Control "no-cache"
+        reverse_proxy frontend:5173
+    }
+}
+```
+
+### 5. Script de déploiement zéro-interruption
+
+Le script `deploy-staging.sh` orchestre un déploiement en 5 étapes avec une attente active de PostgreSQL avant d'exécuter les migrations, évitant ainsi les erreurs de migration sur une base encore en démarrage.
+
+```bash
+#!/bin/bash
+set -e  # Arrêt immédiat si une commande échoue
+
+docker compose build         # Rebuild des images
+docker compose up -d         # Relance les conteneurs en arrière-plan
+
+# Reload Caddy sans interruption (évite de redémarrer le reverse proxy)
+docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile
+
+# Attente active : on boucle jusqu'à ce que PostgreSQL accepte les connexions
+until docker compose exec -T db pg_isready -U user -d crm > /dev/null 2>&1; do
+  sleep 1
+done
+
+# Migration Prisma : appliquée UNIQUEMENT quand la BDD est prête
+docker compose exec -T backend npx prisma migrate deploy
+```
+
+### 6. Monitoring
+
+Le conteneur **GoAccess** analyse les logs générés par Caddy et restitue un tableau de bord visuel des statistiques de trafic réseau, actualisé toutes les 60 secondes.
 
 ![Statistiques GoAccess](./images/goaccess_stats.png)
 
-### 4. Tâches planifiées (Cron) et Sauvegardes
+### 7. Tâches planifiées (Cron) et Sauvegardes
 
-Afin d'assurer la conformité RGPD et l'automatisation des relances, deux tâches planifiées récurrentes (`cron`) sont configurées sur le système hôte du VPS :
-- **Relances de paiement automatiques (US4)** : Un script autonome (`backend/src/scripts/alerteRetard.js`) s'exécute chaque jour pour détecter les factures "en attente" dont l'échéance est dépassée, passer leur statut à "en retard" et envoyer un e-mail de rappel automatique au client via Nodemailer.
-- **Sauvegarde automatisée de la base de données** : Un script shell (`scripts/backup-db.sh`) est lancé toutes les nuits via `cron`. Il exécute `pg_dump` directement dans le conteneur Docker (`docker compose exec -T db`), compresse le résultat à la volée avec `gzip`, et applique une politique de rétention de 7 jours via `find … -mtime +7 -delete` (respect du droit à l'oubli RGPD).
+Deux tâches `cron` tournent sur le VPS :
+- **Relances de paiement automatiques** : `alerteRetard.js` s'exécute chaque nuit pour détecter les factures `en_attente` dont l'échéance est dépassée, les basculer en `en_retard` et envoyer une mise en demeure email.
+- **Sauvegarde automatisée** : `backup-db.sh` lance `pg_dump` dans le conteneur PostgreSQL, compresse avec `gzip` et applique une rétention de 7 jours (`find … -mtime +7 -delete`), en conformité avec le droit à l'oubli RGPD.
  
 ---
  
