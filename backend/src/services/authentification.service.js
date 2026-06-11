@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const prisma = require('../config/db');
+const { chiffrer, dechiffrer } = require('../utils/chiffrement');
 
 class AuthentificationService {
   async inscription(email, motDePasse, nom, prenom) {
@@ -13,11 +14,11 @@ class AuthentificationService {
     const motDePasseHache = await bcrypt.hash(motDePasse, sel);
 
     const nouvelUtilisateur = await prisma.user.create({
-      data: { 
-        email, 
-        password: motDePasseHache, 
-        nom, 
-        prenom 
+      data: {
+        email,
+        password: motDePasseHache,
+        nom: chiffrer(nom),
+        prenom: chiffrer(prenom)
       }
     });
 
@@ -41,7 +42,14 @@ class AuthentificationService {
       { expiresIn: '24h' }
     );
 
-    return { utilisateur, token };
+    // Déchiffrement des données profil avant envoi au client
+    const utilisateurDechiffre = {
+      ...utilisateur,
+      nom: dechiffrer(utilisateur.nom),
+      prenom: dechiffrer(utilisateur.prenom)
+    };
+
+    return { utilisateur: utilisateurDechiffre, token };
   }
 }
 
